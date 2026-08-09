@@ -50,8 +50,16 @@ import { Switch } from "@/components/ui/switch";
 import { SwipeListItem } from "@/components/ui/swipe-list-item";
 import { TabBar, type TabKey } from "@/components/ui/tab-bar";
 import { locales, type Locale } from "@/lib/i18n";
-import { chats, professions, recentSearches, vacancies } from "@/lib/mock-data";
-import { cn, formatSalary } from "@/lib/utils";
+import {
+  chats,
+  professionById,
+  professions,
+  recentSearches,
+  vacancies,
+  vacancyLocation,
+  type Vacancy,
+} from "@/lib/mock-data";
+import { cn, formatAgo, formatSalary } from "@/lib/utils";
 
 /** Tokenlar va ularning ikkala rejimdagi qiymatlari (globals.css bilan bir xil) */
 const COLOR_TOKENS: { token: string; light: string; dark: string }[] = [
@@ -106,6 +114,9 @@ export default function DesignSystemPage() {
     { value: "oneToThree", label: t.job.experience.oneToThree },
     { value: "threePlus", label: t.job.experience.threePlus },
   ];
+
+  const professionName = (vacancy: Vacancy) =>
+    professionById(vacancy.professionId)?.name[locale] ?? vacancy.company;
 
   const toggleSaved = (id: string) =>
     setSaved((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -209,7 +220,7 @@ export default function DesignSystemPage() {
           <ListItem
             key={vacancy.id}
             leading={<Avatar name={vacancy.company} online={vacancy.fastReply} />}
-            title={vacancy.title[locale]}
+            title={professionName(vacancy)}
             titleAdornment={
               vacancy.verified ? (
                 <IconShieldCheck size={15} className="text-accent" />
@@ -221,8 +232,8 @@ export default function DesignSystemPage() {
               t.job.currency,
               t.job.negotiable,
             )}
-            caption={`${vacancy.company} · ${vacancy.district[locale]}`}
-            meta={vacancy.postedAt[locale]}
+            caption={`${vacancy.company} · ${vacancyLocation(vacancy, locale)}`}
+            meta={formatAgo(vacancy.postedMinutesAgo, t.time)}
             trailing={vacancy.fastReply ? <Dot className="bg-success" /> : undefined}
             last={i === vacancies.length - 1}
             onClick={() => setSheetOpen(true)}
@@ -239,7 +250,7 @@ export default function DesignSystemPage() {
             key={chat.id}
             leading={<Avatar name={chat.company} />}
             title={chat.company}
-            subtitle={chat.lastMessage[locale]}
+            subtitle={chat.messages[chat.messages.length - 1].text[locale]}
             meta={chat.time}
             trailing={<CountBadge count={chat.unread} />}
             last={i === chats.length - 1}
@@ -354,14 +365,14 @@ export default function DesignSystemPage() {
             <ListItem
               key={vacancy.id}
               leading={<Avatar name={vacancy.company} />}
-              title={vacancy.title[locale]}
+              title={professionName(vacancy)}
               subtitle={formatSalary(
                 vacancy.salaryMin,
                 vacancy.salaryMax,
                 t.job.currency,
                 t.job.negotiable,
               )}
-              meta={vacancy.postedAt[locale]}
+              meta={formatAgo(vacancy.postedMinutesAgo, t.time)}
               last={i === 2}
             />
           ))}
@@ -536,7 +547,7 @@ export default function DesignSystemPage() {
           >
             <ListItem
               leading={<Avatar name={vacancy.company} />}
-              title={vacancy.title[locale]}
+              title={professionName(vacancy)}
               titleAdornment={
                 saved.includes(vacancy.id) ? (
                   <IconBookmark size={14} className="text-accent" />
@@ -548,7 +559,7 @@ export default function DesignSystemPage() {
                 t.job.currency,
                 t.job.negotiable,
               )}
-              meta={i === 0 ? t.design.swipe.hint : vacancy.postedAt[locale]}
+              meta={i === 0 ? t.design.swipe.hint : formatAgo(vacancy.postedMinutesAgo, t.time)}
               last={i === 1}
             />
           </SwipeListItem>

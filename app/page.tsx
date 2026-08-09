@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-// 1-bosqich: dizayn tizimi. Keyingi bosqichda bu yerda vakansiyalar ro'yxati bo'ladi.
+// Ish qidiruvchi uchun bosh ekran — vakansiyalar ro'yxati.
 export default function Home() {
-  redirect("/design");
+  redirect("/jobs");
 }

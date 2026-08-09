@@ -3,12 +3,12 @@
 Telegram uslubidagi ish topish platformasi. Asosiy raqib — hh.uz emas, Telegram
 kanallari. Demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 
-## Holat: 1-bosqich — dizayn tizimi
+## Holat: 2-bosqich — ish qidiruvchi ekranlari
 
 | Bosqich | Nima | Holat |
 | --- | --- | --- |
 | 1 | Dizayn tizimi — barcha komponentlar bitta sahifada | ✅ tayyor |
-| 2 | Ish qidiruvchi ekranlari (statik) | ⏳ |
+| 2 | Ish qidiruvchi ekranlari (statik) | ✅ tayyor |
 | 3 | Ish beruvchi ekranlari (statik) | ⏳ |
 | 4 | Baza va API | ⏳ |
 | 5 | Telegram autentifikatsiya | ⏳ |
@@ -19,11 +19,24 @@ kanallari. Demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 
 ```bash
 npm install
-npm run dev     # http://localhost:3000 → /design ga yo'naltiradi
+npm run dev     # http://localhost:3000 → /jobs ga yo'naltiradi
 ```
 
-Dizayn tizimi sahifasi: **`/design`**. Yuqoridagi ikkita tanlagich orqali
-ko'rinish (yorug'/tungi/tizim) va tilni (o'zbek lotin / kirill / rus) almashtiring.
+### Ekranlar
+
+| Manzil | Ekran |
+| --- | --- |
+| `/jobs` | Ishlar — kasb filtri, cheksiz aylanish, saralash, vakansiya sheeti |
+| `/search` | Qidiruv — bitta maydon va so'nggi qidiruvlar |
+| `/messages` | Xabarlar — ish beruvchilar bilan chatlar |
+| `/chat/[id]` | Chat — ariza shu yerda davom etadi |
+| `/saved` | Saqlangan vakansiyalar |
+| `/profile` | Profil — kartochka, til, ko'rinish |
+| `/card` | Kartochkani tahrirlash — 5 maydon |
+| `/design` | Dizayn tizimi (1-bosqich) |
+
+Til va ko'rinish Profil ekranidan, dizayn tizimi sahifasida esa yuqoridagi
+tanlagichlardan almashtiriladi.
 
 ```bash
 npm run build   # ishlab chiqarish uchun yig'ish
@@ -52,15 +65,24 @@ npx tsc --noEmit
 app/
   globals.css           dizayn tokenlari (@theme), yorug'/tungi
   layout.tsx            providerlar, PWA meta, chaqnashsiz tungi rejim
-  design/page.tsx       1-bosqich: dizayn tizimi bitta sahifada
+  (app)/                tab bar bilan ekranlar: jobs, messages, saved, profile
+  search/ chat/ card/   to'liq ekran (tab barsiz)
+  design/               1-bosqich: dizayn tizimi bitta sahifada
 components/
   providers/            theme-provider, i18n-provider
+  app/                  app-tab-bar
+  jobs/                 vacancy-row, vacancy-sheet
   ui/                   button, list, sheet, chip, tab-bar, ...
 lib/
   i18n/locales/         uz.ts (manba), uz-cyrl.ts, ru.ts
   client-store.ts       localStorage + useSyncExternalStore
+  stores.ts             saqlangan / yuborilgan arizalar / kartochka
+  use-sheet.ts          sheet holati brauzer tarixiga bog'lanadi
   mock-data.ts          shartli ma'lumotlar (keyin bazadan keladi)
 ```
+
+Holat (saqlangan vakansiyalar, yuborilgan arizalar, kartochka) hozircha
+`localStorage`da — 4-bosqichda bazaga ko'chadi.
 
 ### Til
 

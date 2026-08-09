@@ -25,6 +25,29 @@ export function formatSalary(
   return `${formatNumber((min ?? max) as number)} ${currency}`;
 }
 
+/**
+ * "Necha vaqt oldin" — turg'un qiymatdan hisoblanadi, shuning uchun
+ * server va mijozda bir xil chiqadi.
+ */
+export function formatAgo(
+  minutesAgo: number,
+  labels: {
+    now: string;
+    minutesShort: string;
+    hoursShort: string;
+    daysShort: string;
+    yesterday: string;
+  },
+): string {
+  if (minutesAgo < 2) return labels.now;
+  if (minutesAgo < 60) return `${minutesAgo} ${labels.minutesShort}`;
+  const hours = Math.floor(minutesAgo / 60);
+  if (hours < 24) return `${hours} ${labels.hoursShort}`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return labels.yesterday;
+  return `${days} ${labels.daysShort}`;
+}
+
 /** Avatar uchun turg'un rang — nomdan hisoblanadi */
 const AVATAR_COLORS = [
   "#E17076",
