@@ -1,0 +1,13 @@
+{
+  "name": "Ish top",
+  "short_name": "Ish top",
+  "description": "O'zbekiston uchun ish topish platformasi",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f5f5",
+  "theme_color": "#229ed9",
+  "lang": "uz-Latn",
+  "dir": "ltr",
+  "categories": ["business", "productivity"]
+}

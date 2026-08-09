@@ -1,0 +1,227 @@
+@import "tailwindcss";
+
+/* Sinf asosidagi tungi rejim (system/light/dark uchun) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ==========================================================================
+   DIZAYN TOKENLARI — Telegram uslubi
+   Bitta asosiy rang, qolgani kulrang shkala.
+   ========================================================================== */
+
+:root {
+  /* Asosiy rang */
+  --accent: #229ed9;
+  --accent-pressed: #1c88bb;
+  --accent-soft: #e8f4fb;
+  --on-accent: #ffffff;
+
+  /* Fon va yuzalar */
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --surface-pressed: #ebebeb;
+  --fill: #efeff4;
+
+  /* Chiziqlar */
+  --separator: #e3e3e6;
+
+  /* Matn */
+  --text: #0f0f0f;
+  --text-secondary: #8e8e93;
+  --text-tertiary: #b0b0b5;
+
+  /* Holat ranglari */
+  --danger: #ff3b30;
+  --success: #34c759;
+  --warning: #ff9500;
+
+  /* Skelet yuklanishi */
+  --skeleton: #e6e6e9;
+  --skeleton-shine: #f2f2f4;
+
+  color-scheme: light;
+}
+
+.dark {
+  --accent: #3390ec;
+  --accent-pressed: #2b7fd4;
+  --accent-soft: #17293b;
+  --on-accent: #ffffff;
+
+  --bg: #0e1621;
+  --surface: #17212b;
+  --surface-pressed: #1e2a36;
+  --fill: #202b36;
+
+  --separator: #232e3c;
+
+  --text: #ffffff;
+  --text-secondary: #7d8b99;
+  --text-tertiary: #55606b;
+
+  --danger: #ff453a;
+  --success: #30d158;
+  --warning: #ff9f0a;
+
+  --skeleton: #1e2a36;
+  --skeleton-shine: #263442;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-accent: var(--accent);
+  --color-accent-pressed: var(--accent-pressed);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-pressed: var(--surface-pressed);
+  --color-fill: var(--fill);
+
+  --color-separator: var(--separator);
+
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+
+  --color-skeleton: var(--skeleton);
+  --color-skeleton-shine: var(--skeleton-shine);
+
+  /* Burchaklar: 10–12px */
+  --radius-tg-sm: 10px;
+  --radius-tg: 12px;
+
+  /* Tizim shrifti */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Inter,
+    "Helvetica Neue", Arial, sans-serif;
+
+  /* Shrift shkalasi: sarlavha 17, matn 15, izoh 13 */
+  --text-title: 17px;
+  --text-title--line-height: 22px;
+  --text-title--font-weight: 600;
+
+  --text-body: 15px;
+  --text-body--line-height: 20px;
+
+  --text-caption: 13px;
+  --text-caption--line-height: 17px;
+
+  --text-section: 13px;
+  --text-section--line-height: 16px;
+  --text-section--letter-spacing: 0.06em;
+  --text-section--font-weight: 500;
+
+  /* Animatsiya */
+  --ease-tg: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* ==========================================================================
+   ASOS
+   ========================================================================== */
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 20px;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+/* Ingichka ajratuvchi chiziq — qurilma pikselida 1px */
+.hairline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--separator);
+  transform: scaleY(0.5);
+  transform-origin: bottom;
+  pointer-events: none;
+}
+
+/* Ajratuvchi chiziq avatardan keyin boshlanadi (Telegram'dagidek) */
+.hairline-inset::after {
+  left: 68px;
+}
+
+.hairline-inset-sm::after {
+  left: 16px;
+}
+
+/* Skelet yuklanish animatsiyasi (spinner emas) */
+@keyframes skeleton-shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton {
+  background-image: linear-gradient(
+    90deg,
+    var(--skeleton) 0%,
+    var(--skeleton-shine) 50%,
+    var(--skeleton) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shine 1.4s ease-in-out infinite;
+}
+
+/* Pastdan ko'tariladigan sheet */
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-sheet-up {
+  animation: sheet-up 0.28s var(--ease-tg);
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s var(--ease-tg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-sheet-up,
+  .animate-fade-in,
+  .skeleton {
+    animation: none;
+  }
+}
+
+/* Skroll paneli — mobil uslub */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

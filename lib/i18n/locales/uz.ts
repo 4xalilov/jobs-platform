@@ -1,0 +1,194 @@
+/**
+ * O'zbekcha (lotin) — standart til.
+ * Bu fayl boshqa tillar uchun tuzilma manbasi hisoblanadi.
+ */
+export const uz = {
+  common: {
+    appName: "Ish top",
+    cancel: "Bekor qilish",
+    save: "Saqlash",
+    saved: "Saqlandi",
+    remove: "O'chirish",
+    search: "Qidirish",
+    send: "Yuborish",
+    apply: "Ariza yuborish",
+    applied: "Ariza yuborildi",
+    back: "Orqaga",
+    done: "Tayyor",
+    all: "Hammasi",
+    edit: "Tahrirlash",
+    close: "Yopish",
+    retry: "Qayta urinish",
+    loading: "Yuklanmoqda",
+    example: "Namuna",
+  },
+
+  tabs: {
+    jobs: "Ishlar",
+    messages: "Xabarlar",
+    saved: "Saqlangan",
+    profile: "Profil",
+  },
+
+  theme: {
+    label: "Ko'rinish",
+    light: "Yorug'",
+    dark: "Tungi",
+    system: "Tizim",
+  },
+
+  language: {
+    label: "Til",
+    uz: "O'zbekcha",
+    uzCyrl: "Ўзбекча",
+    ru: "Русский",
+  },
+
+  job: {
+    salaryFrom: "dan",
+    salaryTo: "gacha",
+    currency: "so'm",
+    negotiable: "Kelishilgan holda",
+    fastReply: "Tez javob",
+    verified: "Tasdiqlangan",
+    nearby: "Yaqinimda",
+    views: "ko'rish",
+    applications: "ariza",
+    experience: {
+      none: "Tajribasiz",
+      upToOne: "1 yilgacha",
+      oneToThree: "1–3 yil",
+      threePlus: "3+ yil",
+    },
+  },
+
+  time: {
+    now: "hozir",
+    minutesShort: "daq",
+    hoursShort: "soat",
+    yesterday: "kecha",
+  },
+
+  design: {
+    title: "Dizayn tizimi",
+    subtitle: "1-bosqich — barcha komponentlar bitta sahifada",
+    sections: {
+      colors: "Ranglar",
+      typography: "Tipografika",
+      buttons: "Tugmalar",
+      listItem: "Ro'yxat elementi",
+      chips: "Kasb filtri",
+      search: "Qidiruv",
+      avatars: "Avatar va belgilar",
+      sheet: "Pastdan ko'tariladigan sheet",
+      skeleton: "Skelet yuklanish",
+      forms: "Forma elementlari",
+      navigation: "Navigatsiya",
+      icons: "Ikonkalar",
+      swipe: "Chapga tortish",
+      principles: "Qoidalar",
+    },
+    colors: {
+      accent: "Asosiy",
+      accentPressed: "Bosilgan",
+      accentSoft: "Yumshoq",
+      bg: "Fon",
+      surface: "Element",
+      fill: "To'ldiruvchi",
+      separator: "Ajratuvchi",
+      text: "Matn",
+      textSecondary: "Ikkilamchi matn",
+      textTertiary: "Uchlamchi matn",
+      danger: "Xavf",
+      success: "Muvaffaqiyat",
+      warning: "Ogohlantirish",
+      note: "Bitta asosiy rang, qolgan hammasi kulrang shkalada.",
+    },
+    typography: {
+      titleSample: "Sotuvchi — Chorsu bozori",
+      titleSpec: "Sarlavha · 17px · semibold",
+      bodySample: "4 000 000 – 6 000 000 so'm · Toshkent",
+      bodySpec: "Matn · 15px · oddiy",
+      captionSample: "2 soat oldin joylashtirilgan",
+      captionSpec: "Izoh · 13px · kulrang",
+      sectionSpec: "Bo'lim sarlavhasi · 13px · bosh harflarda",
+      fontNote: "Tizim shrifti: SF Pro / Roboto / Inter.",
+    },
+    buttons: {
+      primary: "Asosiy",
+      secondary: "Ikkilamchi",
+      ghost: "Shaffof",
+      danger: "Xavfli",
+      block: "Katta (butun kenglik)",
+      disabled: "O'chirilgan",
+      loading: "Kutilmoqda",
+    },
+    listItem: {
+      note: "Chapda avatar, o'rtada sarlavha va izoh, o'ngda vaqt yoki belgi. Faqat ingichka chiziq — karta, soya, ramka yo'q.",
+      unread: "o'qilmagan",
+    },
+    chips: {
+      note: "Gorizontal aylanadi, tanlangani asosiy rangda.",
+    },
+    search: {
+      placeholder: "Ish yoki kompaniya qidiring",
+      recent: "So'nggi qidiruvlar",
+      note: "Yuqorida joylashadi, pastga tortilganda chiqadi.",
+    },
+    avatars: {
+      note: "Logo bo'lmasa — nom harfi va turg'un rang.",
+      badgeUnread: "O'qilmagan",
+      badgeCount: "Soni",
+      badgeFast: "Tez javob",
+      badgeVerified: "Tasdiqlangan",
+      badgeNew: "Yangi",
+    },
+    sheet: {
+      open: "Sheetni ochish",
+      title: "Sotuvchi",
+      company: "Chorsu Market",
+      description:
+        "Bozordagi do'konga sotuvchi kerak. Ish vaqti 9:00–18:00, dam olish kuni — yakshanba. Tajriba shart emas, o'rgatamiz.",
+      note: "Modal oyna emas — pastdan ko'tariladigan sheet. Yuqorida tortish uchun dastak.",
+      location: "Toshkent, Shayxontohur",
+      schedule: "To'liq kun",
+    },
+    skeleton: {
+      note: "Yuklanishda spinner emas, skeleton ko'rsatiladi.",
+      toggle: "Skeletonni ko'rsatish",
+    },
+    forms: {
+      inputLabel: "Ism",
+      inputPlaceholder: "Ismingizni yozing",
+      selectLabel: "Kasb",
+      selectPlaceholder: "Ro'yxatdan tanlang",
+      segmentedLabel: "Tajriba",
+      switchLabel: "Tungi rejim",
+      switchHint: "Tizim sozlamasiga bo'ysunadi",
+      stepLabel: "Qadam",
+      stepOf: "dan",
+      note: "Bir ekranda bitta savol. Uzun anketa yo'q.",
+    },
+    navigation: {
+      tabBarNote: "Pastda faqat 4 ta bo'lim.",
+      fabNote: "Asosiy harakat uchun pastda o'ngda floating tugma.",
+      navBarTitle: "Ishlar",
+    },
+    icons: {
+      note: "Barcha ikonkalar chiziqli (outline), to'ldirilgan emas.",
+    },
+    swipe: {
+      note: "Ro'yxat elementini chapga torting — tez harakatlar chiqadi.",
+      hint: "← chapga torting",
+    },
+    principles: {
+      one: "Agar biror element Telegram'da yo'q bo'lsa — qo'shishdan oldin ikki marta o'yla.",
+      two: "Har bir tap darhol javob bersin — optimistic UI.",
+      three: "Sahifa qayta yuklanmaydi, o'tishlar silliq animatsiya bilan.",
+      four: "Butun ilova telefonda bitta qo'l bilan boshqarilsin.",
+      five: "Sekin internetda ham ishlasin — sahifa 1,5 sekunddan tez yuklansin.",
+    },
+  },
+};
+
+export type Dictionary = typeof uz;
