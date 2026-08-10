@@ -240,7 +240,11 @@ function buildVacancies(count: number): Vacancy[] {
       verified: rand() < 0.45,
       views: 20 + Math.floor(rand() * 900),
       applications: Math.floor(rand() * 40),
-      distanceKm: Math.round(rand() * 180) / 10,
+      // Masofa shaharga bog'liq — boshqa shaharlar tabiiy ravishda oxirida qoladi
+      distanceKm:
+        city.id === "toshkent"
+          ? Math.round((0.3 + rand() * 14.7) * 10) / 10
+          : 180 + Math.floor(rand() * 420),
     });
   }
 
