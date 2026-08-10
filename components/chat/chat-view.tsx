@@ -2,10 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
+import { useSystemMessageText } from "@/components/chat/chat-list";
 import { Avatar } from "@/components/ui/avatar";
 import { IconArrowLeft, IconMic, IconSend } from "@/components/ui/icon";
 import { NavBar } from "@/components/ui/nav-bar";
-import type { ChatMessage } from "@/lib/mock-data";
+import type { ChatDTO } from "@/lib/db/types";
 import { cn } from "@/lib/utils";
 
 /**
@@ -13,20 +14,19 @@ import { cn } from "@/lib/utils";
  * shu ekranni ko'radi, faqat "men" tomoni almashadi.
  */
 export function ChatView({
-  title,
-  status,
+  chat,
   context,
-  messages,
+  status,
   me,
 }: {
-  title: string;
-  status?: string;
+  chat: ChatDTO;
   context?: string;
-  messages: ChatMessage[];
-  me: "candidate" | "employer";
+  status?: string;
+  me: "nomzod" | "ish_beruvchi";
 }) {
-  const { t, locale } = useI18n();
+  const { t } = useI18n();
   const router = useRouter();
+  const systemText = useSystemMessageText();
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-[440px] flex-col bg-bg">
@@ -44,9 +44,9 @@ export function ChatView({
         }
         title={
           <span className="flex items-center justify-center gap-2">
-            <Avatar name={title} size={28} />
+            <Avatar name={chat.title} size={28} />
             <span className="min-w-0">
-              <span className="block truncate text-title leading-tight">{title}</span>
+              <span className="block truncate text-title leading-tight">{chat.title}</span>
               {status && (
                 <span className="block truncate text-[11px] leading-tight font-normal text-text-secondary">
                   {status}
@@ -66,10 +66,10 @@ export function ChatView({
       <div className="flex flex-1 flex-col gap-1.5 px-3 py-4">
         <p className="pb-1 text-center text-caption text-text-tertiary">{t.screens.chat.today}</p>
 
-        {messages.map((message) =>
-          message.from === "system" ? (
+        {chat.messages.map((message) =>
+          message.from === "tizim" ? (
             <p key={message.id} className="py-1 text-center text-caption text-text-tertiary">
-              {message.text[locale]}
+              {systemText(message.text)}
             </p>
           ) : (
             <div
@@ -82,7 +82,7 @@ export function ChatView({
                   message.from === me ? "bg-accent text-on-accent" : "bg-surface text-text",
                 )}
               >
-                <p className="text-body break-words">{message.text[locale]}</p>
+                <p className="text-body break-words">{message.text}</p>
                 <p
                   className={cn(
                     "mt-0.5 text-right text-[11px] leading-[13px]",

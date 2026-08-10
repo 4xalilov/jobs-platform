@@ -29,5 +29,8 @@ export function useSheet<T>() {
     }
   }, []);
 
-  return { value, isOpen: value !== null, open, close };
+  /** Ochiq sheet ichidagi ma'lumotni yangilash (tarixga tegmasdan) */
+  const replace = useCallback((next: T) => setValue(next), []);
+
+  return { value, isOpen: value !== null, open, close, replace };
 }

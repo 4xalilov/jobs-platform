@@ -1,25 +1,15 @@
-"use client";
+import { notFound } from "next/navigation";
+import { ChatScreen } from "@/components/chat/chat-screen";
+import { getEmployerChat } from "@/lib/db/queries";
+import { currentCompanyId } from "@/lib/db/session";
 
-import { useParams } from "next/navigation";
-import { ChatView } from "@/components/chat/chat-view";
-import { useI18n } from "@/components/providers/i18n-provider";
-import { candidateById, professionById } from "@/lib/mock-data";
+export const dynamic = "force-dynamic";
 
-export default function EmployerChatPage() {
-  const { locale } = useI18n();
-  const params = useParams<{ id: string }>();
-  const candidate = candidateById(params.id);
+export default async function EmployerChatPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const companyId = await currentCompanyId();
+  const chat = companyId ? await getEmployerChat(id, companyId) : null;
+  if (!chat) notFound();
 
-  if (!candidate) return null;
-
-  const profession = professionById(candidate.professionId);
-
-  return (
-    <ChatView
-      title={candidate.name}
-      context={profession ? profession.name[locale] : undefined}
-      messages={candidate.messages}
-      me="employer"
-    />
-  );
+  return <ChatScreen chat={chat} me="ish_beruvchi" />;
 }

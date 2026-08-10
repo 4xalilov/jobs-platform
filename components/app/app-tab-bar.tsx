@@ -3,7 +3,6 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { TabBar, type TabKey } from "@/components/ui/tab-bar";
-import { chats } from "@/lib/mock-data";
 
 const ROUTES: Record<TabKey, string> = {
   jobs: "/jobs",
@@ -19,12 +18,10 @@ function activeTab(pathname: string): TabKey {
   return "jobs";
 }
 
-export function AppTabBar() {
+export function AppTabBar({ unread = 0 }: { unread?: number }) {
   const { t } = useI18n();
   const pathname = usePathname();
   const router = useRouter();
-
-  const unread = chats.reduce((sum, chat) => sum + chat.unread, 0);
 
   return (
     <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[440px] -translate-x-1/2">

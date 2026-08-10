@@ -5,8 +5,15 @@ import { Avatar } from "@/components/ui/avatar";
 import { Dot } from "@/components/ui/badge";
 import { IconBookmark, IconShieldCheck } from "@/components/ui/icon";
 import { ListItem } from "@/components/ui/list";
-import { professionById, vacancyLocation, type Vacancy } from "@/lib/mock-data";
+import type { VacancyDTO } from "@/lib/db/types";
 import { formatAgo, formatSalary } from "@/lib/utils";
+
+/** Vakansiya joylashuvi: "Toshkent, Chilonzor" */
+export function vacancyLocation(vacancy: VacancyDTO, locale: "uz" | "uz-cyrl" | "ru"): string {
+  const city = vacancy.cityName?.[locale] ?? "";
+  const district = vacancy.districtName?.[locale];
+  return district ? `${city}, ${district}` : city;
+}
 
 /**
  * Vakansiya qatori: kompaniya logosi, lavozim, maosh + shahar izoh sifatida,
@@ -15,32 +22,29 @@ import { formatAgo, formatSalary } from "@/lib/utils";
 export function VacancyRow({
   vacancy,
   last = false,
-  saved = false,
   showDistance = false,
   onOpen,
 }: {
-  vacancy: Vacancy;
+  vacancy: VacancyDTO;
   last?: boolean;
-  saved?: boolean;
   showDistance?: boolean;
-  onOpen: (vacancy: Vacancy) => void;
+  onOpen: (vacancy: VacancyDTO) => void;
 }) {
   const { t, locale } = useI18n();
-  const profession = professionById(vacancy.professionId);
 
-  const location = vacancyLocation(vacancy, locale);
-  const caption = showDistance
-    ? `${vacancy.company} · ${vacancy.distanceKm} ${t.job.km}`
-    : `${vacancy.company} · ${location}`;
+  const caption =
+    showDistance && vacancy.distanceKm !== null
+      ? `${vacancy.company} · ${vacancy.distanceKm} ${t.job.km}`
+      : `${vacancy.company} · ${vacancyLocation(vacancy, locale)}`;
 
   return (
     <ListItem
       leading={<Avatar name={vacancy.company} online={vacancy.fastReply} />}
-      title={profession ? profession.name[locale] : vacancy.company}
+      title={vacancy.professionName?.[locale] ?? vacancy.title}
       titleAdornment={
         <span className="flex items-center gap-1">
           {vacancy.verified && <IconShieldCheck size={15} className="text-accent" />}
-          {saved && <IconBookmark size={14} className="text-accent" />}
+          {vacancy.saved && <IconBookmark size={14} className="text-accent" />}
         </span>
       }
       subtitle={formatSalary(

@@ -7,7 +7,7 @@ import { IconCard, IconCheck } from "@/components/ui/icon";
 import { ListGroup } from "@/components/ui/list";
 import { NavBar } from "@/components/ui/nav-bar";
 import { Sheet } from "@/components/ui/sheet";
-import { company, plans, type Plan } from "@/lib/mock-data";
+import { plans, type Plan } from "@/lib/plans";
 import { useSheet } from "@/lib/use-sheet";
 import { cn, formatNumber } from "@/lib/utils";
 
@@ -39,7 +39,7 @@ export default function PlansPage() {
 
       <ListGroup className="mt-3">
         {plans.map((plan, i) => {
-          const current = plan.id === company.plan;
+          const current = plan.id === "free";
           return (
             <button
               key={plan.id}

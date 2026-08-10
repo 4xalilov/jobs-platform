@@ -1,26 +1,15 @@
-"use client";
+import { notFound } from "next/navigation";
+import { ChatScreen } from "@/components/chat/chat-screen";
+import { getChat } from "@/lib/db/queries";
+import { currentUserId } from "@/lib/db/session";
 
-import { useParams } from "next/navigation";
-import { ChatView } from "@/components/chat/chat-view";
-import { useI18n } from "@/components/providers/i18n-provider";
-import { chatById, professionById } from "@/lib/mock-data";
+export const dynamic = "force-dynamic";
 
-export default function ChatPage() {
-  const { t, locale } = useI18n();
-  const params = useParams<{ id: string }>();
-  const chat = chatById(params.id);
+export default async function ChatPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const userId = await currentUserId();
+  const chat = userId ? await getChat(id, userId) : null;
+  if (!chat) notFound();
 
-  if (!chat) return null;
-
-  const profession = professionById(chat.professionId);
-
-  return (
-    <ChatView
-      title={chat.company}
-      status={chat.fastReply ? t.screens.chat.fastReplyStatus : undefined}
-      context={profession ? profession.name[locale] : undefined}
-      messages={chat.messages}
-      me="candidate"
-    />
-  );
+  return <ChatScreen chat={chat} me="nomzod" />;
 }

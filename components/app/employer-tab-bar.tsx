@@ -4,7 +4,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { CountBadge } from "@/components/ui/badge";
 import { IconBriefcase, IconCard, IconUser, IconUsers } from "@/components/ui/icon";
-import { candidates } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 
 type EmployerTab = "vacancies" | "candidates" | "plans" | "profile";
@@ -31,12 +30,11 @@ function activeTab(pathname: string): EmployerTab {
 }
 
 /** Ish beruvchi uchun pastdagi 4 ta bo'lim */
-export function EmployerTabBar() {
+export function EmployerTabBar({ unread = 0 }: { unread?: number }) {
   const { t } = useI18n();
   const pathname = usePathname();
   const router = useRouter();
 
-  const unread = candidates.reduce((sum, candidate) => sum + candidate.unread, 0);
   const active = activeTab(pathname);
   const tabs: EmployerTab[] = ["vacancies", "candidates", "plans", "profile"];
 

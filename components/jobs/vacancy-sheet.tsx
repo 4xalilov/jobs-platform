@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
+import { vacancyLocation } from "@/components/jobs/vacancy-row";
 import { Avatar } from "@/components/ui/avatar";
 import { Tag } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,8 +18,8 @@ import {
   IconUsers,
 } from "@/components/ui/icon";
 import { Sheet } from "@/components/ui/sheet";
-import { professionById, vacancyLocation, type Vacancy } from "@/lib/mock-data";
-import { useApplied, useSaved } from "@/lib/stores";
+import { apiPost } from "@/lib/api";
+import type { VacancyDTO } from "@/lib/db/types";
 import { formatSalary } from "@/lib/utils";
 
 /**
@@ -29,21 +30,29 @@ export function VacancySheet({
   vacancy,
   open,
   onClose,
+  onChange,
 }: {
-  vacancy: Vacancy | null;
+  vacancy: VacancyDTO | null;
   open: boolean;
   onClose: () => void;
+  /** Ariza yoki saqlash holati o'zgarganda ro'yxatni yangilash uchun */
+  onChange?: (vacancy: VacancyDTO) => void;
 }) {
   const { t, locale } = useI18n();
   const router = useRouter();
-  const { hasApplied, apply } = useApplied();
-  const { isSaved, toggle } = useSaved();
 
   if (!vacancy) return null;
 
-  const profession = professionById(vacancy.professionId);
-  const applied = hasApplied(vacancy.id);
-  const saved = isSaved(vacancy.id);
+  // Optimistic UI: javob kutilmaydi, holat darhol o'zgaradi
+  const apply = () => {
+    onChange?.({ ...vacancy, applied: true, applications: vacancy.applications + 1 });
+    void apiPost(`/vacancies/${vacancy.id}/apply`).then(() => router.refresh());
+  };
+
+  const toggleSaved = () => {
+    onChange?.({ ...vacancy, saved: !vacancy.saved });
+    void apiPost(`/vacancies/${vacancy.id}/save`).then(() => router.refresh());
+  };
 
   return (
     <Sheet
@@ -51,7 +60,7 @@ export function VacancySheet({
       onClose={onClose}
       closeLabel={t.common.close}
       footer={
-        applied ? (
+        vacancy.applied ? (
           <div className="flex gap-2">
             <Button variant="secondary" size="lg" className="flex-1" disabled>
               <IconCheck size={20} />
@@ -67,7 +76,7 @@ export function VacancySheet({
             </Button>
           </div>
         ) : (
-          <Button block size="lg" onClick={() => apply(vacancy.id)}>
+          <Button block size="lg" onClick={apply}>
             {t.common.apply}
           </Button>
         )
@@ -78,16 +87,16 @@ export function VacancySheet({
           <Avatar name={vacancy.company} size={52} online={vacancy.fastReply} />
           <div className="min-w-0 flex-1">
             <h2 className="text-[20px] leading-6 font-semibold text-text">
-              {profession ? profession.name[locale] : vacancy.company}
+              {vacancy.professionName?.[locale] ?? vacancy.title}
             </h2>
             <p className="mt-0.5 truncate text-body text-text-secondary">{vacancy.company}</p>
           </div>
           <button
             type="button"
             aria-label={t.common.save}
-            aria-pressed={saved}
-            onClick={() => toggle(vacancy.id)}
-            className={saved ? "p-1 text-accent" : "p-1 text-text-tertiary"}
+            aria-pressed={vacancy.saved}
+            onClick={toggleSaved}
+            className={vacancy.saved ? "p-1 text-accent" : "p-1 text-text-tertiary"}
           >
             <IconBookmark size={24} />
           </button>
@@ -113,7 +122,7 @@ export function VacancySheet({
           <Tag>{t.job.experience[vacancy.experience]}</Tag>
         </div>
 
-        <p className="mt-4 text-body text-text">{vacancy.description[locale]}</p>
+        <p className="mt-4 text-body text-text">{vacancy.description}</p>
 
         <div className="mt-4 flex gap-4 text-caption text-text-tertiary">
           <span className="flex items-center gap-1">

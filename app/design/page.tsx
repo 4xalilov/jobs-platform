@@ -51,14 +51,11 @@ import { SwipeListItem } from "@/components/ui/swipe-list-item";
 import { TabBar, type TabKey } from "@/components/ui/tab-bar";
 import { locales, type Locale } from "@/lib/i18n";
 import {
-  chats,
-  professionById,
-  professions,
-  recentSearches,
-  vacancies,
-  vacancyLocation,
-  type Vacancy,
-} from "@/lib/mock-data";
+  sampleChats,
+  sampleProfessions,
+  sampleSearches,
+  sampleVacancies,
+} from "@/lib/design-samples";
 import { cn, formatAgo, formatSalary } from "@/lib/utils";
 
 /** Tokenlar va ularning ikkala rejimdagi qiymatlari (globals.css bilan bir xil) */
@@ -114,9 +111,6 @@ export default function DesignSystemPage() {
     { value: "oneToThree", label: t.job.experience.oneToThree },
     { value: "threePlus", label: t.job.experience.threePlus },
   ];
-
-  const professionName = (vacancy: Vacancy) =>
-    professionById(vacancy.professionId)?.name[locale] ?? vacancy.company;
 
   const toggleSaved = (id: string) =>
     setSaved((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -216,11 +210,11 @@ export default function DesignSystemPage() {
       {/* ——— 4. Ro'yxat elementi ——— */}
       <SectionHeader>{t.design.sections.listItem}</SectionHeader>
       <ListGroup>
-        {vacancies.map((vacancy, i) => (
+        {sampleVacancies.map((vacancy, i) => (
           <ListItem
             key={vacancy.id}
             leading={<Avatar name={vacancy.company} online={vacancy.fastReply} />}
-            title={professionName(vacancy)}
+            title={vacancy.title[locale]}
             titleAdornment={
               vacancy.verified ? (
                 <IconShieldCheck size={15} className="text-accent" />
@@ -232,10 +226,10 @@ export default function DesignSystemPage() {
               t.job.currency,
               t.job.negotiable,
             )}
-            caption={`${vacancy.company} · ${vacancyLocation(vacancy, locale)}`}
+            caption={`${vacancy.company} · ${vacancy.location[locale]}`}
             meta={formatAgo(vacancy.postedMinutesAgo, t.time)}
             trailing={vacancy.fastReply ? <Dot className="bg-success" /> : undefined}
-            last={i === vacancies.length - 1}
+            last={i === sampleVacancies.length - 1}
             onClick={() => setSheetOpen(true)}
           />
         ))}
@@ -245,15 +239,15 @@ export default function DesignSystemPage() {
       {/* Xabarlar ro'yxati — aynan Telegram ko'rinishi */}
       <SectionHeader>{t.tabs.messages}</SectionHeader>
       <ListGroup>
-        {chats.map((chat, i) => (
+        {sampleChats.map((chat, i) => (
           <ListItem
             key={chat.id}
             leading={<Avatar name={chat.company} />}
             title={chat.company}
-            subtitle={chat.messages[chat.messages.length - 1].text[locale]}
+            subtitle={chat.message[locale]}
             meta={chat.time}
             trailing={<CountBadge count={chat.unread} />}
-            last={i === chats.length - 1}
+            last={i === sampleChats.length - 1}
             onClick={() => undefined}
           />
         ))}
@@ -266,7 +260,7 @@ export default function DesignSystemPage() {
           <Chip selected={profession === null} onClick={() => setProfession(null)}>
             {t.common.all}
           </Chip>
-          {professions.map((p) => (
+          {sampleProfessions.map((p) => (
             <Chip
               key={p.id}
               selected={profession === p.id}
@@ -291,13 +285,13 @@ export default function DesignSystemPage() {
       </div>
       <SectionHeader>{t.design.search.recent}</SectionHeader>
       <ListGroup>
-        {recentSearches.map((item, i) => (
+        {sampleSearches.map((item, i) => (
           <ListItem
             key={item.uz}
             leading={<IconClock size={20} className="text-text-tertiary" />}
             title={<span className="text-body">{item[locale]}</span>}
             insetSeparator={false}
-            last={i === recentSearches.length - 1}
+            last={i === sampleSearches.length - 1}
             onClick={() => setQuery(item[locale])}
             className="py-2.5"
           />
@@ -361,11 +355,11 @@ export default function DesignSystemPage() {
         </ListGroup>
       ) : (
         <ListGroup>
-          {vacancies.slice(0, 3).map((vacancy, i) => (
+          {sampleVacancies.slice(0, 3).map((vacancy, i) => (
             <ListItem
               key={vacancy.id}
               leading={<Avatar name={vacancy.company} />}
-              title={professionName(vacancy)}
+              title={vacancy.title[locale]}
               subtitle={formatSalary(
                 vacancy.salaryMin,
                 vacancy.salaryMax,
@@ -407,7 +401,7 @@ export default function DesignSystemPage() {
           label={t.design.forms.selectLabel}
           value={
             selectedProfession
-              ? professions.find((p) => p.id === selectedProfession)?.name[locale]
+              ? sampleProfessions.find((item) => item.id === selectedProfession)?.name[locale]
               : null
           }
           placeholder={t.design.forms.selectPlaceholder}
@@ -525,7 +519,7 @@ export default function DesignSystemPage() {
       {/* ——— 13. Chapga tortish ——— */}
       <SectionHeader>{t.design.sections.swipe}</SectionHeader>
       <ListGroup>
-        {vacancies.slice(0, 2).map((vacancy, i) => (
+        {sampleVacancies.slice(0, 2).map((vacancy, i) => (
           <SwipeListItem
             key={vacancy.id}
             actions={[
@@ -547,7 +541,7 @@ export default function DesignSystemPage() {
           >
             <ListItem
               leading={<Avatar name={vacancy.company} />}
-              title={professionName(vacancy)}
+              title={vacancy.title[locale]}
               titleAdornment={
                 saved.includes(vacancy.id) ? (
                   <IconBookmark size={14} className="text-accent" />
@@ -659,12 +653,12 @@ export default function DesignSystemPage() {
         title={t.design.forms.selectLabel}
       >
         <ListGroup>
-          {professions.map((p, i) => (
+          {sampleProfessions.map((p, i) => (
             <ListItem
               key={p.id}
               title={<span className="text-body">{p.name[locale]}</span>}
               insetSeparator={false}
-              last={i === professions.length - 1}
+              last={i === sampleProfessions.length - 1}
               trailing={
                 selectedProfession === p.id ? (
                   <IconCheck size={20} className="text-accent" />
