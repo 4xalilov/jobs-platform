@@ -262,6 +262,41 @@ export const uz = {
     },
   },
 
+  auth: {
+    title: "Ish top",
+    subtitle: "Telegram orqali bir bosishda kiring — parol ham, email ham kerak emas",
+    telegramButton: "Telegram bilan kirish",
+    devButton: "Namunaviy foydalanuvchi bilan kirish",
+    devHint: "Telegram boti sozlanmagan — mahalliy sinov uchun",
+    notConfigured: "Telegram boti hali ulanmagan",
+    notConfiguredHint: "TELEGRAM_BOT_TOKEN va TELEGRAM_BOT_USERNAME ni .env.local ga qo'shing",
+    error: "Kirishda xatolik",
+    errorHint: "Havola eskirgan bo'lishi mumkin. Qaytadan urinib ko'ring.",
+    logout: "Chiqish",
+    privacy: "Faqat ismingiz va Telegram rasmingiz olinadi",
+  },
+
+  onboarding: {
+    roleTitle: "Nima qilmoqchisiz?",
+    roleHint: "Keyin buni Profilda o'zgartirishingiz mumkin",
+    seeker: "Ish qidiryapman",
+    seekerHint: "Vakansiyalarni ko'rib, bir bosishda ariza yuboring",
+    employer: "Xodim qidiryapman",
+    employerHint: "Vakansiya joylang va nomzodlar bilan yozishing",
+    professionTitle: "Qanday ish qidiryapsiz?",
+    professionHint: "Ro'yxatdan tanlang — keyin o'zgartirsa bo'ladi",
+    cityTitle: "Qayerda ishlamoqchisiz?",
+    cityHint: "Yaqin atrofdagi ishlarni shunga qarab ko'rsatamiz",
+    companyTitle: "Kompaniya nomi",
+    companyHint: "Nomzodlar shu nomni ko'radi",
+    companyPlaceholder: "Masalan: Chorsu Market",
+    phoneTitle: "Telefon raqami",
+    phoneHint: "Majburiy emas, keyin ham qo'shsa bo'ladi",
+    phonePlaceholder: "+998 90 123 45 67",
+    finish: "Boshlash",
+    skip: "O'tkazib yuborish",
+  },
+
   employer: {
     tabs: {
       vacancies: "Vakansiyalar",

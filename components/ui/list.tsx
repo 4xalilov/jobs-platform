@@ -45,6 +45,8 @@ export type ListItemProps = {
   /** O'ngda pastda: belgi (badge) */
   trailing?: React.ReactNode;
   chevron?: boolean;
+  /** Izoh uzun bo'lsa kesilmasin, bir necha qatorga bo'linsin */
+  wrapSubtitle?: boolean;
   /** Oxirgi element — ajratuvchi chiziq chizilmaydi */
   last?: boolean;
   /** Chiziq avatardan keyin boshlansinmi */
@@ -62,6 +64,7 @@ export function ListItem({
   meta,
   trailing,
   chevron = false,
+  wrapSubtitle = false,
   last = false,
   insetSeparator = true,
   onClick,
@@ -89,7 +92,14 @@ export function ListItem({
           {titleAdornment}
         </span>
         {subtitle && (
-          <span className="mt-0.5 block truncate text-body text-text-secondary">{subtitle}</span>
+          <span
+            className={cn(
+              "mt-0.5 block text-body text-text-secondary",
+              wrapSubtitle ? "whitespace-normal" : "truncate",
+            )}
+          >
+            {subtitle}
+          </span>
         )}
         {caption && (
           <span className="mt-0.5 block truncate text-caption text-text-tertiary">{caption}</span>

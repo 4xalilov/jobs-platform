@@ -261,6 +261,41 @@ export const ru: Dictionary = {
     },
   },
 
+  auth: {
+    title: "Ish top",
+    subtitle: "Вход через Telegram в одно нажатие — ни пароля, ни почты",
+    telegramButton: "Войти через Telegram",
+    devButton: "Войти как демо-пользователь",
+    devHint: "Бот Telegram не настроен — для локальной проверки",
+    notConfigured: "Бот Telegram ещё не подключён",
+    notConfiguredHint: "Добавьте TELEGRAM_BOT_TOKEN и TELEGRAM_BOT_USERNAME в .env.local",
+    error: "Ошибка входа",
+    errorHint: "Ссылка могла устареть. Попробуйте ещё раз.",
+    logout: "Выйти",
+    privacy: "Берём только имя и фото из Telegram",
+  },
+
+  onboarding: {
+    roleTitle: "Что вы хотите?",
+    roleHint: "Позже это можно изменить в профиле",
+    seeker: "Ищу работу",
+    seekerHint: "Смотрите вакансии и откликайтесь в одно нажатие",
+    employer: "Ищу сотрудника",
+    employerHint: "Разместите вакансию и переписывайтесь с кандидатами",
+    professionTitle: "Какую работу ищете?",
+    professionHint: "Выберите из списка — потом можно поменять",
+    cityTitle: "Где хотите работать?",
+    cityHint: "По этому будем показывать работу рядом",
+    companyTitle: "Название компании",
+    companyHint: "Кандидаты увидят это название",
+    companyPlaceholder: "Например: Chorsu Market",
+    phoneTitle: "Номер телефона",
+    phoneHint: "Не обязательно, можно добавить позже",
+    phonePlaceholder: "+998 90 123 45 67",
+    finish: "Начать",
+    skip: "Пропустить",
+  },
+
   employer: {
     tabs: {
       vacancies: "Вакансии",

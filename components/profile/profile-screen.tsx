@@ -20,9 +20,9 @@ import { ListGroup, ListItem, SectionHeader } from "@/components/ui/list";
 import { NavBar } from "@/components/ui/nav-bar";
 import { Segmented } from "@/components/ui/segmented";
 import { Sheet } from "@/components/ui/sheet";
+import { apiPost } from "@/lib/api";
 import type { CardDTO, CityDTO, ProfessionDTO } from "@/lib/db/types";
 import { locales, type Locale } from "@/lib/i18n";
-import { useRole } from "@/lib/stores";
 import { useSheet } from "@/lib/use-sheet";
 import { formatSalary } from "@/lib/utils";
 
@@ -42,7 +42,6 @@ export function ProfileScreen({
   const { t, locale, setLocale } = useI18n();
   const { mode, setMode } = useTheme();
   const router = useRouter();
-  const { setRole } = useRole();
   const languageSheet = useSheet<true>();
 
   const profession = professions.find((item) => item.id === card?.professionId);
@@ -175,12 +174,27 @@ export function ProfileScreen({
           block
           variant="secondary"
           leading={<IconBriefcase size={18} />}
-          onClick={() => {
-            setRole("employer");
-            router.push("/employer/vacancies");
+          onClick={async () => {
+            const { next } = await apiPost<{ next: string }>("/auth/role", {
+              role: "ish_beruvchi",
+            });
+            router.push(next);
+            router.refresh();
           }}
         >
           {t.employer.switchToEmployer}
+        </Button>
+        <Button
+          block
+          variant="danger"
+          className="mt-2"
+          onClick={async () => {
+            await apiPost("/auth/logout");
+            router.replace("/kirish");
+            router.refresh();
+          }}
+        >
+          {t.auth.logout}
         </Button>
         <button
           type="button"

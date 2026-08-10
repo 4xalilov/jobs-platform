@@ -166,13 +166,22 @@ async function main() {
       );
     }
 
+    // Demo foydalanuvchi — u ham ish qidiradi, ham Chorsu Market egasi.
+    // Shunday qilinganda bitta kirish bilan ikkala tomonni ham ko'rish mumkin.
+    const demo = await client.query(
+      "insert into users (ism, rol, til, username) values ('Aziz', 'nomzod', 'uz', 'demo') returning id",
+    );
+    const demoUserId = demo.rows[0].id;
+
     // Ish beruvchilar va kompaniyalar
     const companyIds = [];
     for (const company of COMPANIES) {
-      const user = await client.query(
-        "insert into users (ism, rol) values ($1, 'ish_beruvchi') returning id",
-        [company.name],
-      );
+      const user = company.name === "Chorsu Market"
+        ? { rows: [{ id: demoUserId }] }
+        : await client.query(
+            "insert into users (ism, rol) values ($1, 'ish_beruvchi') returning id",
+            [company.name],
+          );
       const row = await client.query(
         `insert into companies (user_id, nom, telefon, tavsif, tasdiqlangan, tez_javob_belgisi)
          values ($1, $2, $3, $4, $5, $6) returning id`,
@@ -246,11 +255,7 @@ async function main() {
       vacancies.push({ id: inserted.rows[0].id, companyId: company.id, professionId });
     }
 
-    // ——— Demo nomzod ———
-    const demo = await client.query(
-      "insert into users (ism, rol, til) values ('Aziz', 'nomzod', 'uz') returning id",
-    );
-    const demoUserId = demo.rows[0].id;
+    // ——— Demo nomzodning kartochkasi ———
     const demoCard = await client.query(
       `insert into candidate_cards
          (user_id, kasb_id, shahar_id, tuman_id, tajriba_daraja, maosh_min, maosh_max)
@@ -263,16 +268,18 @@ async function main() {
     const chorsu = companyIds.find((c) => c.name === "Chorsu Market");
     const milano = companyIds.find((c) => c.name === "Milano Cafe");
     const express = companyIds.find((c) => c.name === "Express Yetkazib");
+    const havas = companyIds.find((c) => c.name === "Havas Market");
 
     const pickVacancy = (companyId) => vacancies.find((v) => v.companyId === companyId);
 
+    // Demo foydalanuvchi o'z kompaniyasiga ariza yubormaydi
     const conversations = [
       {
-        vacancy: pickVacancy(chorsu.id),
+        vacancy: pickVacancy(havas.id),
         messages: [
           ["ish_beruvchi", "Assalomu alaykum! Kartochkangizni ko'rdik.", false],
           ["nomzod", "Assalomu alaykum, rahmat! Qachon kelay?", true],
-          ["ish_beruvchi", "Ertaga soat 10 da kela olasizmi? Manzil: Chorsu bozori, 2-qator.", false],
+          ["ish_beruvchi", "Ertaga soat 10 da kela olasizmi? Manzil: Havas Market, 2-qavat.", false],
           ["ish_beruvchi", "Pasport nusxasini olib keling.", false],
         ],
       },
@@ -375,8 +382,7 @@ async function main() {
         (select count(*) from messages) as xabarlar
     `);
     console.log("Namunaviy ma'lumotlar yuklandi:", counts.rows[0]);
-    console.log("Demo nomzod user_id:", demoUserId);
-    console.log("Demo ish beruvchi user_id:", chorsu.userId);
+    console.log("Demo foydalanuvchi user_id:", demoUserId, "(Chorsu Market egasi ham)");
   } catch (error) {
     await client.query("rollback");
     throw error;

@@ -261,6 +261,41 @@ export const uzCyrl: Dictionary = {
     },
   },
 
+  auth: {
+    title: "Иш топ",
+    subtitle: "Telegram орқали бир босишда киринг — парол ҳам, email ҳам керак эмас",
+    telegramButton: "Telegram билан кириш",
+    devButton: "Намунавий фойдаланувчи билан кириш",
+    devHint: "Telegram боти созланмаган — маҳаллий синов учун",
+    notConfigured: "Telegram боти ҳали уланмаган",
+    notConfiguredHint: "TELEGRAM_BOT_TOKEN ва TELEGRAM_BOT_USERNAME ни .env.local га қўшинг",
+    error: "Киришда хатолик",
+    errorHint: "Ҳавола эскирган бўлиши мумкин. Қайтадан уриниб кўринг.",
+    logout: "Чиқиш",
+    privacy: "Фақат исмингиз ва Telegram расмингиз олинади",
+  },
+
+  onboarding: {
+    roleTitle: "Нима қилмоқчисиз?",
+    roleHint: "Кейин буни Профилда ўзгартиришингиз мумкин",
+    seeker: "Иш қидиряпман",
+    seekerHint: "Вакансияларни кўриб, бир босишда ариза юборинг",
+    employer: "Ходим қидиряпман",
+    employerHint: "Вакансия жойланг ва номзодлар билан ёзишинг",
+    professionTitle: "Қандай иш қидиряпсиз?",
+    professionHint: "Рўйхатдан танланг — кейин ўзгартирса бўлади",
+    cityTitle: "Қаерда ишламоқчисиз?",
+    cityHint: "Яқин атрофдаги ишларни шунга қараб кўрсатамиз",
+    companyTitle: "Компания номи",
+    companyHint: "Номзодлар шу номни кўради",
+    companyPlaceholder: "Масалан: Chorsu Market",
+    phoneTitle: "Телефон рақами",
+    phoneHint: "Мажбурий эмас, кейин ҳам қўшса бўлади",
+    phonePlaceholder: "+998 90 123 45 67",
+    finish: "Бошлаш",
+    skip: "Ўтказиб юбориш",
+  },
+
   employer: {
     tabs: {
       vacancies: "Вакансиялар",

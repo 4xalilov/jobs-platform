@@ -3,7 +3,7 @@
 Telegram uslubidagi ish topish platformasi. Asosiy raqib — hh.uz emas, Telegram
 kanallari. Demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 
-## Holat: 4-bosqich — baza va API
+## Holat: 5-bosqich — Telegram autentifikatsiya
 
 | Bosqich | Nima | Holat |
 | --- | --- | --- |
@@ -11,7 +11,7 @@ kanallari. Demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 | 2 | Ish qidiruvchi ekranlari (statik) | ✅ tayyor |
 | 3 | Ish beruvchi ekranlari (statik) | ✅ tayyor |
 | 4 | Baza va API | ✅ tayyor |
-| 5 | Telegram autentifikatsiya | ⏳ |
+| 5 | Telegram autentifikatsiya | ✅ tayyor |
 | 6 | Chat funksiyasi | ⏳ |
 | 7 | To'lov integratsiyasi (Payme, Click) | ⏳ |
 
@@ -35,6 +35,32 @@ Generator turg'un urug'dan foydalanadi — har safar bir xil ma'lumot chiqadi.
 
 Boshqa bazaga ulanish uchun `.env.local` dagi `DATABASE_URL` ni o'zgartiring.
 
+### Telegram botni ulash
+
+Parol ham, elektron pochta ham yo'q — kirish faqat Telegram orqali.
+
+1. [@BotFather](https://t.me/BotFather) da `/newbot` bilan bot yarating.
+2. Olingan tokenni `.env.local` ga `TELEGRAM_BOT_TOKEN` qilib yozing,
+   bot nomini (`@` siz) `TELEGRAM_BOT_USERNAME` ga.
+3. @BotFather da `/setdomain` buyrug'i bilan saytingiz domenini bog'lang —
+   Login Widget faqat shu domenda ishlaydi.
+4. `SESSION_SECRET` ni `openssl rand -base64 32` bilan yarating. Ishlab
+   chiqarishda majburiy; bo'lmasa ilova ishga tushmaydi.
+
+Bot ulanmagan bo'lsa, kirish ekranida **namunaviy foydalanuvchi** tugmasi
+chiqadi (`demo`) — u seed yaratgan nomzod va Chorsu Market kompaniyasining
+egasi, ya'ni bitta kirish bilan ikkala tomonni ham ko'rish mumkin. Bu tugma
+ishlab chiqish rejimida o'z-o'zidan ochiq. Ishlab chiqarish build'ida faqat
+`ALLOW_DEV_LOGIN=1` bilan ataylab yoqiladi — demo uchun; haqiqiy
+foydalanuvchilar bo'lgan joyda yoqmang. Token berilgan bo'lsa, bu tugma
+umuman ko'rinmaydi va `/api/auth/dev` 403 qaytaradi.
+
+Imzo tekshiruvi Telegram hujjatidagidek: `secret = SHA256(bot_token)`,
+`hash = HMAC_SHA256(data_check_string, secret)`, taqqoslash
+`timingSafeEqual` bilan. Havola 24 soatdan eski bo'lsa rad etiladi.
+Sessiya — HMAC-SHA256 bilan imzolangan `httpOnly` cookie (30 kun), tashqi
+kutubxonasiz.
+
 ### Ekranlar
 
 | Manzil | Ekran |
@@ -52,9 +78,16 @@ Boshqa bazaga ulanish uchun `.env.local` dagi `DATABASE_URL` ni o'zgartiring.
 | `/employer/chat/[id]` | Nomzod bilan chat |
 | `/employer/plans` | Tariflar — Payme va Click |
 | `/employer/profile` | Kompaniya profili |
+| `/kirish` | Kirish — Telegram Login Widget |
+| `/boshlash` | Tanishtiruv — rol, kasb, shahar yoki kompaniya, telefon |
 | `/design` | Dizayn tizimi (1-bosqich) |
 
 Rol Profil ekranidagi tugma orqali almashadi (ish qidiruvchi ↔ ish beruvchi).
+Yangi rolda kartochka yoki kompaniya bo'lmasa, `/boshlash` ga yo'naltiriladi.
+
+Kirmagan foydalanuvchi yopiq ekranga kirsa `/kirish` ga qaytariladi. Tekshiruv
+`requireUser()` da — sahifa server komponentida, ya'ni ma'lumot umuman
+olinmaydi.
 
 ### API
 
@@ -70,6 +103,11 @@ Rol Profil ekranidagi tugma orqali almashadi (ish qidiruvchi ↔ ish beruvchi).
 | `DELETE /api/employer/vacancies/[id]` | Vakansiyani o'chirish |
 | `GET /api/employer/candidates` · `GET /api/employer/chats/[id]` | Nomzodlar |
 | `GET /api/professions` · `GET /api/cities` | Ma'lumotnomalar |
+| `GET /api/auth/telegram` | Login Widget qaytaradigan manzil — imzo tekshiriladi |
+| `POST /api/auth/dev` | Namunaviy kirish (bot ulanmagan bo'lsagina) |
+| `POST /api/auth/logout` | Chiqish — cookie tozalanadi |
+| `POST /api/auth/role` | Rolni almashtirish |
+| `POST /api/onboarding` | Tanishtiruvni yakunlash — kartochka yoki kompaniya |
 
 Sahifalar ma'lumotni to'g'ridan-to'g'ri server komponentlarida oladi; API
 brauzerdan keladigan qo'shimcha so'rovlar uchun (cheksiz aylanish, qidiruv,
@@ -108,12 +146,15 @@ app/
   (app)/                tab bar bilan ekranlar: jobs, messages, saved, profile
   search/ chat/ card/   to'liq ekran (tab barsiz)
   design/               1-bosqich: dizayn tizimi bitta sahifada
+  kirish/ boshlash/      kirish va tanishtiruv (5-bosqich)
 components/
   providers/            theme-provider, i18n-provider
   app/                  app-tab-bar
+  auth/                 login-screen, onboarding-flow
   jobs/                 vacancy-row, vacancy-sheet
   ui/                   button, list, sheet, chip, tab-bar, ...
 lib/
+  auth/                 session (imzolangan cookie), telegram (imzo tekshiruvi)
   db/                   client, queries, types, session
   i18n/locales/         uz.ts (manba), uz-cyrl.ts, ru.ts
   api.ts                brauzerdan API'ga so'rovlar
@@ -145,8 +186,11 @@ Spetsifikatsiyadagi jadvallardan tashqari uchtasi qo'shildi: `cities` va
 - **Sahifalash** — keyset (kursor), `OFFSET` ishlatilmaydi: aylantirish
   paytida yangi vakansiya qo'shilsa ham qatorlar takrorlanmaydi.
 
-Foydalanuvchi hozircha cookie yoki `DEV_USER_ID` orqali aniqlanadi —
-5-bosqichda Telegram Login Widget bilan almashtiriladi.
+Foydalanuvchi imzolangan sessiya cookie'si orqali aniqlanadi
+(`lib/auth/session.ts`). `users` jadvaliga `username`, `foto_url` va
+`oxirgi_kirish` ustunlari qo'shildi (`0002_auth.sql`) — Telegram profilidan
+keladigan ma'lumot. Takroriy kirish `on conflict (telegram_id) do update`
+bilan yangilanadi, yangi qator yaratmaydi.
 
 ### Til
 
@@ -157,7 +201,7 @@ kalit kompilyatsiya xatosi beradi.
 
 ## Texnik stack
 
-Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · PWA (manifest)
+Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · PostgreSQL 16 ·
+Telegram Login Widget · PWA (manifest)
 
-Keyingi bosqichlarda: PostgreSQL, Telegram Login Widget, S3 mos fayl saqlash,
-Payme/Click to'lovlari.
+Keyingi bosqichlarda: jonli chat, S3 mos fayl saqlash, Payme/Click to'lovlari.

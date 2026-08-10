@@ -540,7 +540,7 @@ export async function saveCard(userId: string, card: Omit<CardDTO, "id">): Promi
 
 /* ——— Ish beruvchi ——— */
 
-export async function getCompany(userId: string): Promise<CompanyDTO | null> {
+export async function getCompany(companyId: string): Promise<CompanyDTO | null> {
   const row = await queryOne<{
     id: string;
     nom: string;
@@ -549,8 +549,8 @@ export async function getCompany(userId: string): Promise<CompanyDTO | null> {
     tasdiqlangan: boolean;
     tez_javob_belgisi: boolean;
   }>(
-    "select id, nom, telefon, tavsif, tasdiqlangan, tez_javob_belgisi from companies where user_id = $1::uuid",
-    [userId],
+    "select id, nom, telefon, tavsif, tasdiqlangan, tez_javob_belgisi from companies where id = $1::uuid",
+    [companyId],
   );
   if (!row) return null;
   return {
@@ -762,4 +762,123 @@ export async function getEmployerChat(chatId: string, companyId: string): Promis
     professionName: localized(row.kasb_uz, row.kasb_cyrl, row.kasb_ru),
     messages: await chatMessages(row.id),
   };
+}
+
+/* ——— Autentifikatsiya ——— */
+
+export type AuthUser = {
+  id: string;
+  name: string;
+  role: "nomzod" | "ish_beruvchi";
+  photoUrl: string | null;
+  hasCard: boolean;
+  companyId: string | null;
+};
+
+type AuthUserRow = {
+  id: string;
+  ism: string;
+  rol: AuthUser["role"];
+  foto_url: string | null;
+  card_id: string | null;
+  company_id: string | null;
+};
+
+const AUTH_USER_SELECT = `
+  select u.id, u.ism, u.rol, u.foto_url,
+    (select cc.id from candidate_cards cc where cc.user_id = u.id) as card_id,
+    (select c.id from companies c where c.user_id = u.id order by c.nom limit 1) as company_id
+  from users u
+`;
+
+function mapAuthUser(row: AuthUserRow): AuthUser {
+  return {
+    id: row.id,
+    name: row.ism,
+    role: row.rol,
+    photoUrl: row.foto_url,
+    hasCard: row.card_id !== null,
+    companyId: row.company_id,
+  };
+}
+
+export async function getAuthUser(userId: string): Promise<AuthUser | null> {
+  const row = await queryOne<AuthUserRow>(`${AUTH_USER_SELECT} where u.id = $1::uuid`, [userId]);
+  return row ? mapAuthUser(row) : null;
+}
+
+export type TelegramProfile = {
+  telegramId: number;
+  firstName: string;
+  lastName?: string;
+  username?: string;
+  photoUrl?: string;
+};
+
+/** Telegram bo'yicha foydalanuvchini topadi yoki yaratadi */
+export async function upsertTelegramUser(profile: TelegramProfile): Promise<AuthUser> {
+  const fullName = [profile.firstName, profile.lastName].filter(Boolean).join(" ").trim();
+
+  const row = await queryOne<{ id: string }>(
+    `insert into users (telegram_id, ism, rol, username, foto_url, oxirgi_kirish)
+     values ($1, $2, 'nomzod', $3, $4, now())
+     on conflict (telegram_id) do update set
+       ism = excluded.ism,
+       username = excluded.username,
+       foto_url = excluded.foto_url,
+       oxirgi_kirish = now()
+     returning id`,
+    [profile.telegramId, fullName || "Foydalanuvchi", profile.username ?? null, profile.photoUrl ?? null],
+  );
+  if (!row) throw new Error("Foydalanuvchi yaratilmadi");
+
+  const user = await getAuthUser(row.id);
+  if (!user) throw new Error("Foydalanuvchi topilmadi");
+  return user;
+}
+
+export async function setUserRole(userId: string, role: AuthUser["role"]): Promise<void> {
+  await query("update users set rol = $2 where id = $1::uuid", [userId, role]);
+}
+
+/** Ish beruvchiga o'tganda kompaniya bo'lmasa — yaratiladi */
+export async function ensureCompany(
+  userId: string,
+  name: string,
+  phone: string | null,
+): Promise<string> {
+  const existing = await queryOne<{ id: string }>(
+    "select id from companies where user_id = $1::uuid order by nom limit 1",
+    [userId],
+  );
+  if (existing) return existing.id;
+
+  const row = await queryOne<{ id: string }>(
+    "insert into companies (user_id, nom, telefon) values ($1::uuid, $2, $3) returning id",
+    [userId, name, phone],
+  );
+  if (!row) throw new Error("Kompaniya yaratilmadi");
+  return row.id;
+}
+
+/** Ro'yxatdan o'tishda kartochkaning eng kerakli ikkita maydoni */
+export async function createMinimalCard(
+  userId: string,
+  professionId: string,
+  cityId: string,
+): Promise<void> {
+  await query(
+    `insert into candidate_cards (user_id, kasb_id, shahar_id)
+     values ($1::uuid, $2, $3)
+     on conflict (user_id) do update set kasb_id = excluded.kasb_id, shahar_id = excluded.shahar_id`,
+    [userId, professionId, cityId],
+  );
+}
+
+/** Mahalliy sinov uchun: namunaviy nomzod */
+export async function findDemoUser(): Promise<AuthUser | null> {
+  const row = await queryOne<AuthUserRow>(
+    `${AUTH_USER_SELECT} where u.username = 'demo' limit 1`,
+  );
+  return row ? mapAuthUser(row) : null;
 }
