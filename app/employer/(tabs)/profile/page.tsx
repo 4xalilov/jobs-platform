@@ -7,45 +7,32 @@ import { Avatar } from "@/components/ui/avatar";
 import { Tag } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  IconBriefcase,
-  IconCamera,
+  IconBolt,
   IconCheck,
   IconGlobe,
-  IconMic,
   IconMoon,
-  IconPencil,
-  IconVideo,
+  IconShieldCheck,
+  IconUser,
 } from "@/components/ui/icon";
 import { ListGroup, ListItem, SectionHeader } from "@/components/ui/list";
 import { NavBar } from "@/components/ui/nav-bar";
 import { Segmented } from "@/components/ui/segmented";
 import { Sheet } from "@/components/ui/sheet";
-import { cityById, professionById } from "@/lib/mock-data";
-import { useApplied, useCard, useRole, useSaved } from "@/lib/stores";
 import { locales, type Locale } from "@/lib/i18n";
+import { company } from "@/lib/mock-data";
+import { useMyVacancies, useRole } from "@/lib/stores";
 import { useSheet } from "@/lib/use-sheet";
-import { formatSalary } from "@/lib/utils";
 
-export default function ProfilePage() {
+export default function EmployerProfilePage() {
   const { t, locale, setLocale } = useI18n();
   const { mode, setMode } = useTheme();
   const router = useRouter();
-  const { card } = useCard();
   const { setRole } = useRole();
-  const { ids: appliedIds } = useApplied();
-  const { ids: savedIds } = useSaved();
+  const { vacancies } = useMyVacancies();
   const languageSheet = useSheet<true>();
 
-  const profession = card.professionId ? professionById(card.professionId) : undefined;
-  const city = card.cityId ? cityById(card.cityId) : undefined;
-  const district =
-    city && card.districtIndex !== null ? city.districts[card.districtIndex] : undefined;
-
-  const location = city
-    ? district
-      ? `${city.name[locale]}, ${district[locale]}`
-      : city.name[locale]
-    : t.screens.profile.notFilled;
+  const activeCount = vacancies.filter((v) => v.status === "active").length;
+  const totalApplications = vacancies.reduce((sum, v) => sum + v.applications, 0);
 
   const localeLabels: Record<Locale, string> = {
     uz: t.language.uz,
@@ -55,91 +42,64 @@ export default function ProfilePage() {
 
   return (
     <>
-      <NavBar title={t.tabs.profile} className="sticky top-0 z-20 hairline" />
+      <NavBar title={t.employer.tabs.profile} className="sticky top-0 z-20 hairline" />
 
-      {/* Kartochka — rezyume o'rniga */}
       <div className="bg-surface px-4 pt-4 pb-4">
         <div className="flex items-center gap-3">
-          <Avatar name={card.name || "?"} size={64} />
+          <Avatar name={company.name} size={64} online={company.fastReply} />
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-[20px] leading-6 font-semibold text-text">
-              {card.name || t.screens.profile.notFilled}
+              {company.name}
             </h2>
-            <p className="mt-0.5 truncate text-body text-text-secondary">
-              {profession ? profession.name[locale] : t.screens.profile.notFilled}
-            </p>
+            <p className="mt-0.5 truncate text-body text-text-secondary">{company.phone}</p>
           </div>
         </div>
 
         <div className="mt-3 flex flex-wrap gap-2">
-          <Tag>{location}</Tag>
-          <Tag>{t.job.experience[card.experience]}</Tag>
-          <Tag>
-            {formatSalary(card.salaryMin, card.salaryMax, t.job.currency, t.screens.card.salaryAny)}
-          </Tag>
+          {company.verified && (
+            <Tag tone="accent" icon={<IconShieldCheck size={13} />}>
+              {t.employer.company.verified}
+            </Tag>
+          )}
+          {company.fastReply && (
+            <Tag tone="success" icon={<IconBolt size={13} />}>
+              {t.job.fastReply}
+            </Tag>
+          )}
         </div>
 
-        <Button
-          block
-          variant="secondary"
-          className="mt-4"
-          leading={<IconPencil size={18} />}
-          onClick={() => router.push("/card")}
-        >
-          {t.screens.profile.editCard}
-        </Button>
+        <p className="mt-3 text-body text-text">{company.about[locale]}</p>
       </div>
 
-      {/* Qo'shimcha — majburiy emas */}
-      <SectionHeader>{t.screens.profile.media}</SectionHeader>
-      <ListGroup>
-        <ListItem
-          leading={<IconCamera size={22} className="text-text-secondary" />}
-          title={<span className="text-body font-normal">{t.screens.profile.photo}</span>}
-          insetSeparator={false}
-          chevron
-        />
-        <ListItem
-          leading={<IconVideo size={22} className="text-text-secondary" />}
-          title={<span className="text-body font-normal">{t.screens.profile.video}</span>}
-          insetSeparator={false}
-          chevron
-        />
-        <ListItem
-          leading={<IconMic size={22} className="text-text-secondary" />}
-          title={<span className="text-body font-normal">{t.screens.profile.voice}</span>}
-          insetSeparator={false}
-          chevron
-          last
-        />
-      </ListGroup>
-      <p className="px-4 pt-2 text-caption text-text-tertiary">{t.screens.profile.mediaHint}</p>
-
-      {/* Statistika */}
       <ListGroup className="mt-5">
         <ListItem
-          title={<span className="text-body font-normal">{t.screens.profile.applicationsCount}</span>}
+          title={
+            <span className="text-body font-normal">{t.employer.company.activeVacancies}</span>
+          }
           insetSeparator={false}
-          trailing={<span className="text-body text-text-secondary">{appliedIds.length}</span>}
+          trailing={<span className="text-body text-text-secondary">{activeCount}</span>}
         />
         <ListItem
-          title={<span className="text-body font-normal">{t.screens.profile.savedCount}</span>}
+          title={
+            <span className="text-body font-normal">{t.employer.company.totalApplications}</span>
+          }
           insetSeparator={false}
-          trailing={<span className="text-body text-text-secondary">{savedIds.length}</span>}
+          trailing={<span className="text-body text-text-secondary">{totalApplications}</span>}
           last
         />
       </ListGroup>
 
-      {/* Sozlamalar */}
+      <p className="px-4 pt-2 text-caption text-text-tertiary">
+        {t.employer.company.fastReplyHint}
+      </p>
+
       <SectionHeader>{t.screens.profile.settings}</SectionHeader>
       <ListGroup>
         <ListItem
           leading={<IconGlobe size={22} className="text-text-secondary" />}
           title={<span className="text-body font-normal">{t.language.label}</span>}
           insetSeparator={false}
-          trailing={
-            <span className="text-body text-text-secondary">{localeLabels[locale]}</span>
-          }
+          trailing={<span className="text-body text-text-secondary">{localeLabels[locale]}</span>}
           onClick={() => languageSheet.open(true)}
         />
         <div className="bg-surface px-4 py-3">
@@ -164,21 +124,14 @@ export default function ProfilePage() {
         <Button
           block
           variant="secondary"
-          leading={<IconBriefcase size={18} />}
+          leading={<IconUser size={18} />}
           onClick={() => {
-            setRole("employer");
-            router.push("/employer/vacancies");
+            setRole("seeker");
+            router.push("/jobs");
           }}
         >
-          {t.employer.switchToEmployer}
+          {t.employer.switchToSeeker}
         </Button>
-        <button
-          type="button"
-          onClick={() => router.push("/design")}
-          className="mt-6 text-caption text-text-tertiary underline"
-        >
-          {t.design.title}
-        </button>
       </div>
 
       <Sheet

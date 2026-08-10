@@ -61,10 +61,7 @@ export function VacancySheet({
               variant="primary"
               size="lg"
               leading={<IconMessage size={20} />}
-              onClick={() => {
-                onClose();
-                router.push("/messages");
-              }}
+              onClick={() => router.push("/messages")}
             >
               {t.tabs.messages}
             </Button>

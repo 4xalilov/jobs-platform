@@ -3,13 +3,13 @@
 Telegram uslubidagi ish topish platformasi. Asosiy raqib — hh.uz emas, Telegram
 kanallari. Demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 
-## Holat: 2-bosqich — ish qidiruvchi ekranlari
+## Holat: 3-bosqich — ish beruvchi ekranlari
 
 | Bosqich | Nima | Holat |
 | --- | --- | --- |
 | 1 | Dizayn tizimi — barcha komponentlar bitta sahifada | ✅ tayyor |
 | 2 | Ish qidiruvchi ekranlari (statik) | ✅ tayyor |
-| 3 | Ish beruvchi ekranlari (statik) | ⏳ |
+| 3 | Ish beruvchi ekranlari (statik) | ✅ tayyor |
 | 4 | Baza va API | ⏳ |
 | 5 | Telegram autentifikatsiya | ⏳ |
 | 6 | Chat funksiyasi | ⏳ |
@@ -33,7 +33,15 @@ npm run dev     # http://localhost:3000 → /jobs ga yo'naltiradi
 | `/saved` | Saqlangan vakansiyalar |
 | `/profile` | Profil — kartochka, til, ko'rinish |
 | `/card` | Kartochkani tahrirlash — 5 maydon |
+| `/employer/vacancies` | Mening vakansiyalarim — ko'rishlar va arizalar soni |
+| `/employer/new` | Vakansiya joylash — 4 qadam, ovozli vakansiya |
+| `/employer/candidates` | Nomzodlar — arizalar chat ro'yxati sifatida |
+| `/employer/chat/[id]` | Nomzod bilan chat |
+| `/employer/plans` | Tariflar — Payme va Click |
+| `/employer/profile` | Kompaniya profili |
 | `/design` | Dizayn tizimi (1-bosqich) |
+
+Rol Profil ekranidagi tugma orqali almashadi (ish qidiruvchi ↔ ish beruvchi).
 
 Til va ko'rinish Profil ekranidan, dizayn tizimi sahifasida esa yuqoridagi
 tanlagichlardan almashtiriladi.

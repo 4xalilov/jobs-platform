@@ -458,3 +458,270 @@ export const recentSearches: Localized[] = [
   { uz: "kuryer smenali", "uz-cyrl": "курьер сменали", ru: "курьер посменно" },
   { uz: "oshpaz Yunusobod", "uz-cyrl": "ошпаз Юнусобод", ru: "повар Юнусабад" },
 ];
+
+/* ——— Ish beruvchi ——— */
+
+/** Ish beruvchi o'zi yozgan matn oddiy satr, namunaviylari uchala tilda */
+export type EmployerText = string | Localized;
+
+export function resolveText(value: EmployerText, locale: Locale): string {
+  return typeof value === "string" ? value : value[locale];
+}
+
+export type PlanId = "free" | "standard" | "premium" | "pack" | "database";
+export type VacancyStatus = "active" | "expired";
+
+export type EmployerVacancy = {
+  id: string;
+  professionId: string;
+  cityId: string;
+  districtIndex: number | null;
+  salaryMin: number | null;
+  salaryMax: number | null;
+  employment: EmploymentType;
+  description: EmployerText;
+  status: VacancyStatus;
+  plan: PlanId;
+  views: number;
+  applications: number;
+  newApplications: number;
+  postedMinutesAgo: number;
+  daysLeft: number;
+};
+
+export const company = {
+  name: "Chorsu Market",
+  phone: "+998 90 123 45 67",
+  verified: true,
+  fastReply: true,
+  plan: "free" as PlanId,
+  about: {
+    uz: "Chorsu bozoridagi oziq-ovqat do'koni. 2016-yildan beri ishlaymiz.",
+    "uz-cyrl": "Чорсу бозоридаги озиқ-овқат дўкони. 2016-йилдан бери ишлаймиз.",
+    ru: "Продуктовый магазин на рынке Чорсу. Работаем с 2016 года.",
+  } as Localized,
+};
+
+export const employerVacancies: EmployerVacancy[] = [
+  {
+    id: "e1",
+    professionId: "sotuvchi",
+    cityId: "toshkent",
+    districtIndex: 3,
+    salaryMin: 4_000_000,
+    salaryMax: 6_000_000,
+    employment: "full",
+    status: "active",
+    plan: "free",
+    views: 248,
+    applications: 12,
+    newApplications: 3,
+    postedMinutesAgo: 120,
+    daysLeft: 27,
+    description: {
+      uz: "Do'konga sotuvchi kerak. Ish vaqti 9:00–18:00, dam olish kuni — yakshanba. Tajriba shart emas, o'rgatamiz.",
+      "uz-cyrl": "Дўконга сотувчи керак. Иш вақти 9:00–18:00, дам олиш куни — якшанба. Тажриба шарт эмас, ўргатамиз.",
+      ru: "В магазин нужен продавец. График 9:00–18:00, выходной — воскресенье. Опыт не обязателен, научим.",
+    },
+  },
+  {
+    id: "e2",
+    professionId: "kassir",
+    cityId: "toshkent",
+    districtIndex: 3,
+    salaryMin: 4_500_000,
+    salaryMax: null,
+    employment: "shift",
+    status: "active",
+    plan: "standard",
+    views: 512,
+    applications: 7,
+    newApplications: 1,
+    postedMinutesAgo: 2_880,
+    daysLeft: 24,
+    description: {
+      uz: "Smenali ish: 2 kun ishlaysiz, 2 kun dam olasiz. Kassa apparatida ishlash o'rgatiladi.",
+      "uz-cyrl": "Сменали иш: 2 кун ишлайсиз, 2 кун дам оласиз. Касса аппаратида ишлаш ўргатилади.",
+      ru: "Посменно: 2 дня работаете, 2 отдыхаете. Работе на кассе обучим.",
+    },
+  },
+  {
+    id: "e3",
+    professionId: "omborchi",
+    cityId: "toshkent",
+    districtIndex: 3,
+    salaryMin: 5_000_000,
+    salaryMax: 7_000_000,
+    employment: "full",
+    status: "expired",
+    plan: "free",
+    views: 96,
+    applications: 3,
+    newApplications: 0,
+    postedMinutesAgo: 46_000,
+    daysLeft: 0,
+    description: {
+      uz: "Omborga xodim kerak edi. Yuk ko'tarish bor, jismoniy tayyorgarlik talab qilinadi.",
+      "uz-cyrl": "Омборга ходим керак эди. Юк кўтариш бор, жисмоний тайёргарлик талаб қилинади.",
+      ru: "Требовался сотрудник на склад. Есть погрузка, нужна физическая подготовка.",
+    },
+  },
+];
+
+export function employerVacancyById(id: string): EmployerVacancy | undefined {
+  return employerVacancies.find((v) => v.id === id);
+}
+
+export type Candidate = {
+  id: string;
+  name: string;
+  professionId: string;
+  cityId: string;
+  districtIndex: number | null;
+  experience: ExperienceLevel;
+  salaryMin: number | null;
+  salaryMax: number | null;
+  vacancyId: string;
+  time: string;
+  unread: number;
+  messages: ChatMessage[];
+};
+
+const APPLIED: Localized = {
+  uz: "Nomzod ariza yubordi",
+  "uz-cyrl": "Номзод ариза юборди",
+  ru: "Кандидат откликнулся",
+};
+
+export const candidates: Candidate[] = [
+  {
+    id: "n1",
+    name: "Aziz Karimov",
+    professionId: "sotuvchi",
+    cityId: "toshkent",
+    districtIndex: 0,
+    experience: "upToOne",
+    salaryMin: 4_000_000,
+    salaryMax: 6_000_000,
+    vacancyId: "e1",
+    time: "14:20",
+    unread: 2,
+    messages: [
+      { id: "m1", from: "system", time: "12:40", text: APPLIED },
+      {
+        id: "m2",
+        from: "candidate",
+        time: "14:18",
+        text: {
+          uz: "Assalomu alaykum, ish hali bormi?",
+          "uz-cyrl": "Ассалому алайкум, иш ҳали борми?",
+          ru: "Здравствуйте, вакансия ещё актуальна?",
+        },
+      },
+      {
+        id: "m3",
+        from: "candidate",
+        time: "14:20",
+        text: {
+          uz: "Chorsu yaqinida turaman, tez yetib boraman.",
+          "uz-cyrl": "Чорсу яқинида тураман, тез етиб бораман.",
+          ru: "Живу рядом с Чорсу, доберусь быстро.",
+        },
+      },
+    ],
+  },
+  {
+    id: "n2",
+    name: "Nodira Yusupova",
+    professionId: "kassir",
+    cityId: "toshkent",
+    districtIndex: 1,
+    experience: "oneToThree",
+    salaryMin: 4_000_000,
+    salaryMax: 5_000_000,
+    vacancyId: "e2",
+    time: "12:05",
+    unread: 1,
+    messages: [
+      { id: "m1", from: "system", time: "11:30", text: APPLIED },
+      {
+        id: "m2",
+        from: "candidate",
+        time: "12:05",
+        text: {
+          uz: "Salom, ikki yil kassir bo'lib ishlaganman.",
+          "uz-cyrl": "Салом, икки йил кассир бўлиб ишлаганман.",
+          ru: "Здравствуйте, два года работала кассиром.",
+        },
+      },
+    ],
+  },
+  {
+    id: "n3",
+    name: "Jasur Toshmatov",
+    professionId: "sotuvchi",
+    cityId: "toshkent",
+    districtIndex: 5,
+    experience: "threePlus",
+    salaryMin: 6_000_000,
+    salaryMax: 8_000_000,
+    vacancyId: "e1",
+    time: "kecha",
+    unread: 0,
+    messages: [
+      { id: "m1", from: "system", time: "16:10", text: APPLIED },
+      {
+        id: "m2",
+        from: "employer",
+        time: "17:02",
+        text: {
+          uz: "Rahmat, kartochkangizni ko'rdik. Bog'lanamiz.",
+          "uz-cyrl": "Раҳмат, карточкангизни кўрдик. Боғланамиз.",
+          ru: "Спасибо, карточку посмотрели. Свяжемся.",
+        },
+      },
+    ],
+  },
+  {
+    id: "n4",
+    name: "Malika Rahimova",
+    professionId: "sotuvchi",
+    cityId: "toshkent",
+    districtIndex: 6,
+    experience: "none",
+    salaryMin: 3_000_000,
+    salaryMax: 4_000_000,
+    vacancyId: "e1",
+    time: "kecha",
+    unread: 0,
+    messages: [{ id: "m1", from: "system", time: "09:15", text: APPLIED }],
+  },
+  {
+    id: "n5",
+    name: "Bekzod Ergashev",
+    professionId: "kassir",
+    cityId: "toshkent",
+    districtIndex: 2,
+    experience: "upToOne",
+    salaryMin: 4_000_000,
+    salaryMax: 6_000_000,
+    vacancyId: "e2",
+    time: "2 kun",
+    unread: 0,
+    messages: [{ id: "m1", from: "system", time: "10:40", text: APPLIED }],
+  },
+];
+
+export function candidateById(id: string): Candidate | undefined {
+  return candidates.find((c) => c.id === id);
+}
+
+export type Plan = { id: PlanId; price: number; monthly: boolean };
+
+export const plans: Plan[] = [
+  { id: "free", price: 0, monthly: false },
+  { id: "standard", price: 59_000, monthly: false },
+  { id: "premium", price: 129_000, monthly: false },
+  { id: "pack", price: 449_000, monthly: false },
+  { id: "database", price: 299_000, monthly: true },
+];

@@ -2,7 +2,12 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 import { createStorageStore } from "@/lib/client-store";
-import { defaultCard, type CandidateCard } from "@/lib/mock-data";
+import {
+  defaultCard,
+  employerVacancies,
+  type CandidateCard,
+  type EmployerVacancy,
+} from "@/lib/mock-data";
 
 const EMPTY: string[] = [];
 
@@ -79,4 +84,55 @@ export function useCard() {
   const save = useCallback((next: CandidateCard) => cardStore.set(JSON.stringify(next)), []);
 
   return { card, save };
+}
+
+/* ——— Ish beruvchi ——— */
+
+export type Role = "seeker" | "employer";
+
+const roleStore = createStorageStore<Role>("ish.role", (raw) =>
+  raw === "employer" ? "employer" : "seeker",
+);
+
+/** Foydalanuvchi roli — nomzod yoki ish beruvchi */
+export function useRole() {
+  const role = useSyncExternalStore(roleStore.subscribe, roleStore.get, () => "seeker" as Role);
+  const setRole = useCallback((next: Role) => roleStore.set(next), []);
+  return { role, setRole };
+}
+
+const EMPTY_VACANCIES: EmployerVacancy[] = [];
+
+const myVacanciesStore = createStorageStore<EmployerVacancy[]>("ish.myVacancies", (raw) => {
+  if (!raw) return EMPTY_VACANCIES;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as EmployerVacancy[]) : EMPTY_VACANCIES;
+  } catch {
+    return EMPTY_VACANCIES;
+  }
+});
+
+/**
+ * Ish beruvchining vakansiyalari: namunaviylari + shu sessiyada joylanganlari.
+ * Yangi joylangani tepada turadi.
+ */
+export function useMyVacancies() {
+  const created = useSyncExternalStore(
+    myVacanciesStore.subscribe,
+    myVacanciesStore.get,
+    () => EMPTY_VACANCIES,
+  );
+
+  const publish = useCallback((vacancy: EmployerVacancy) => {
+    const current = myVacanciesStore.get();
+    myVacanciesStore.set(JSON.stringify([vacancy, ...current]));
+  }, []);
+
+  const remove = useCallback((id: string) => {
+    const current = myVacanciesStore.get();
+    myVacanciesStore.set(JSON.stringify(current.filter((v) => v.id !== id)));
+  }, []);
+
+  return { vacancies: [...created, ...employerVacancies], created, publish, remove };
 }
