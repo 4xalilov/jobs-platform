@@ -53,11 +53,21 @@ export type ChatListItemDTO = {
   unread: number;
 };
 
+export type ChatSide = "nomzod" | "ish_beruvchi";
+
 export type MessageDTO = {
   id: string;
-  from: "nomzod" | "ish_beruvchi" | "tizim";
+  from: ChatSide | "tizim";
   text: string;
+  /** Ko'rsatish uchun tayyor soat: 14:32 */
   time: string;
+  /** ISO — sana ajratgichlari va tartib uchun */
+  at: string;
+  /** Qarshi tomon o'qiganmi (ikkita belgi) */
+  read: boolean;
+  /** Ovozli xabar bo'lsa */
+  audioUrl?: string;
+  durationMs?: number;
 };
 
 export type ChatDTO = {
@@ -66,6 +76,13 @@ export type ChatDTO = {
   fastReply: boolean;
   professionName: Localized | null;
   messages: MessageDTO[];
+};
+
+/** Chatni davomli kuzatish javobi */
+export type ChatUpdateDTO = {
+  messages: MessageDTO[];
+  /** Shu vaqtgacha yuborgan xabarlarim o'qilgan (ISO) */
+  readUpTo: string | null;
 };
 
 export type CardDTO = {

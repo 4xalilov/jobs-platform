@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { CountBadge } from "@/components/ui/badge";
 import { IconBriefcase, IconCard, IconUser, IconUsers } from "@/components/ui/icon";
+import { useUnread } from "@/lib/use-unread";
 import { cn } from "@/lib/utils";
 
 type EmployerTab = "vacancies" | "candidates" | "plans" | "profile";
@@ -34,6 +35,7 @@ export function EmployerTabBar({ unread = 0 }: { unread?: number }) {
   const { t } = useI18n();
   const pathname = usePathname();
   const router = useRouter();
+  const live = useUnread(unread);
 
   const active = activeTab(pathname);
   const tabs: EmployerTab[] = ["vacancies", "candidates", "plans", "profile"];
@@ -57,9 +59,9 @@ export function EmployerTabBar({ unread = 0 }: { unread?: number }) {
             >
               <span className="relative">
                 <TabIcon size={26} />
-                {tab === "candidates" && unread > 0 && (
+                {tab === "candidates" && live > 0 && (
                   <CountBadge
-                    count={unread}
+                    count={live}
                     className="absolute -top-1 -right-2.5 border-2 border-surface"
                   />
                 )}

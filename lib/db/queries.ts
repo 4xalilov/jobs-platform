@@ -5,6 +5,8 @@ import type {
   CardDTO,
   ChatDTO,
   ChatListItemDTO,
+  ChatSide,
+  ChatUpdateDTO,
   CityDTO,
   CompanyDTO,
   EmployerVacancyDTO,
@@ -397,7 +399,8 @@ export async function listChats(userId: string): Promise<ChatListItemDTO[]> {
   const rows = await query<ChatListRow>(
     `select ch.id, co.nom as kompaniya, co.tez_javob_belgisi as tez_javob,
        p.nom_uz as kasb_uz, p.nom_uz_cyrl as kasb_cyrl, p.nom_ru as kasb_ru,
-       (select m.matn from messages m where m.chat_id = ch.id order by m.sana desc limit 1) as oxirgi_matn,
+       (select coalesce(m.matn, 'ovozli_xabar') from messages m
+         where m.chat_id = ch.id order by m.sana desc, m.id desc limit 1) as oxirgi_matn,
        ch.oxirgi_xabar_sana as oxirgi_sana,
        (select count(*) from messages m
          where m.chat_id = ch.id and m.oqilgan = false and m.kim_yubordi = 'ish_beruvchi') as oqilmagan
@@ -423,19 +426,38 @@ export async function listChats(userId: string): Promise<ChatListItemDTO[]> {
   }));
 }
 
-type MessageRow = { id: string; kim_yubordi: MessageDTO["from"]; matn: string | null; sana: Date };
+type MessageRow = {
+  id: string;
+  kim_yubordi: MessageDTO["from"];
+  matn: string | null;
+  ovoz_url: string | null;
+  davomiylik_ms: number | null;
+  oqilgan: boolean;
+  sana: Date;
+};
 
-async function chatMessages(chatId: string): Promise<MessageDTO[]> {
-  const rows = await query<MessageRow>(
-    "select id, kim_yubordi, matn, sana from messages where chat_id = $1::uuid order by sana",
-    [chatId],
-  );
-  return rows.map((row) => ({
+const MESSAGE_SELECT =
+  "select id, kim_yubordi, matn, ovoz_url, davomiylik_ms, oqilgan, sana from messages";
+
+function toMessage(row: MessageRow): MessageDTO {
+  return {
     id: row.id,
     from: row.kim_yubordi,
     text: row.matn ?? "",
     time: timeLabel(row.sana),
-  }));
+    at: row.sana.toISOString(),
+    read: row.oqilgan,
+    ...(row.ovoz_url ? { audioUrl: row.ovoz_url } : {}),
+    ...(row.davomiylik_ms === null ? {} : { durationMs: row.davomiylik_ms }),
+  };
+}
+
+async function chatMessages(chatId: string): Promise<MessageDTO[]> {
+  const rows = await query<MessageRow>(
+    `${MESSAGE_SELECT} where chat_id = $1::uuid order by sana, id`,
+    [chatId],
+  );
+  return rows.map(toMessage);
 }
 
 export async function getChat(chatId: string, userId: string): Promise<ChatDTO | null> {
@@ -700,7 +722,8 @@ export async function listCandidates(companyId: string): Promise<CandidateDTO[]>
        sh.nom_uz as shahar_uz, sh.nom_uz_cyrl as shahar_cyrl, sh.nom_ru as shahar_ru,
        tm.nom_uz as tuman_uz, tm.nom_uz_cyrl as tuman_cyrl, tm.nom_ru as tuman_ru,
        cc.tajriba_daraja, cc.maosh_min, cc.maosh_max, v.lavozim,
-       (select m.matn from messages m where m.chat_id = ch.id order by m.sana desc limit 1) as oxirgi_matn,
+       (select coalesce(m.matn, 'ovozli_xabar') from messages m
+         where m.chat_id = ch.id order by m.sana desc, m.id desc limit 1) as oxirgi_matn,
        ch.oxirgi_xabar_sana as oxirgi_sana,
        (select count(*) from messages m
          where m.chat_id = ch.id and m.oqilgan = false and m.kim_yubordi = 'nomzod') as oqilmagan
@@ -762,6 +785,160 @@ export async function getEmployerChat(chatId: string, companyId: string): Promis
     professionName: localized(row.kasb_uz, row.kasb_cyrl, row.kasb_ru),
     messages: await chatMessages(row.id),
   };
+}
+
+/* ——— Yozishuv ——— */
+
+/**
+ * Foydalanuvchi shu chatda qaysi tomon ekanini aniqlaydi.
+ * Bitta yo'l ikkala tomonga ham xizmat qiladi — kim yozayotgani so'rovdan
+ * emas, bazadagi bog'lanishdan kelib chiqadi.
+ */
+export async function chatSide(chatId: string, userId: string): Promise<ChatSide | null> {
+  const row = await queryOne<{ nomzod: boolean; ish_beruvchi: boolean }>(
+    `select cc.user_id = $2::uuid as nomzod, co.user_id = $2::uuid as ish_beruvchi
+     from chats ch
+     join applications a on a.id = ch.application_id
+     join candidate_cards cc on cc.id = a.candidate_card_id
+     join vacancies v on v.id = a.vacancy_id
+     join companies co on co.id = v.company_id
+     where ch.id = $1::uuid`,
+    [chatId, userId],
+  );
+  if (!row) return null;
+  if (row.nomzod) return "nomzod";
+  if (row.ish_beruvchi) return "ish_beruvchi";
+  return null;
+}
+
+const other = (side: ChatSide): ChatSide => (side === "nomzod" ? "ish_beruvchi" : "nomzod");
+
+export async function sendMessage(
+  chatId: string,
+  from: ChatSide,
+  content: { text?: string; audioId?: string; durationMs?: number },
+): Promise<MessageDTO> {
+  const text = content.text?.trim() || null;
+  const audioUrl = content.audioId ? `/api/audio/${content.audioId}` : null;
+  if (!text && !audioUrl) throw new Error("Bo'sh xabar");
+
+  return transaction(async (run) => {
+    const rows = await run<MessageRow>(
+      `insert into messages (chat_id, kim_yubordi, matn, ovoz_url, davomiylik_ms)
+       values ($1::uuid, $2, $3, $4, $5)
+       returning id, kim_yubordi, matn, ovoz_url, davomiylik_ms, oqilgan, sana`,
+      [chatId, from, text, audioUrl, content.durationMs ?? null],
+    );
+    // Xabarlar ro'yxati shu ustun bo'yicha tartiblanadi
+    await run("update chats set oxirgi_xabar_sana = $2 where id = $1::uuid", [
+      chatId,
+      rows[0].sana,
+    ]);
+    return toMessage(rows[0]);
+  });
+}
+
+/** Ochiq chatga kelgan yangi xabarlar — `since` dan keyingilari */
+export async function messagesSince(
+  chatId: string,
+  side: ChatSide,
+  since: string | null,
+): Promise<ChatUpdateDTO> {
+  const rows = since
+    ? await query<MessageRow>(
+        `${MESSAGE_SELECT} where chat_id = $1::uuid and sana > $2::timestamptz order by sana, id`,
+        [chatId, since],
+      )
+    : await query<MessageRow>(`${MESSAGE_SELECT} where chat_id = $1::uuid order by sana, id`, [
+        chatId,
+      ]);
+
+  // O'zim yuborgan xabarlardan qaysilari o'qilgani — ikkinchi belgi uchun.
+  // Har birini alohida yuborish o'rniga eng oxirgi o'qilgan vaqtni beramiz.
+  const read = await queryOne<{ oxirgi: Date | null }>(
+    `select max(sana) as oxirgi from messages
+     where chat_id = $1::uuid and kim_yubordi = $2 and oqilgan = true`,
+    [chatId, side],
+  );
+
+  return {
+    messages: rows.map(toMessage),
+    readUpTo: read?.oxirgi ? read.oxirgi.toISOString() : null,
+  };
+}
+
+/** Chat ochilganda qarshi tomonning xabarlari o'qilgan deb belgilanadi */
+export async function markChatRead(chatId: string, side: ChatSide): Promise<void> {
+  await query(
+    `update messages set oqilgan = true
+     where chat_id = $1::uuid and kim_yubordi = $2 and oqilgan = false`,
+    [chatId, other(side)],
+  );
+}
+
+/** Tab bardagi belgi uchun — nomzod tomoni */
+export async function unreadTotal(userId: string): Promise<number> {
+  const row = await queryOne<{ soni: string }>(
+    `select count(*) as soni from messages m
+     join chats ch on ch.id = m.chat_id
+     join applications a on a.id = ch.application_id
+     join candidate_cards cc on cc.id = a.candidate_card_id
+     where cc.user_id = $1::uuid and m.kim_yubordi = 'ish_beruvchi' and m.oqilgan = false`,
+    [userId],
+  );
+  return Number(row?.soni ?? 0);
+}
+
+/** Tab bardagi belgi uchun — ish beruvchi tomoni */
+export async function unreadTotalForCompany(companyId: string): Promise<number> {
+  const row = await queryOne<{ soni: string }>(
+    `select count(*) as soni from messages m
+     join chats ch on ch.id = m.chat_id
+     join applications a on a.id = ch.application_id
+     join vacancies v on v.id = a.vacancy_id
+     where v.company_id = $1::uuid and m.kim_yubordi = 'nomzod' and m.oqilgan = false`,
+    [companyId],
+  );
+  return Number(row?.soni ?? 0);
+}
+
+/* ——— Ovozli xabar ——— */
+
+export async function saveAudio(
+  bytes: Buffer,
+  mimeType: string,
+  durationMs: number,
+): Promise<string> {
+  const row = await queryOne<{ id: string }>(
+    "insert into message_audio (bayt, turi, davomiylik_ms) values ($1, $2, $3) returning id",
+    [bytes, mimeType, durationMs],
+  );
+  if (!row) throw new Error("Ovoz saqlanmadi");
+  return row.id;
+}
+
+/**
+ * Ovozni faqat shu yozishuv ishtirokchisi ola oladi.
+ * Bog'lanish `messages.ovoz_url` orqali — spetsifikatsiyadagi ustun o'sha,
+ * shuning uchun qo'shimcha kalit ustun kiritilmadi.
+ */
+export async function getAudioForUser(
+  id: string,
+  userId: string,
+): Promise<{ bytes: Buffer; mimeType: string } | null> {
+  const row = await queryOne<{ bayt: Buffer; turi: string }>(
+    `select ma.bayt, ma.turi from message_audio ma
+     join messages m on m.ovoz_url = '/api/audio/' || ma.id
+     join chats ch on ch.id = m.chat_id
+     join applications a on a.id = ch.application_id
+     join candidate_cards cc on cc.id = a.candidate_card_id
+     join vacancies v on v.id = a.vacancy_id
+     join companies co on co.id = v.company_id
+     where ma.id = $1::uuid and (cc.user_id = $2::uuid or co.user_id = $2::uuid)
+     limit 1`,
+    [id, userId],
+  );
+  return row ? { bytes: row.bayt, mimeType: row.turi } : null;
 }
 
 /* ——— Autentifikatsiya ——— */

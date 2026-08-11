@@ -222,9 +222,16 @@ export const uzCyrl: Dictionary = {
     chat: {
       placeholder: "Хабар ёзинг",
       applicationSent: "Сиз ариза юбордингиз",
+      applicationReceived: "Номзод ариза юборди",
       today: "Бугун",
+      yesterday: "Кеча",
       fastReplyStatus: "одатда 24 соат ичида жавоб беради",
-      stagePlaceholder: "Чат 6-босқичда ишга тушади",
+      voiceMessage: "Овозли хабар",
+      recording: "Ёзилмоқда",
+      cancelRecording: "Бекор қилиш",
+      micDenied: "Микрофонга рухсат берилмади",
+      micUnavailable: "Бу браузерда овоз ёзиб бўлмайди",
+      notSent: "Юборилмади",
     },
     saved: {
       empty: "Сақланган вакансия йўқ",

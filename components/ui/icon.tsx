@@ -240,6 +240,25 @@ export const IconPlay = (p: IconProps) => (
   </Icon>
 );
 
+export const IconPause = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M9 4.5v15M15 4.5v15" />
+  </Icon>
+);
+
+/** Yetkazildi — bitta belgi; o'qildi — ikkita */
+export const IconCheckDouble = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M1.5 12.5 6 17 16.5 6.5M11 15.5l1.5 1.5L23 6.5" />
+  </Icon>
+);
+
+export const IconSquare = (p: IconProps) => (
+  <Icon {...p}>
+    <rect x="5.5" y="5.5" width="13" height="13" rx="2" />
+  </Icon>
+);
+
 export const IconCard = (p: IconProps) => (
   <Icon {...p}>
     <rect x="2.5" y="5" width="19" height="14" rx="2.5" />

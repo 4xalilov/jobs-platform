@@ -222,9 +222,16 @@ export const ru: Dictionary = {
     chat: {
       placeholder: "Напишите сообщение",
       applicationSent: "Вы отправили отклик",
+      applicationReceived: "Кандидат отправил отклик",
       today: "Сегодня",
+      yesterday: "Вчера",
       fastReplyStatus: "обычно отвечает в течение 24 часов",
-      stagePlaceholder: "Чат заработает на 6-м этапе",
+      voiceMessage: "Голосовое сообщение",
+      recording: "Идёт запись",
+      cancelRecording: "Отменить",
+      micDenied: "Нет доступа к микрофону",
+      micUnavailable: "В этом браузере запись недоступна",
+      notSent: "Не отправлено",
     },
     saved: {
       empty: "Нет сохранённых вакансий",

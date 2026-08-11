@@ -3,7 +3,7 @@
 Telegram uslubidagi ish topish platformasi. Asosiy raqib — hh.uz emas, Telegram
 kanallari. Demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 
-## Holat: 5-bosqich — Telegram autentifikatsiya
+## Holat: 6-bosqich — chat funksiyasi
 
 | Bosqich | Nima | Holat |
 | --- | --- | --- |
@@ -12,7 +12,7 @@ kanallari. Demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 | 3 | Ish beruvchi ekranlari (statik) | ✅ tayyor |
 | 4 | Baza va API | ✅ tayyor |
 | 5 | Telegram autentifikatsiya | ✅ tayyor |
-| 6 | Chat funksiyasi | ⏳ |
+| 6 | Chat funksiyasi | ✅ tayyor |
 | 7 | To'lov integratsiyasi (Payme, Click) | ⏳ |
 
 ## Ishga tushirish
@@ -103,6 +103,11 @@ olinmaydi.
 | `DELETE /api/employer/vacancies/[id]` | Vakansiyani o'chirish |
 | `GET /api/employer/candidates` · `GET /api/employer/chats/[id]` | Nomzodlar |
 | `GET /api/professions` · `GET /api/cities` | Ma'lumotnomalar |
+| `GET /api/chats/[id]/messages` | Yangi xabarlar: `?since=<ISO>` |
+| `POST /api/chats/[id]/messages` | Xabar yuborish (matn yoki ovoz) |
+| `POST /api/chats/[id]/read` | Chat ochildi — qarshi tomon xabarlari o'qildi |
+| `POST /api/audio` · `GET /api/audio/[id]` | Ovozli xabar |
+| `GET /api/unread` | Tab bardagi o'qilmagan belgisi |
 | `GET /api/auth/telegram` | Login Widget qaytaradigan manzil — imzo tekshiriladi |
 | `POST /api/auth/dev` | Namunaviy kirish (bot ulanmagan bo'lsagina) |
 | `POST /api/auth/logout` | Chiqish — cookie tozalanadi |
@@ -111,7 +116,32 @@ olinmaydi.
 
 Sahifalar ma'lumotni to'g'ridan-to'g'ri server komponentlarida oladi; API
 brauzerdan keladigan qo'shimcha so'rovlar uchun (cheksiz aylanish, qidiruv,
-ariza yuborish).
+ariza yuborish, yozishuv).
+
+### Chat
+
+Xabar yozilgan zahoti ekranda paydo bo'ladi, serverga esa fonda ketadi
+(optimistic UI). Yetkazilgani bitta belgi, o'qilgani ikkita belgi bilan
+ko'rsatiladi. Yuborilmasa — xabar joyida qoladi va "Qayta urinish" chiqadi.
+
+Yangi xabarlar 2,5 sekundlik so'rov bilan keladi, ro'yxatlar va tab bardagi
+belgi — 5 sekundda. WebSocket ataylab olinmadi: PWA telefonda fon rejimiga
+tez-tez tushadi, uzilgan ulanishni tiklash kodi qimmatga tushadi, chat trafigi
+esa kichkina. Ekran ko'rinmay qolsa so'rov to'xtaydi, qaytganda darhol bir
+marta so'raladi.
+
+`GET /api/chats/[id]/messages` bitta yo'l — nomzod ham, ish beruvchi ham
+shundan foydalanadi. Kim yozayotgani so'rovda emas, bazadagi bog'lanishda
+aniqlanadi, ya'ni o'zini boshqa tomon qilib ko'rsatib bo'lmaydi.
+
+**Ovozli xabar.** Mikrofonga bosiladi — yozuv boshlanadi, yana bosiladi —
+yuboriladi (ushlab turish emas: tasodifan qo'yib yuborilsa xabar yo'qoladi).
+Uzunlik chegarasi 60 sekund. Spetsifikatsiyada `messages.ovoz_url` bor, lekin
+fayl qayerda turishi aytilmagan — S3 mos saqlagich hali ulanmagani uchun audio
+`message_audio` jadvalida, bazada yotadi (30 sekundlik opus ≈ 60 KB). S3 ga
+o'tilsa faqat shu jadval va `/api/audio` yo'li almashadi, `ovoz_url` allaqachon
+URL bo'lgani uchun qolgan kod o'zgarmaydi. Ovozni faqat shu yozishuv
+ishtirokchisi ola oladi — begonaga 401 qaytadi.
 
 Til va ko'rinish Profil ekranidan, dizayn tizimi sahifasida esa yuqoridagi
 tanlagichlardan almashtiriladi.
@@ -151,6 +181,7 @@ components/
   providers/            theme-provider, i18n-provider
   app/                  app-tab-bar
   auth/                 login-screen, onboarding-flow
+  chat/                 chat-list, chat-view, message-composer, voice-bubble
   jobs/                 vacancy-row, vacancy-sheet
   ui/                   button, list, sheet, chip, tab-bar, ...
 lib/
@@ -161,6 +192,9 @@ lib/
   client-store.ts       localStorage + useSyncExternalStore
   stores.ts             til/ko'rinish va so'nggi qidiruvlar
   use-sheet.ts          sheet holati brauzer tarixiga bog'lanadi
+  use-chat.ts           yozishuv: optimistik yuborish, kuzatish, o'qildi
+  use-polling.ts        ekran ko'rinib turganda so'rov, aks holda to'xtaydi
+  use-recorder.ts       ovozli xabar yozish (MediaRecorder)
   design-samples.ts     faqat /design sahifasi uchun namuna
 db/
   migrations/           SQL migratsiyalar
@@ -204,4 +238,4 @@ kalit kompilyatsiya xatosi beradi.
 Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · PostgreSQL 16 ·
 Telegram Login Widget · PWA (manifest)
 
-Keyingi bosqichlarda: jonli chat, S3 mos fayl saqlash, Payme/Click to'lovlari.
+Keyingi bosqichda: Payme va Click to'lovlari. Undan keyin S3 mos fayl saqlash.

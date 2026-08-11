@@ -1,5 +1,5 @@
 import { AppTabBar } from "@/components/app/app-tab-bar";
-import { listChats } from "@/lib/db/queries";
+import { unreadTotal } from "@/lib/db/queries";
 import { requireUser } from "@/lib/db/session";
 
 export const dynamic = "force-dynamic";
@@ -7,8 +7,7 @@ export const dynamic = "force-dynamic";
 /** Tab bar bilan ekranlar: Ishlar / Xabarlar / Saqlangan / Profil */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser();
-  const chats = await listChats(user.id);
-  const unread = chats.reduce((sum, chat) => sum + chat.unread, 0);
+  const unread = await unreadTotal(user.id);
 
   return (
     <div className="mx-auto min-h-dvh max-w-[440px] bg-bg">

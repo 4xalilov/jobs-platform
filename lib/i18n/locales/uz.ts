@@ -223,9 +223,16 @@ export const uz = {
     chat: {
       placeholder: "Xabar yozing",
       applicationSent: "Siz ariza yubordingiz",
+      applicationReceived: "Nomzod ariza yubordi",
       today: "Bugun",
+      yesterday: "Kecha",
       fastReplyStatus: "odatda 24 soat ichida javob beradi",
-      stagePlaceholder: "Chat 6-bosqichda ishga tushadi",
+      voiceMessage: "Ovozli xabar",
+      recording: "Yozilmoqda",
+      cancelRecording: "Bekor qilish",
+      micDenied: "Mikrofonga ruxsat berilmadi",
+      micUnavailable: "Bu brauzerda ovoz yozib bo'lmaydi",
+      notSent: "Yuborilmadi",
     },
     saved: {
       empty: "Saqlangan vakansiya yo'q",

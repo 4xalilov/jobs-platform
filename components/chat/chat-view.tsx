@@ -1,13 +1,39 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { MessageComposer } from "@/components/chat/message-composer";
+import { VoiceBubble } from "@/components/chat/voice-bubble";
 import { useI18n } from "@/components/providers/i18n-provider";
-import { useSystemMessageText } from "@/components/chat/chat-list";
 import { Avatar } from "@/components/ui/avatar";
-import { IconArrowLeft, IconMic, IconSend } from "@/components/ui/icon";
+import { IconArrowLeft, IconCheck, IconCheckDouble, IconClock } from "@/components/ui/icon";
 import { NavBar } from "@/components/ui/nav-bar";
-import type { ChatDTO } from "@/lib/db/types";
+import { useChat, type ChatMessage } from "@/lib/use-chat";
+import type { ChatDTO, ChatSide } from "@/lib/db/types";
 import { cn } from "@/lib/utils";
+
+/** Kun ajratgichi: bugungi va kechagi kun nomlanadi, qolgani sana */
+function useDayLabel() {
+  const { t, locale } = useI18n();
+  const tag = locale === "ru" ? "ru-RU" : "uz-UZ";
+
+  return (iso: string) => {
+    const date = new Date(iso);
+    const today = new Date();
+    const days = Math.round(
+      (new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime() -
+        new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()) /
+        86_400_000,
+    );
+    if (days <= 0) return t.screens.chat.today;
+    if (days === 1) return t.screens.chat.yesterday;
+    return date.toLocaleDateString(tag, { day: "numeric", month: "long" });
+  };
+}
+
+function dayKey(iso: string): string {
+  return iso.slice(0, 10);
+}
 
 /**
  * Ariza chat sifatida ochiladi — ish qidiruvchi ham, ish beruvchi ham
@@ -22,11 +48,27 @@ export function ChatView({
   chat: ChatDTO;
   context?: string;
   status?: string;
-  me: "nomzod" | "ish_beruvchi";
+  me: ChatSide;
 }) {
   const { t } = useI18n();
   const router = useRouter();
-  const systemText = useSystemMessageText();
+  const dayLabel = useDayLabel();
+  const { messages, send, retry } = useChat(chat.id, chat.messages, me);
+
+  const bottom = useRef<HTMLDivElement>(null);
+  const count = messages.length;
+
+  // Yangi xabar kelganda pastga tushamiz — Telegramdagidek
+  useEffect(() => {
+    bottom.current?.scrollIntoView({ block: "end" });
+  }, [count]);
+
+  const systemText = (raw: string) =>
+    raw === "ariza_yuborildi"
+      ? me === "nomzod"
+        ? t.screens.chat.applicationSent
+        : t.screens.chat.applicationReceived
+      : raw;
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-[440px] flex-col bg-bg">
@@ -63,55 +105,92 @@ export function ChatView({
         </div>
       )}
 
-      <div className="flex flex-1 flex-col gap-1.5 px-3 py-4">
-        <p className="pb-1 text-center text-caption text-text-tertiary">{t.screens.chat.today}</p>
+      {/* Suhbat qisqa bo'lsa xabarlar pastda turadi — Telegramdagidek */}
+      <div className="flex flex-1 flex-col justify-end gap-1.5 px-3 py-4">
+        {messages.map((message, index) => {
+          const newDay = index === 0 || dayKey(message.at) !== dayKey(messages[index - 1].at);
 
-        {chat.messages.map((message) =>
-          message.from === "tizim" ? (
-            <p key={message.id} className="py-1 text-center text-caption text-text-tertiary">
-              {systemText(message.text)}
-            </p>
-          ) : (
-            <div
-              key={message.id}
-              className={cn("flex", message.from === me ? "justify-end" : "justify-start")}
-            >
-              <div
-                className={cn(
-                  "max-w-[78%] rounded-tg px-3 py-2",
-                  message.from === me ? "bg-accent text-on-accent" : "bg-surface text-text",
-                )}
-              >
-                <p className="text-body break-words">{message.text}</p>
-                <p
-                  className={cn(
-                    "mt-0.5 text-right text-[11px] leading-[13px]",
-                    message.from === me ? "text-on-accent/70" : "text-text-tertiary",
-                  )}
-                >
-                  {message.time}
+          return (
+            <div key={message.id} className="contents">
+              {newDay && (
+                <p className="py-1 text-center text-caption text-text-tertiary">
+                  {dayLabel(message.at)}
                 </p>
-              </div>
+              )}
+              {message.from === "tizim" ? (
+                <p className="py-1 text-center text-caption text-text-tertiary">
+                  {systemText(message.text)}
+                </p>
+              ) : (
+                <Bubble message={message} me={me} onRetry={() => retry(message.id)} />
+              )}
             </div>
-          ),
-        )}
+          );
+        })}
+        <div ref={bottom} />
       </div>
 
-      {/* Yozish paneli — 6-bosqichda ishga tushadi */}
-      <div className="sticky bottom-0 border-t border-separator bg-surface px-3 py-2 pb-[calc(8px+env(safe-area-inset-bottom))]">
-        <div className="flex items-center gap-2">
-          <div className="flex h-9 flex-1 items-center rounded-tg-sm bg-fill px-3">
-            <span className="truncate text-body text-text-tertiary">
-              {t.screens.chat.stagePlaceholder}
-            </span>
-          </div>
-          <span className="text-text-tertiary opacity-50">
-            <IconMic size={24} />
-          </span>
-          <span className="text-accent opacity-50">
-            <IconSend size={24} />
-          </span>
-        </div>
+      <MessageComposer onSend={send} />
+    </div>
+  );
+}
+
+function Bubble({
+  message,
+  me,
+  onRetry,
+}: {
+  message: ChatMessage;
+  me: ChatSide;
+  onRetry: () => void;
+}) {
+  const { t } = useI18n();
+  const mine = message.from === me;
+
+  return (
+    <div className={cn("flex", mine ? "justify-end" : "justify-start")}>
+      <div
+        className={cn(
+          "max-w-[78%] rounded-tg px-3 py-2",
+          mine ? "bg-accent text-on-accent" : "bg-surface text-text",
+          message.failed && "opacity-60",
+        )}
+      >
+        {message.audioUrl ? (
+          <VoiceBubble
+            url={message.audioUrl}
+            durationMs={message.durationMs}
+            mine={mine}
+            label={t.screens.chat.voiceMessage}
+          />
+        ) : (
+          <p className="text-body break-words whitespace-pre-wrap">{message.text}</p>
+        )}
+
+        <span
+          className={cn(
+            "mt-0.5 flex items-center justify-end gap-1 text-[11px] leading-[13px]",
+            mine ? "text-on-accent/70" : "text-text-tertiary",
+          )}
+        >
+          {message.failed ? (
+            <button type="button" onClick={onRetry} className="underline">
+              {t.screens.chat.notSent} · {t.common.retry}
+            </button>
+          ) : (
+            <>
+              {message.time}
+              {mine &&
+                (message.pending ? (
+                  <IconClock size={13} />
+                ) : message.read ? (
+                  <IconCheckDouble size={14} />
+                ) : (
+                  <IconCheck size={13} />
+                ))}
+            </>
+          )}
+        </span>
       </div>
     </div>
   );

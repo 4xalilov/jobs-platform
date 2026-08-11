@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSystemMessageText } from "@/components/chat/chat-list";
 import { useI18n } from "@/components/providers/i18n-provider";
@@ -11,16 +12,25 @@ import { IconMessage, IconUsers } from "@/components/ui/icon";
 import { ListGroup, ListItem } from "@/components/ui/list";
 import { NavBar } from "@/components/ui/nav-bar";
 import { Sheet } from "@/components/ui/sheet";
+import { apiGet } from "@/lib/api";
 import type { CandidateDTO } from "@/lib/db/types";
+import { usePolling } from "@/lib/use-polling";
 import { useSheet } from "@/lib/use-sheet";
 import { formatSalary } from "@/lib/utils";
 
 /** Nomzodlar — arizalar chat ro'yxati sifatida */
-export function CandidateList({ candidates }: { candidates: CandidateDTO[] }) {
+export function CandidateList({ candidates: initial }: { candidates: CandidateDTO[] }) {
   const { t, locale } = useI18n();
   const router = useRouter();
   const card = useSheet<CandidateDTO>();
-  const systemText = useSystemMessageText();
+  const systemText = useSystemMessageText("ish_beruvchi");
+  const [candidates, setCandidates] = useState(initial);
+
+  // Nomzod javob yozsa ro'yxat o'zi yangilanadi
+  const refresh = useCallback(async () => {
+    setCandidates(await apiGet<CandidateDTO[]>("/employer/candidates"));
+  }, []);
+  usePolling(refresh, 5000);
 
   const location = (candidate: CandidateDTO) => {
     const city = candidate.cityName?.[locale] ?? "";

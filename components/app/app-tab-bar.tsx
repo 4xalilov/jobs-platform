@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { TabBar, type TabKey } from "@/components/ui/tab-bar";
+import { useUnread } from "@/lib/use-unread";
 
 const ROUTES: Record<TabKey, string> = {
   jobs: "/jobs",
@@ -22,6 +23,7 @@ export function AppTabBar({ unread = 0 }: { unread?: number }) {
   const { t } = useI18n();
   const pathname = usePathname();
   const router = useRouter();
+  const live = useUnread(unread);
 
   return (
     <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[440px] -translate-x-1/2">
@@ -34,7 +36,7 @@ export function AppTabBar({ unread = 0 }: { unread?: number }) {
           saved: t.tabs.saved,
           profile: t.tabs.profile,
         }}
-        badges={{ messages: unread }}
+        badges={{ messages: live }}
       />
     </div>
   );
