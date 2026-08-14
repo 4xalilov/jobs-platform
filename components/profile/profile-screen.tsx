@@ -14,17 +14,15 @@ import {
   IconMic,
   IconMoon,
   IconPencil,
-  IconVideo,
 } from "@/components/ui/icon";
 import { ListGroup, ListItem, SectionHeader } from "@/components/ui/list";
-import { NavBar } from "@/components/ui/nav-bar";
+import { LargeTitle } from "@/components/ui/large-title";
 import { Segmented } from "@/components/ui/segmented";
 import { Sheet } from "@/components/ui/sheet";
 import { apiPost } from "@/lib/api";
 import type { CardDTO, CityDTO, ProfessionDTO } from "@/lib/db/types";
 import { locales, type Locale } from "@/lib/i18n";
 import { useSheet } from "@/lib/use-sheet";
-import { formatSalary } from "@/lib/utils";
 
 export function ProfileScreen({
   card,
@@ -62,7 +60,7 @@ export function ProfileScreen({
 
   return (
     <>
-      <NavBar title={t.tabs.profile} className="sticky top-0 z-20 hairline" />
+      <LargeTitle>{t.tabs.profile}</LargeTitle>
 
       {/* Kartochka — rezyume o'rniga */}
       <div className="bg-surface px-4 pt-4 pb-4">
@@ -81,14 +79,7 @@ export function ProfileScreen({
         <div className="mt-3 flex flex-wrap gap-2">
           <Tag>{location}</Tag>
           <Tag>{t.job.experience[card?.experience ?? "none"]}</Tag>
-          <Tag>
-            {formatSalary(
-              card?.salaryMin ?? null,
-              card?.salaryMax ?? null,
-              t.job.currency,
-              t.screens.card.salaryAny,
-            )}
-          </Tag>
+          <Tag>{t.job.employment[card?.employment ?? "full"]}</Tag>
         </div>
 
         <Button
@@ -107,12 +98,6 @@ export function ProfileScreen({
         <ListItem
           leading={<IconCamera size={22} className="text-text-secondary" />}
           title={<span className="text-body font-normal">{t.screens.profile.photo}</span>}
-          insetSeparator={false}
-          chevron
-        />
-        <ListItem
-          leading={<IconVideo size={22} className="text-text-secondary" />}
-          title={<span className="text-body font-normal">{t.screens.profile.video}</span>}
           insetSeparator={false}
           chevron
         />

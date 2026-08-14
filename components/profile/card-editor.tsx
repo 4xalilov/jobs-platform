@@ -4,28 +4,24 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { SelectField, TextField } from "@/components/ui/field";
-import { IconArrowLeft, IconCamera, IconCheck, IconMic, IconVideo } from "@/components/ui/icon";
+import { IconArrowLeft, IconCamera, IconCheck, IconMic } from "@/components/ui/icon";
 import { ListGroup, ListItem, SectionHeader } from "@/components/ui/list";
 import { NavBar } from "@/components/ui/nav-bar";
 import { Segmented } from "@/components/ui/segmented";
 import { Sheet } from "@/components/ui/sheet";
 import { apiPut } from "@/lib/api";
-import type { CardDTO, CityDTO, ExperienceLevel, ProfessionDTO } from "@/lib/db/types";
+import type {
+  CardDTO,
+  CityDTO,
+  EmploymentType,
+  ExperienceLevel,
+  ProfessionDTO,
+} from "@/lib/db/types";
 import { useSheet } from "@/lib/use-sheet";
-import { formatSalary } from "@/lib/utils";
 
-type Picker = "profession" | "city" | "district" | "salary";
+type Picker = "profession" | "city" | "district" | "employment";
 
-/** Maosh diapazoni — yozilmaydi, ro'yxatdan tanlanadi */
-const SALARY_RANGES: { min: number | null; max: number | null }[] = [
-  { min: null, max: null },
-  { min: 2_000_000, max: 3_000_000 },
-  { min: 3_000_000, max: 4_000_000 },
-  { min: 4_000_000, max: 6_000_000 },
-  { min: 6_000_000, max: 8_000_000 },
-  { min: 8_000_000, max: 12_000_000 },
-  { min: 12_000_000, max: null },
-];
+const EMPLOYMENT_TYPES: EmploymentType[] = ["full", "part", "shift", "temporary"];
 
 /** Rezyume o'rniga kartochka — 5 maydon, bo'ldi */
 export function CardEditor({
@@ -124,20 +120,12 @@ export function CardEditor({
           />
         )}
 
+        {/* v2 ning 5-maydoni: kutilayotgan maosh o'rniga ish turi */}
         <SelectField
-          label={t.screens.card.salary}
-          value={
-            draft.salaryMin || draft.salaryMax
-              ? formatSalary(
-                  draft.salaryMin,
-                  draft.salaryMax,
-                  t.job.currency,
-                  t.screens.card.salaryAny,
-                )
-              : null
-          }
-          placeholder={t.screens.card.chooseSalary}
-          onClick={() => picker.open("salary")}
+          label={t.screens.card.employment}
+          value={t.job.employment[draft.employment]}
+          placeholder={t.screens.card.chooseEmployment}
+          onClick={() => picker.open("employment")}
           last
         />
       </ListGroup>
@@ -157,12 +145,6 @@ export function CardEditor({
         <ListItem
           leading={<IconCamera size={22} className="text-text-secondary" />}
           title={<span className="text-body font-normal">{t.screens.profile.photo}</span>}
-          insetSeparator={false}
-          chevron
-        />
-        <ListItem
-          leading={<IconVideo size={22} className="text-text-secondary" />}
-          title={<span className="text-body font-normal">{t.screens.profile.video}</span>}
           insetSeparator={false}
           chevron
         />
@@ -188,7 +170,7 @@ export function CardEditor({
               ? t.screens.card.city
               : picker.value === "district"
                 ? t.screens.card.district
-                : t.screens.card.salary
+                : t.screens.card.employment
         }
       >
         <ListGroup>
@@ -237,15 +219,15 @@ export function CardEditor({
               />
             ))}
 
-          {picker.value === "salary" &&
-            SALARY_RANGES.map((range, i) => (
+          {picker.value === "employment" &&
+            EMPLOYMENT_TYPES.map((option, i) => (
               <PickerRow
-                key={i}
-                label={formatSalary(range.min, range.max, t.job.currency, t.screens.card.salaryAny)}
-                selected={draft.salaryMin === range.min && draft.salaryMax === range.max}
-                last={i === SALARY_RANGES.length - 1}
+                key={option}
+                label={t.job.employment[option]}
+                selected={draft.employment === option}
+                last={i === EMPLOYMENT_TYPES.length - 1}
                 onSelect={() => {
-                  patch({ salaryMin: range.min, salaryMax: range.max });
+                  patch({ employment: option });
                   picker.close();
                 }}
               />

@@ -3,17 +3,22 @@
 Telegram uslubidagi ish topish platformasi. Asosiy raqib — hh.uz emas, Telegram
 kanallari. Demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 
-## Holat: 6-bosqich — chat funksiyasi
+## Holat: v2 ning 2-bosqichi — ish qidiruvchi ekranlari
+
+Spetsifikatsiya v2 ga yangilandi: aniq dizayn qiymatlari, "Arizalarim"
+bo'limi va ishonch qatlami qo'shildi. Bosqichlar shunga qarab qayta
+tartiblandi.
 
 | Bosqich | Nima | Holat |
 | --- | --- | --- |
-| 1 | Dizayn tizimi — barcha komponentlar bitta sahifada | ✅ tayyor |
-| 2 | Ish qidiruvchi ekranlari (statik) | ✅ tayyor |
-| 3 | Ish beruvchi ekranlari (statik) | ✅ tayyor |
+| 1 | Dizayn tizimi (v2 qiymatlari bilan) | ✅ tayyor |
+| 2 | Ish qidiruvchi ekranlari | ✅ tayyor |
+| 3 | Ish beruvchi ekranlari | ✅ v1 bo'yicha, v2 farqlari kutilmoqda |
 | 4 | Baza va API | ✅ tayyor |
 | 5 | Telegram autentifikatsiya | ✅ tayyor |
-| 6 | Chat funksiyasi | ✅ tayyor |
-| 7 | To'lov integratsiyasi (Payme, Click) | ⏳ |
+| 6 | Ishonch qatlami — moslik, javob ko'rsatkichi, ariza holati | ⏳ |
+| 7 | Chat funksiyasi | ✅ tayyor |
+| 8 | To'lov integratsiyasi (Payme, Click) | ⏳ tashlab ketildi |
 
 ## Ishga tushirish
 
@@ -65,13 +70,13 @@ kutubxonasiz.
 
 | Manzil | Ekran |
 | --- | --- |
-| `/jobs` | Ishlar — kasb filtri, cheksiz aylanish, saralash, vakansiya sheeti |
+| `/jobs` | Ishlar — kasb va Saqlangan filtri, cheksiz aylanish, saralash |
 | `/search` | Qidiruv — bitta maydon va so'nggi qidiruvlar |
 | `/messages` | Xabarlar — ish beruvchilar bilan chatlar |
 | `/chat/[id]` | Chat — ariza shu yerda davom etadi |
-| `/saved` | Saqlangan vakansiyalar |
+| `/arizalarim` | Arizalarim — yuborilgan arizalar va holati |
 | `/profile` | Profil — kartochka, til, ko'rinish |
-| `/card` | Kartochkani tahrirlash — 5 maydon |
+| `/card` | Kartochkani tahrirlash — 5 maydon (5-si: ish turi) |
 | `/employer/vacancies` | Mening vakansiyalarim — ko'rishlar va arizalar soni |
 | `/employer/new` | Vakansiya joylash — 4 qadam, ovozli vakansiya |
 | `/employer/candidates` | Nomzodlar — arizalar chat ro'yxati sifatida |
@@ -98,6 +103,7 @@ olinmaydi.
 | `POST /api/vacancies/[id]/apply` | Ariza + chat ochish |
 | `POST /api/vacancies/[id]/save` | Saqlashni almashtirish |
 | `GET /api/saved` · `GET /api/chats` · `GET /api/chats/[id]` | Nomzod ekranlari |
+| `POST /api/vacancies/[id]/hide` | Chapga tortib yashirish |
 | `GET/PUT /api/card` | Nomzod kartochkasi |
 | `GET/POST /api/employer/vacancies` | Ish beruvchi vakansiyalari |
 | `DELETE /api/employer/vacancies/[id]` | Vakansiyani o'chirish |
@@ -154,9 +160,14 @@ npx tsc --noEmit
 
 ## Dizayn qoidalari
 
-- Bitta asosiy rang (`#229ED9`), qolgan hammasi kulrang shkalada
-- Fon `#F5F5F5`, elementlar oq; burchaklar 10–12px
-- Tizim shrifti; sarlavha 17px semibold, matn 15px, izoh 13px kulrang
+- Bitta asosiy rang (`#0088CC`), qolgan hammasi kulrang shkalada
+- Fon `#EFEFF4`, elementlar oq; burchaklar karta 12px, tugma 10px, sheet 16px
+- Tungi rejim iOS uslubida: fon `#000000`, yuza `#1C1C1E`, sheet `#2C2C2E`
+- Tizim shrifti; sahifa sarlavhasi 34px, panel 17px semibold, ro'yxat
+  elementi 17px (o'qilmagan — semibold), izoh 15px, meta 13px
+- Ro'yxat elementi 76px, avatar 48px, tab bar va asosiy tugma 50px
+- Ajratuvchi 0,5px, avatar tugagan joydan (chapdan 76px) boshlanadi
+- Ikonkalar 1,5px chiziqli; faqat faol tab to'ldirilgan variantga o'tadi
 - Ro'yxat elementlari orasida faqat ingichka chiziq — karta, soya, ramka yo'q
 - Bo'lim sarlavhalari: kichik, kulrang, BOSH HARFLARDA
 - Ikonkalar chiziqli (outline), to'ldirilgan emas

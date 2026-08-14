@@ -8,7 +8,7 @@ import { CountBadge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { IconMessage } from "@/components/ui/icon";
 import { ListGroup, ListItem } from "@/components/ui/list";
-import { NavBar } from "@/components/ui/nav-bar";
+import { LargeTitle } from "@/components/ui/large-title";
 import { apiGet } from "@/lib/api";
 import { usePolling } from "@/lib/use-polling";
 import type { ChatListItemDTO, ChatSide } from "@/lib/db/types";
@@ -44,7 +44,7 @@ export function ChatList({ chats: initial }: { chats: ChatListItemDTO[] }) {
 
   return (
     <>
-      <NavBar title={t.tabs.messages} className="sticky top-0 z-20 hairline" />
+      <LargeTitle>{t.tabs.messages}</LargeTitle>
 
       {chats.length === 0 ? (
         <EmptyState

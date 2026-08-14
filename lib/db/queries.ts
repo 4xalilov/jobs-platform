@@ -1,6 +1,8 @@
 import "server-only";
 import { query, queryOne, transaction } from "./client";
 import type {
+  ApplicationDTO,
+  ApplicationStatus,
   CandidateDTO,
   CardDTO,
   ChatDTO,
@@ -186,6 +188,8 @@ export type ListVacanciesOptions = {
   limit?: number;
   lat?: number | null;
   lng?: number | null;
+  /** Faqat saqlanganlar — v2 da "Saqlangan" Ishlar ichidagi filtr */
+  savedOnly?: boolean;
 };
 
 /**
@@ -204,10 +208,23 @@ export async function listVacancies(options: ListVacanciesOptions): Promise<Page
     limit = 12,
     lat = null,
     lng = null,
+    savedOnly = false,
   } = options;
 
   const params: unknown[] = [userId, lat, lng];
   const where: string[] = ["v.holat = 'faol'"];
+
+  if (userId) {
+    // Chapga tortib yashirilgan vakansiya boshqa ko'rinmaydi
+    where.push(
+      "not exists (select 1 from hidden_vacancies h where h.vacancy_id = v.id and h.user_id = $1::uuid)",
+    );
+    if (savedOnly) {
+      where.push(
+        "exists (select 1 from saved_vacancies s where s.vacancy_id = v.id and s.user_id = $1::uuid)",
+      );
+    }
+  }
 
   if (professionId) {
     params.push(professionId);
@@ -345,7 +362,10 @@ export async function toggleSaved(userId: string, vacancyId: string): Promise<bo
 /* ——— Ariza ——— */
 
 /** Ariza yuborilganda chat ham ochiladi — ariza ro'yxati emas, chat modeli */
-export async function applyToVacancy(userId: string, vacancyId: string): Promise<{ chatId: string }> {
+export async function applyToVacancy(
+  userId: string,
+  vacancyId: string,
+): Promise<{ chatId: string }> {
   return transaction(async (run) => {
     const card = await run<{ id: string }>(
       "select id from candidate_cards where user_id = $1::uuid",
@@ -379,6 +399,95 @@ export async function applyToVacancy(userId: string, vacancyId: string): Promise
 
     return { chatId: chat[0].id };
   });
+}
+
+/* ——— Arizalarim ——— */
+
+type ApplicationRow = {
+  id: string;
+  chat_id: string | null;
+  kompaniya: string;
+  lavozim: string;
+  kasb_uz: string | null;
+  kasb_cyrl: string | null;
+  kasb_ru: string | null;
+  shahar_uz: string | null;
+  shahar_cyrl: string | null;
+  shahar_ru: string | null;
+  holat: string;
+  korilgan_sana: Date | null;
+  javob_sana: Date | null;
+  yaratilgan_sana: Date;
+  kunlar: string;
+  javob_bormi: boolean;
+};
+
+/** 7 kun javob bo'lmasa ekranda turtki chiqadi */
+const STALE_DAYS = 7;
+
+function applicationStatus(row: ApplicationRow): ApplicationStatus {
+  if (row.javob_bormi || row.javob_sana) return "javob_berildi";
+  if (row.holat === "rad_etildi" || row.holat === "qabul_qilindi") return "javob_berildi";
+  if (row.korilgan_sana) return "korib_chiqilmoqda";
+  if (row.holat === "korildi") return "korildi";
+  return "yuborildi";
+}
+
+export async function listApplications(userId: string): Promise<ApplicationDTO[]> {
+  const rows = await query<ApplicationRow>(
+    `select a.id, ch.id as chat_id, co.nom as kompaniya, v.lavozim,
+       p.nom_uz as kasb_uz, p.nom_uz_cyrl as kasb_cyrl, p.nom_ru as kasb_ru,
+       sh.nom_uz as shahar_uz, sh.nom_uz_cyrl as shahar_cyrl, sh.nom_ru as shahar_ru,
+       a.holat, a.korilgan_sana, a.javob_sana, a.yaratilgan_sana,
+       floor(extract(epoch from (now() - a.yaratilgan_sana)) / 86400) as kunlar,
+       exists (
+         select 1 from messages m
+         where m.chat_id = ch.id and m.kim_yubordi = 'ish_beruvchi'
+       ) as javob_bormi
+     from applications a
+     join candidate_cards cc on cc.id = a.candidate_card_id
+     join vacancies v on v.id = a.vacancy_id
+     join companies co on co.id = v.company_id
+     left join chats ch on ch.application_id = a.id
+     left join professions p on p.id = v.kasb_id
+     left join cities sh on sh.id = v.shahar_id
+     where cc.user_id = $1::uuid
+     order by a.yaratilgan_sana desc`,
+    [userId],
+  );
+
+  return rows.map((row) => {
+    const status = applicationStatus(row);
+    return {
+      id: row.id,
+      chatId: row.chat_id,
+      company: row.kompaniya,
+      vacancyTitle: row.lavozim,
+      professionName: localized(row.kasb_uz, row.kasb_cyrl, row.kasb_ru),
+      cityName: localized(row.shahar_uz, row.shahar_cyrl, row.shahar_ru),
+      status,
+      sentAt: row.yaratilgan_sana.toISOString(),
+      sentLabel: timeLabel(row.yaratilgan_sana),
+      stale: status === "yuborildi" && Number(row.kunlar) >= STALE_DAYS,
+    };
+  });
+}
+
+/* ——— Yashirish ——— */
+
+/** Chapga tortib yashirish. Qaytadi: endi yashiringanmi. */
+export async function toggleHidden(userId: string, vacancyId: string): Promise<boolean> {
+  const removed = await query(
+    "delete from hidden_vacancies where user_id = $1::uuid and vacancy_id = $2::uuid returning vacancy_id",
+    [userId, vacancyId],
+  );
+  if (removed.length > 0) return false;
+
+  await query(
+    "insert into hidden_vacancies (user_id, vacancy_id) values ($1::uuid, $2::uuid) on conflict do nothing",
+    [userId, vacancyId],
+  );
+  return true;
 }
 
 /* ——— Chatlar (nomzod tomoni) ——— */
@@ -500,17 +609,15 @@ type CardRow = {
   shahar_id: string | null;
   tuman_id: string | null;
   tajriba_daraja: CardDTO["experience"];
-  maosh_min: number | null;
-  maosh_max: number | null;
+  bandlik_turi: CardDTO["employment"];
   foto_url: string | null;
-  video_url: string | null;
   ovoz_url: string | null;
 };
 
 export async function getCard(userId: string): Promise<CardDTO | null> {
   const row = await queryOne<CardRow>(
     `select cc.id, u.ism, cc.kasb_id, cc.shahar_id, cc.tuman_id, cc.tajriba_daraja,
-            cc.maosh_min, cc.maosh_max, cc.foto_url, cc.video_url, cc.ovoz_url
+            cc.bandlik_turi, cc.foto_url, cc.ovoz_url
      from candidate_cards cc
      join users u on u.id = cc.user_id
      where cc.user_id = $1::uuid`,
@@ -525,10 +632,8 @@ export async function getCard(userId: string): Promise<CardDTO | null> {
     cityId: row.shahar_id,
     districtId: row.tuman_id,
     experience: row.tajriba_daraja,
-    salaryMin: row.maosh_min,
-    salaryMax: row.maosh_max,
+    employment: row.bandlik_turi,
     photoUrl: row.foto_url,
-    videoUrl: row.video_url,
     voiceUrl: row.ovoz_url,
   };
 }
@@ -538,24 +643,15 @@ export async function saveCard(userId: string, card: Omit<CardDTO, "id">): Promi
     await run("update users set ism = $2 where id = $1::uuid", [userId, card.name]);
     await run(
       `insert into candidate_cards
-         (user_id, kasb_id, shahar_id, tuman_id, tajriba_daraja, maosh_min, maosh_max)
-       values ($1::uuid, $2, $3, $4, $5, $6, $7)
+         (user_id, kasb_id, shahar_id, tuman_id, tajriba_daraja, bandlik_turi)
+       values ($1::uuid, $2, $3, $4, $5, $6)
        on conflict (user_id) do update set
          kasb_id = excluded.kasb_id,
          shahar_id = excluded.shahar_id,
          tuman_id = excluded.tuman_id,
          tajriba_daraja = excluded.tajriba_daraja,
-         maosh_min = excluded.maosh_min,
-         maosh_max = excluded.maosh_max`,
-      [
-        userId,
-        card.professionId,
-        card.cityId,
-        card.districtId,
-        card.experience,
-        card.salaryMin,
-        card.salaryMax,
-      ],
+         bandlik_turi = excluded.bandlik_turi`,
+      [userId, card.professionId, card.cityId, card.districtId, card.experience, card.employment],
     );
   });
 }
@@ -1005,7 +1101,12 @@ export async function upsertTelegramUser(profile: TelegramProfile): Promise<Auth
        foto_url = excluded.foto_url,
        oxirgi_kirish = now()
      returning id`,
-    [profile.telegramId, fullName || "Foydalanuvchi", profile.username ?? null, profile.photoUrl ?? null],
+    [
+      profile.telegramId,
+      fullName || "Foydalanuvchi",
+      profile.username ?? null,
+      profile.photoUrl ?? null,
+    ],
   );
   if (!row) throw new Error("Foydalanuvchi yaratilmadi");
 
@@ -1054,8 +1155,6 @@ export async function createMinimalCard(
 
 /** Mahalliy sinov uchun: namunaviy nomzod */
 export async function findDemoUser(): Promise<AuthUser | null> {
-  const row = await queryOne<AuthUserRow>(
-    `${AUTH_USER_SELECT} where u.username = 'demo' limit 1`,
-  );
+  const row = await queryOne<AuthUserRow>(`${AUTH_USER_SELECT} where u.username = 'demo' limit 1`);
   return row ? mapAuthUser(row) : null;
 }

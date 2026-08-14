@@ -1,0 +1,14 @@
+import { NextResponse } from "next/server";
+import { toggleHidden } from "@/lib/db/queries";
+import { currentUserId } from "@/lib/db/session";
+
+export const dynamic = "force-dynamic";
+
+/** Chapga tortib yashirish — vakansiya oqimda boshqa ko'rinmaydi */
+export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const userId = await currentUserId();
+  if (!userId) return NextResponse.json({ error: "Foydalanuvchi topilmadi" }, { status: 401 });
+
+  const { id } = await params;
+  return NextResponse.json({ hidden: await toggleHidden(userId, id) });
+}

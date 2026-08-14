@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
     limit: Math.min(Number(params.get("limit")) || 12, 50),
     lat: parseNumber(params.get("lat")),
     lng: parseNumber(params.get("lng")),
+    savedOnly: params.get("saqlangan") === "1",
   });
 
   return NextResponse.json(page);

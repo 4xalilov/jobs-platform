@@ -349,3 +349,11 @@ export const IconBookmarkSolid = (p: IconProps) => (
     <path d="M7.5 2.5h9A2.9 2.9 0 0 1 19.4 5.4v15.4a.9.9 0 0 1-1.42.73L12 17.2l-5.98 4.33a.9.9 0 0 1-1.42-.73V5.4A2.9 2.9 0 0 1 7.5 2.5Z" />
   </SolidIcon>
 );
+
+/** Yashirish — oqimda ko'rinmasin */
+export const IconEyeOff = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M9.9 5.2A9.6 9.6 0 0 1 12 5c6.2 0 10 7 10 7a17 17 0 0 1-3.1 4M6.4 6.5A17 17 0 0 0 2 12s3.8 7 10 7c2 0 3.7-.7 5.1-1.6" />
+    <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18" />
+  </Icon>
+);

@@ -92,12 +92,28 @@ export type CardDTO = {
   cityId: string | null;
   districtId: string | null;
   experience: ExperienceLevel;
-  salaryMin: number | null;
-  salaryMax: number | null;
+  /** v2 ning 5-maydoni — kutilayotgan maosh o'rniga */
+  employment: EmploymentType;
   photoUrl: string | null;
-  videoUrl: string | null;
   voiceUrl: string | null;
 };
+
+/** Arizalarim ekranidagi bitta ariza */
+export type ApplicationDTO = {
+  id: string;
+  chatId: string | null;
+  company: string;
+  vacancyTitle: string;
+  professionName: Localized | null;
+  cityName: Localized | null;
+  status: ApplicationStatus;
+  sentAt: string;
+  sentLabel: string;
+  /** Ish beruvchi 7 kundan beri ko'rmagan */
+  stale: boolean;
+};
+
+export type ApplicationStatus = "yuborildi" | "korildi" | "korib_chiqilmoqda" | "javob_berildi";
 
 export type EmployerVacancyDTO = {
   id: string;

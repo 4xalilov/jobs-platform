@@ -7,8 +7,15 @@ import { VacancyRow } from "@/components/jobs/vacancy-row";
 import { VacancySheet } from "@/components/jobs/vacancy-sheet";
 import { Chip, ChipRow } from "@/components/ui/chip";
 import { EmptyState } from "@/components/ui/empty-state";
-import { IconBookmark, IconBriefcase, IconCheck, IconSliders } from "@/components/ui/icon";
+import {
+  IconBookmark,
+  IconBriefcase,
+  IconCheck,
+  IconEyeOff,
+  IconSliders,
+} from "@/components/ui/icon";
 import { ListGroup, ListItem } from "@/components/ui/list";
+import { LargeTitle } from "@/components/ui/large-title";
 import { NavBar } from "@/components/ui/nav-bar";
 import { SearchFieldButton } from "@/components/ui/search-field";
 import { Sheet } from "@/components/ui/sheet";
@@ -26,9 +33,12 @@ const FALLBACK_POINT = { lat: 41.3111, lng: 69.2406 };
 export function JobsFeed({
   initial,
   professions,
+  initialSavedOnly = false,
 }: {
   initial: Page<VacancyDTO>;
   professions: ProfessionDTO[];
+  /** v2: "Saqlangan" alohida bo'lim emas, shu yerdagi filtr */
+  initialSavedOnly?: boolean;
 }) {
   const { t, locale } = useI18n();
   const router = useRouter();
@@ -36,6 +46,7 @@ export function JobsFeed({
   const [items, setItems] = useState(initial.items);
   const [cursor, setCursor] = useState(initial.cursor);
   const [profession, setProfession] = useState<string | null>(null);
+  const [savedOnly, setSavedOnly] = useState(initialSavedOnly);
   const [sort, setSort] = useState<SortKey>("new");
   const [loading, setLoading] = useState(false);
   const [point, setPoint] = useState(FALLBACK_POINT);
@@ -60,22 +71,34 @@ export function JobsFeed({
   }, []);
 
   const buildQuery = useCallback(
-    (nextSort: SortKey, nextProfession: string | null, nextCursor: string | null) => {
+    (
+      nextSort: SortKey,
+      nextProfession: string | null,
+      nextCursor: string | null,
+      nextSavedOnly = savedOnly,
+    ) => {
       const params = new URLSearchParams({ sort: nextSort, limit: "12" });
       if (nextProfession) params.set("kasb", nextProfession);
       if (nextCursor) params.set("cursor", nextCursor);
+      if (nextSavedOnly) params.set("saqlangan", "1");
       if (nextSort === "nearby") {
         params.set("lat", String(point.lat));
         params.set("lng", String(point.lng));
       }
       return `/vacancies?${params}`;
     },
-    [point],
+    [point, savedOnly],
   );
 
-  const reload = async (nextSort: SortKey, nextProfession: string | null) => {
+  const reload = async (
+    nextSort: SortKey,
+    nextProfession: string | null,
+    nextSavedOnly = savedOnly,
+  ) => {
     setLoading(true);
-    const page = await apiGet<Page<VacancyDTO>>(buildQuery(nextSort, nextProfession, null));
+    const page = await apiGet<Page<VacancyDTO>>(
+      buildQuery(nextSort, nextProfession, null, nextSavedOnly),
+    );
     setItems(page.items);
     setCursor(page.cursor);
     setLoading(false);
@@ -110,6 +133,12 @@ export function JobsFeed({
     void apiPost(`/vacancies/${vacancy.id}/save`).then(() => router.refresh());
   };
 
+  /** Chapga tortib yashirish — qator darhol yo'qoladi, so'rov fonda ketadi */
+  const hide = (vacancy: VacancyDTO) => {
+    setItems((prev) => prev.filter((item) => item.id !== vacancy.id));
+    void apiPost(`/vacancies/${vacancy.id}/hide`);
+  };
+
   const sortOptions: { key: SortKey; label: string }[] = [
     { key: "new", label: t.screens.jobs.sortNew },
     { key: "nearby", label: t.screens.jobs.sortNearby },
@@ -119,7 +148,7 @@ export function JobsFeed({
   return (
     <>
       <NavBar
-        title={t.tabs.jobs}
+        title=""
         trailing={
           <button
             type="button"
@@ -133,6 +162,8 @@ export function JobsFeed({
         className="sticky top-0 z-20 hairline"
       />
 
+      {/* Qidiruv yuqorida turadi — pastga tortilganda chiqadi.
+          Shuning uchun ochilganda 52px pastga suriladi va sarlavha ko'rinib qoladi. */}
       <div className="bg-surface">
         <SearchFieldButton
           placeholder={t.screens.search.placeholder}
@@ -140,13 +171,27 @@ export function JobsFeed({
         />
       </div>
 
+      <LargeTitle>{t.tabs.jobs}</LargeTitle>
+
       <div className="sticky top-11 z-20 bg-surface hairline">
         <ChipRow>
+          {/* v2: Saqlangan alohida bo'lim emas — shu yerdagi filtr */}
           <Chip
-            selected={profession === null}
+            selected={savedOnly}
+            onClick={() => {
+              const next = !savedOnly;
+              setSavedOnly(next);
+              void reload(sort, profession, next);
+            }}
+          >
+            {t.screens.jobs.savedFilter}
+          </Chip>
+          <Chip
+            selected={!savedOnly && profession === null}
             onClick={() => {
               setProfession(null);
-              void reload(sort, null);
+              setSavedOnly(false);
+              void reload(sort, null, false);
             }}
           >
             {t.common.all}
@@ -154,10 +199,11 @@ export function JobsFeed({
           {professions.map((item) => (
             <Chip
               key={item.id}
-              selected={profession === item.id}
+              selected={!savedOnly && profession === item.id}
               onClick={() => {
                 setProfession(item.id);
-                void reload(sort, item.id);
+                setSavedOnly(false);
+                void reload(sort, item.id, false);
               }}
             >
               {item.name[locale]}
@@ -184,6 +230,13 @@ export function JobsFeed({
                   icon: <IconBookmark size={20} />,
                   className: "bg-accent",
                   onAction: () => toggleSaved(vacancy),
+                },
+                {
+                  key: "hide",
+                  label: t.screens.jobs.hide,
+                  icon: <IconEyeOff size={20} />,
+                  className: "bg-text-secondary",
+                  onAction: () => hide(vacancy),
                 },
               ]}
             >

@@ -258,8 +258,8 @@ async function main() {
     // ——— Demo nomzodning kartochkasi ———
     const demoCard = await client.query(
       `insert into candidate_cards
-         (user_id, kasb_id, shahar_id, tuman_id, tajriba_daraja, maosh_min, maosh_max)
-       values ($1, 'sotuvchi', 'toshkent', 'chilonzor', 'upToOne', 4000000, 6000000)
+         (user_id, kasb_id, shahar_id, tuman_id, tajriba_daraja, bandlik_turi)
+       values ($1, 'sotuvchi', 'toshkent', 'chilonzor', 'upToOne', 'full')
        returning id`,
       [demoUserId],
     );
@@ -271,6 +271,20 @@ async function main() {
     const havas = companyIds.find((c) => c.name === "Havas Market");
 
     const pickVacancy = (companyId) => vacancies.find((v) => v.companyId === companyId);
+
+    // Javobsiz ariza uchun — demo egalik qilmagan, boshqa suhbatlarda ishtirok
+    // etmagan kompaniyaning vakansiyasi
+    const usedCompanies = new Set([chorsu.id, havas.id, milano.id, express.id]);
+    const quietVacancy = vacancies.find((v) => !usedCompanies.has(v.companyId));
+
+    // Demo nomzodning saqlagan vakansiyalari — "Saqlangan" filtri bo'sh chiqmasin
+    for (const vacancy of vacancies.filter((v) => v.companyId !== chorsu.id).slice(0, 4)) {
+      await client.query(
+        "insert into saved_vacancies (user_id, vacancy_id) values ($1,$2) on conflict do nothing",
+        [demoUserId, vacancy.id],
+      );
+    }
+
 
     // Demo foydalanuvchi o'z kompaniyasiga ariza yubormaydi
     const conversations = [
@@ -291,14 +305,31 @@ async function main() {
         vacancy: pickVacancy(express.id),
         messages: [["ish_beruvchi", "Ish vaqti 9:00 dan 18:00 gacha. Moped bormi?", true]],
       },
+      // Javobsiz qolgan ariza — Arizalarim ekranida turtki chiqadi
+      {
+        vacancy: quietVacancy,
+        daysAgo: 9,
+        messages: [],
+      },
     ];
 
     for (const conversation of conversations) {
       if (!conversation.vacancy) continue;
+      const daysAgo = conversation.daysAgo ?? 0;
       const application = await client.query(
-        "insert into applications (vacancy_id, candidate_card_id) values ($1,$2) returning id",
-        [conversation.vacancy.id, demoCard.rows[0].id],
+        `insert into applications (vacancy_id, candidate_card_id, holat, korilgan_sana, yaratilgan_sana)
+         values ($1, $2, $3, $4, now() - ($5 || ' days')::interval)
+         on conflict (vacancy_id, candidate_card_id) do nothing
+         returning id`,
+        [
+          conversation.vacancy.id,
+          demoCard.rows[0].id,
+          conversation.messages.length > 0 ? "korildi" : "yangi",
+          conversation.messages.length > 0 ? new Date() : null,
+          String(daysAgo),
+        ],
       );
+      if (application.rows.length === 0) continue;
       const chat = await client.query(
         "insert into chats (application_id) values ($1) returning id",
         [application.rows[0].id],

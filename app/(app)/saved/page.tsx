@@ -1,11 +1,8 @@
-import { SavedList } from "@/components/jobs/saved-list";
-import { listSavedVacancies } from "@/lib/db/queries";
-import { currentUserId } from "@/lib/db/session";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
-export default async function SavedPage() {
-  const userId = await currentUserId();
-  const vacancies = userId ? await listSavedVacancies(userId) : [];
-  return <SavedList initial={vacancies} />;
+/** v2: Saqlangan alohida bo'lim emas — Ishlar ichidagi filtr */
+export default function SavedPage() {
+  redirect("/jobs?saqlangan=1");
 }
