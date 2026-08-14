@@ -54,7 +54,7 @@ export default function PlansPage() {
             >
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-2">
-                  <span className="text-title text-text">{label(plan)}</span>
+                  <span className="text-nav text-text">{label(plan)}</span>
                   {current && <Tag tone="accent">{t.employer.plans.current}</Tag>}
                 </span>
                 <span className="mt-1 block text-body text-text-secondary">
@@ -62,7 +62,7 @@ export default function PlansPage() {
                 </span>
               </span>
               <span className="shrink-0 pt-0.5 text-right">
-                <span className="block text-title whitespace-nowrap text-text">{price(plan)}</span>
+                <span className="block text-nav whitespace-nowrap text-text">{price(plan)}</span>
                 {!current && (
                   <span className="mt-0.5 block text-caption font-medium text-accent">
                     {t.employer.plans.choose}

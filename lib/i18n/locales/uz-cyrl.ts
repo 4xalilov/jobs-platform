@@ -24,6 +24,7 @@ export const uzCyrl: Dictionary = {
 
   tabs: {
     jobs: "Ишлар",
+    applications: "Аризаларим",
     messages: "Хабарлар",
     saved: "Сақланган",
     profile: "Профил",
@@ -93,6 +94,7 @@ export const uzCyrl: Dictionary = {
       navigation: "Навигация",
       icons: "Иконкалар",
       swipe: "Чапга тортиш",
+      motion: "Анимация",
       principles: "Қоидалар",
     },
     colors: {
@@ -113,13 +115,16 @@ export const uzCyrl: Dictionary = {
     },
     typography: {
       titleSample: "Сотувчи — Чорсу бозори",
-      titleSpec: "Сарлавҳа · 17px · semibold",
+      largeSpec: "Саҳифа сарлавҳаси · 34px · 700 · -0.4px",
+      navSpec: "Панел сарлавҳаси · 17px · 600",
+      titleSpec: "Рўйхат элементи · 17px · оддий (ўқилмаган — 600)",
       bodySample: "4 000 000 – 6 000 000 сўм · Тошкент",
-      bodySpec: "Матн · 15px · оддий",
+      bodySpec: "Рўйхат элементи изоҳи · 15px",
       captionSample: "2 соат олдин жойлаштирилган",
-      captionSpec: "Изоҳ · 13px · кулранг",
-      sectionSpec: "Бўлим сарлавҳаси · 13px · бош ҳарфларда",
-      fontNote: "Тизим шрифти: SF Pro / Roboto / Inter.",
+      captionSpec: "Мета, вақт, белги · 13px · кулранг",
+      sectionSpec: "Бўлим сарлавҳаси · 13px · БОШ ҲАРФЛАР · 0,5px",
+      fontNote:
+        "Тизим шрифти. Махсус шрифт атайлаб юкланмайди — илова қурилманинг ўзиникидек ҳис қилинсин.",
     },
     buttons: {
       primary: "Асосий",
@@ -182,11 +187,20 @@ export const uzCyrl: Dictionary = {
       navBarTitle: "Ишлар",
     },
     icons: {
-      note: "Барча иконкалар чизиқли (outline), тўлдирилган эмас.",
+      note: "Чизиқли (outline), 24×24, чизиқ қалинлиги 1,5px. Фақат фаол таб тўлдирилган вариантга ўтади.",
     },
     swipe: {
       note: "Рўйхат элементини чапга тортинг — тез ҳаракатлар чиқади.",
       hint: "← чапга тортинг",
+    },
+    motion: {
+      tap: "Босиш жавоби · 0,96 масштаб · 100ms",
+      page: "Саҳифа ўтиши · 300ms",
+      sheet: "Sheet очилиши · 350ms · секин тўхтайди",
+      row: "Рўйхат элементи · 200ms · 8px пастдан · 30ms кечикиш билан",
+      badge: "Белги ўзгариши · 150ms",
+      replay: "Қайта кўриш",
+      note: "Ҳар бир босиш 100ms ичида жавоб беради — сервер жавоби кутилмайди.",
     },
     principles: {
       one: "Агар бирор элемент Telegram'да йўқ бўлса — қўшишдан олдин икки марта ўйла.",

@@ -88,7 +88,7 @@ export function ChatView({
           <span className="flex items-center justify-center gap-2">
             <Avatar name={chat.title} size={28} />
             <span className="min-w-0">
-              <span className="block truncate text-title leading-tight">{chat.title}</span>
+              <span className="block truncate text-nav leading-tight">{chat.title}</span>
               {status && (
                 <span className="block truncate text-[11px] leading-tight font-normal text-text-secondary">
                   {status}

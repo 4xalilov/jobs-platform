@@ -60,19 +60,17 @@ import { cn, formatAgo, formatSalary } from "@/lib/utils";
 
 /** Tokenlar va ularning ikkala rejimdagi qiymatlari (globals.css bilan bir xil) */
 const COLOR_TOKENS: { token: string; light: string; dark: string }[] = [
-  { token: "accent", light: "#229ED9", dark: "#3390EC" },
-  { token: "accent-pressed", light: "#1C88BB", dark: "#2B7FD4" },
-  { token: "accent-soft", light: "#E8F4FB", dark: "#17293B" },
-  { token: "bg", light: "#F5F5F5", dark: "#0E1621" },
-  { token: "surface", light: "#FFFFFF", dark: "#17212B" },
-  { token: "fill", light: "#EFEFF4", dark: "#202B36" },
-  { token: "separator", light: "#E3E3E6", dark: "#232E3C" },
-  { token: "text", light: "#0F0F0F", dark: "#FFFFFF" },
-  { token: "text-secondary", light: "#8E8E93", dark: "#7D8B99" },
-  { token: "text-tertiary", light: "#B0B0B5", dark: "#55606B" },
-  { token: "danger", light: "#FF3B30", dark: "#FF453A" },
-  { token: "success", light: "#34C759", dark: "#30D158" },
-  { token: "warning", light: "#FF9500", dark: "#FF9F0A" },
+  { token: "accent", light: "#0088CC", dark: "#2EA6FF" },
+  { token: "accent-pressed", light: "#0077B3", dark: "#2690DD" },
+  { token: "bg", light: "#EFEFF4", dark: "#000000" },
+  { token: "surface", light: "#FFFFFF", dark: "#1C1C1E" },
+  { token: "surface-elevated", light: "#FFFFFF", dark: "#2C2C2E" },
+  { token: "separator", light: "#C6C6C8", dark: "#38383A" },
+  { token: "text", light: "#000000", dark: "#FFFFFF" },
+  { token: "text-secondary", light: "#8E8E93", dark: "#98989E" },
+  { token: "success", light: "#4DB74D", dark: "#4DB74D" },
+  { token: "warning", light: "#F5A623", dark: "#F5A623" },
+  { token: "danger", light: "#E53935", dark: "#E53935" },
 ];
 
 type ExperienceLevel = "none" | "upToOne" | "oneToThree" | "threePlus";
@@ -82,6 +80,7 @@ export default function DesignSystemPage() {
   const { mode, setMode, resolved } = useTheme();
 
   const [profession, setProfession] = useState<string | null>(null);
+  const [motionKey, setMotionKey] = useState(0);
   const [query, setQuery] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
   const [professionSheetOpen, setProfessionSheetOpen] = useState(false);
@@ -123,12 +122,7 @@ export default function DesignSystemPage() {
         <p className="mt-1 text-caption text-text-secondary">{t.design.subtitle}</p>
 
         <div className="mt-3 space-y-2">
-          <Segmented
-            options={themeOptions}
-            value={mode}
-            onChange={setMode}
-            label={t.theme.label}
-          />
+          <Segmented options={themeOptions} value={mode} onChange={setMode} label={t.theme.label} />
           <Segmented
             options={locales.map((l) => ({ value: l, label: localeLabels[l] }))}
             value={locale}
@@ -148,6 +142,12 @@ export default function DesignSystemPage() {
       {/* ——— 2. Tipografika ——— */}
       <SectionHeader>{t.design.sections.typography}</SectionHeader>
       <div className="space-y-3 bg-surface px-4 py-3.5">
+        <TypeSample spec={t.design.typography.largeSpec}>
+          <span className="text-large text-text">{t.tabs.jobs}</span>
+        </TypeSample>
+        <TypeSample spec={t.design.typography.navSpec}>
+          <span className="text-nav text-text">{t.design.typography.titleSample}</span>
+        </TypeSample>
         <TypeSample spec={t.design.typography.titleSpec}>
           <span className="text-title text-text">{t.design.typography.titleSample}</span>
         </TypeSample>
@@ -216,9 +216,7 @@ export default function DesignSystemPage() {
             leading={<Avatar name={vacancy.company} online={vacancy.fastReply} />}
             title={vacancy.title[locale]}
             titleAdornment={
-              vacancy.verified ? (
-                <IconShieldCheck size={15} className="text-accent" />
-              ) : undefined
+              vacancy.verified ? <IconShieldCheck size={15} className="text-accent" /> : undefined
             }
             subtitle={formatSalary(
               vacancy.salaryMin,
@@ -261,11 +259,7 @@ export default function DesignSystemPage() {
             {t.common.all}
           </Chip>
           {sampleProfessions.map((p) => (
-            <Chip
-              key={p.id}
-              selected={profession === p.id}
-              onClick={() => setProfession(p.id)}
-            >
+            <Chip key={p.id} selected={profession === p.id} onClick={() => setProfession(p.id)}>
               {p.name[locale]}
             </Chip>
           ))}
@@ -423,11 +417,7 @@ export default function DesignSystemPage() {
           <p className="pb-2 text-section text-text-secondary uppercase">
             {t.design.forms.segmentedLabel}
           </p>
-          <Segmented
-            options={experienceOptions}
-            value={experience}
-            onChange={setExperience}
-          />
+          <Segmented options={experienceOptions} value={experience} onChange={setExperience} />
         </div>
       </div>
       <p className="px-4 pt-2 text-caption text-text-tertiary">{t.design.forms.note}</p>
@@ -461,8 +451,8 @@ export default function DesignSystemPage() {
           onChange={setTab}
           labels={{
             jobs: t.tabs.jobs,
+            applications: t.tabs.applications,
             messages: t.tabs.messages,
-            saved: t.tabs.saved,
             profile: t.tabs.profile,
           }}
           badges={{ messages: 2 }}
@@ -562,6 +552,48 @@ export default function DesignSystemPage() {
       <p className="px-4 pt-2 text-caption text-text-tertiary">{t.design.swipe.note}</p>
 
       {/* ——— 14. Qoidalar ——— */}
+      {/* ——— Animatsiya ——— */}
+      <SectionHeader>{t.design.sections.motion}</SectionHeader>
+      <div className="space-y-3 bg-surface px-4 py-3.5">
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-body text-text">{t.design.motion.tap}</span>
+          <button
+            type="button"
+            className="tap rounded-tg-sm bg-accent px-4 py-2 text-body font-semibold text-on-accent"
+          >
+            {t.common.example}
+          </button>
+        </div>
+
+        <div className="hairline hairline-inset-sm relative" />
+
+        <div>
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-body text-text">{t.design.motion.row}</span>
+            <Button size="sm" variant="secondary" onClick={() => setMotionKey((n) => n + 1)}>
+              {t.design.motion.replay}
+            </Button>
+          </div>
+          <div key={motionKey} className="mt-2.5 overflow-hidden rounded-tg-sm bg-bg">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="animate-row-in flex items-center gap-3 px-3 py-2.5">
+                <span className="skeleton size-8 rounded-full" />
+                <span className="skeleton h-3 flex-1 rounded-full" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <ul className="space-y-1 pt-1">
+          {[t.design.motion.page, t.design.motion.sheet, t.design.motion.badge].map((line) => (
+            <li key={line} className="text-caption text-text-secondary">
+              {line}
+            </li>
+          ))}
+        </ul>
+        <p className="text-caption text-text-tertiary">{t.design.motion.note}</p>
+      </div>
+
       <SectionHeader>{t.design.sections.principles}</SectionHeader>
       <ListGroup>
         {[

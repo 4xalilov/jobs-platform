@@ -64,7 +64,9 @@ export function SelectField({
     >
       <span className="text-body text-text">{label}</span>
       <span className="flex min-w-0 items-center gap-1">
-        <span className={cn("truncate text-body", value ? "text-text-secondary" : "text-text-tertiary")}>
+        <span
+          className={cn("truncate text-body", value ? "text-text-secondary" : "text-text-tertiary")}
+        >
           {value || placeholder}
         </span>
         <IconChevronRight size={18} className="text-text-tertiary" />

@@ -25,6 +25,7 @@ export const uz = {
 
   tabs: {
     jobs: "Ishlar",
+    applications: "Arizalarim",
     messages: "Xabarlar",
     saved: "Saqlangan",
     profile: "Profil",
@@ -94,6 +95,7 @@ export const uz = {
       navigation: "Navigatsiya",
       icons: "Ikonkalar",
       swipe: "Chapga tortish",
+      motion: "Animatsiya",
       principles: "Qoidalar",
     },
     colors: {
@@ -114,13 +116,16 @@ export const uz = {
     },
     typography: {
       titleSample: "Sotuvchi — Chorsu bozori",
-      titleSpec: "Sarlavha · 17px · semibold",
+      largeSpec: "Sahifa sarlavhasi · 34px · 700 · -0.4px",
+      navSpec: "Panel sarlavhasi · 17px · 600",
+      titleSpec: "Ro'yxat elementi · 17px · oddiy (o'qilmagan — 600)",
       bodySample: "4 000 000 – 6 000 000 so'm · Toshkent",
-      bodySpec: "Matn · 15px · oddiy",
+      bodySpec: "Ro'yxat elementi izohi · 15px",
       captionSample: "2 soat oldin joylashtirilgan",
-      captionSpec: "Izoh · 13px · kulrang",
-      sectionSpec: "Bo'lim sarlavhasi · 13px · bosh harflarda",
-      fontNote: "Tizim shrifti: SF Pro / Roboto / Inter.",
+      captionSpec: "Meta, vaqt, belgi · 13px · kulrang",
+      sectionSpec: "Bo'lim sarlavhasi · 13px · BOSH HARFLAR · 0,5px",
+      fontNote:
+        "Tizim shrifti. Maxsus shrift ataylab yuklanmaydi — ilova qurilmaning o'zinikidek his qilinsin.",
     },
     buttons: {
       primary: "Asosiy",
@@ -183,11 +188,20 @@ export const uz = {
       navBarTitle: "Ishlar",
     },
     icons: {
-      note: "Barcha ikonkalar chiziqli (outline), to'ldirilgan emas.",
+      note: "Chiziqli (outline), 24×24, chiziq qalinligi 1,5px. Faqat faol tab to'ldirilgan variantga o'tadi.",
     },
     swipe: {
       note: "Ro'yxat elementini chapga torting — tez harakatlar chiqadi.",
       hint: "← chapga torting",
+    },
+    motion: {
+      tap: "Bosish javobi · 0,96 masshtab · 100ms",
+      page: "Sahifa o'tishi · 300ms",
+      sheet: "Sheet ochilishi · 350ms · sekin to'xtaydi",
+      row: "Ro'yxat elementi · 200ms · 8px pastdan · 30ms kechikish bilan",
+      badge: "Belgi o'zgarishi · 150ms",
+      replay: "Qayta ko'rish",
+      note: "Har bir bosish 100ms ichida javob beradi — server javobi kutilmaydi.",
     },
     principles: {
       one: "Agar biror element Telegram'da yo'q bo'lsa — qo'shishdan oldin ikki marta o'yla.",

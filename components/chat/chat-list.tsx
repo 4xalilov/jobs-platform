@@ -21,7 +21,9 @@ export function useSystemMessageText(side: ChatSide = "nomzod") {
   const { t } = useI18n();
   return (raw: string) => {
     if (raw === "ariza_yuborildi") {
-      return side === "nomzod" ? t.screens.chat.applicationSent : t.screens.chat.applicationReceived;
+      return side === "nomzod"
+        ? t.screens.chat.applicationSent
+        : t.screens.chat.applicationReceived;
     }
     if (raw === "ovozli_xabar") return t.screens.chat.voiceMessage;
     return raw;
@@ -57,10 +59,12 @@ export function ChatList({ chats: initial }: { chats: ChatListItemDTO[] }) {
               key={chat.id}
               leading={<Avatar name={chat.company} online={chat.fastReply} />}
               title={chat.company}
+              unread={chat.unread > 0}
               subtitle={systemText(chat.lastMessage)}
               meta={chat.lastMessageAt}
               trailing={<CountBadge count={chat.unread} />}
               last={i === chats.length - 1}
+              className="animate-row-in"
               onClick={() => router.push(`/chat/${chat.id}`)}
             />
           ))}

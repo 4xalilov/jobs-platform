@@ -87,7 +87,7 @@ export function Sheet({
           node?.focus();
         }}
         className={cn(
-          "animate-sheet-up relative max-h-[88vh] overflow-hidden rounded-t-2xl bg-surface outline-none",
+          "animate-sheet-up relative max-h-[88vh] overflow-hidden rounded-t-sheet bg-surface-elevated outline-none",
           className,
         )}
         style={
@@ -109,14 +109,14 @@ export function Sheet({
 
         {title && (
           <div className="relative px-4 pt-1 pb-3">
-            <h3 className="text-title text-text">{title}</h3>
+            <h3 className="text-nav text-text">{title}</h3>
           </div>
         )}
 
         <div className="max-h-[70vh] overflow-y-auto overscroll-contain">{children}</div>
 
         {footer && (
-          <div className="border-t border-separator bg-surface px-4 pt-3 pb-[calc(12px+env(safe-area-inset-bottom))]">
+          <div className="border-t border-separator bg-surface-elevated px-4 pt-3 pb-[calc(12px+env(safe-area-inset-bottom))]">
             {footer}
           </div>
         )}

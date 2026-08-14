@@ -2,44 +2,67 @@
 
 import { cn } from "@/lib/utils";
 import { CountBadge } from "./badge";
-import { IconBookmark, IconBriefcase, IconMessage, IconUser, type IconProps } from "./icon";
+import {
+  IconBookmark,
+  IconBookmarkSolid,
+  IconBriefcase,
+  IconBriefcaseSolid,
+  IconDocument,
+  IconDocumentSolid,
+  IconMessage,
+  IconMessageSolid,
+  IconUser,
+  IconUserSolid,
+  type IconProps,
+} from "./icon";
 
-export type TabKey = "jobs" | "messages" | "saved" | "profile";
+export type TabKey = "jobs" | "applications" | "messages" | "saved" | "profile";
 
-const ICONS: Record<TabKey, (p: IconProps) => React.ReactElement> = {
-  jobs: IconBriefcase,
-  messages: IconMessage,
-  saved: IconBookmark,
-  profile: IconUser,
+type IconPair = {
+  line: (p: IconProps) => React.ReactElement;
+  solid: (p: IconProps) => React.ReactElement;
 };
 
-/** Pastda tab bar — faqat 4 ta bo'lim */
+/** Faol tab chiziqlidan to'ldirilgan variantga o'tadi */
+const ICONS: Record<TabKey, IconPair> = {
+  jobs: { line: IconBriefcase, solid: IconBriefcaseSolid },
+  applications: { line: IconDocument, solid: IconDocumentSolid },
+  messages: { line: IconMessage, solid: IconMessageSolid },
+  saved: { line: IconBookmark, solid: IconBookmarkSolid },
+  profile: { line: IconUser, solid: IconUserSolid },
+};
+
+/** v2 tuzilmasi: Ishlar / Arizalarim / Xabarlar / Profil */
+export const DEFAULT_TABS: TabKey[] = ["jobs", "applications", "messages", "profile"];
+
+/** Pastda tab bar — faqat 4 ta bo'lim, balandligi 50px + safe area */
 export function TabBar({
   active,
+  tabs = DEFAULT_TABS,
   onChange,
   labels,
   badges,
   className,
 }: {
   active: TabKey;
+  /** Qaysi bo'limlar chiqishi — ekranlar tayyor bo'lishiga qarab */
+  tabs?: TabKey[];
   onChange: (tab: TabKey) => void;
-  labels: Record<TabKey, string>;
+  labels: Partial<Record<TabKey, string>>;
   badges?: Partial<Record<TabKey, number>>;
   className?: string;
 }) {
-  const tabs: TabKey[] = ["jobs", "messages", "saved", "profile"];
-
   return (
     <nav
       className={cn(
-        "flex border-t border-separator bg-surface/95 backdrop-blur-md",
+        "hairline-top relative flex bg-surface/95 backdrop-blur-md",
         "pb-[env(safe-area-inset-bottom)]",
         className,
       )}
     >
       {tabs.map((tab) => {
-        const TabIcon = ICONS[tab];
         const isActive = tab === active;
+        const TabIcon = isActive ? ICONS[tab].solid : ICONS[tab].line;
         const count = badges?.[tab] ?? 0;
 
         return (
@@ -49,9 +72,8 @@ export function TabBar({
             aria-current={isActive ? "page" : undefined}
             onClick={() => onChange(tab)}
             className={cn(
-              "relative flex flex-1 flex-col items-center gap-0.5 py-1.5",
-              "transition-colors duration-100",
-              isActive ? "text-accent" : "text-text-tertiary",
+              "tap relative flex h-[50px] flex-1 flex-col items-center justify-center gap-0.5",
+              isActive ? "text-accent" : "text-text-secondary",
             )}
           >
             <span className="relative">
@@ -59,7 +81,7 @@ export function TabBar({
               {count > 0 && (
                 <CountBadge
                   count={count}
-                  className="absolute -top-1 -right-2.5 border-2 border-surface"
+                  className="badge-pop absolute -top-1 -right-2.5 border-2 border-surface"
                 />
               )}
             </span>

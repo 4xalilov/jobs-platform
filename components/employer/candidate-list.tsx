@@ -55,11 +55,13 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
               key={candidate.chatId}
               leading={<Avatar name={candidate.name} />}
               title={candidate.name}
+              unread={candidate.unread > 0}
               subtitle={systemText(candidate.lastMessage)}
               caption={`${candidate.professionName?.[locale] ?? ""} · ${t.job.experience[candidate.experience]}`}
               meta={candidate.lastMessageAt}
               trailing={<CountBadge count={candidate.unread} />}
               last={i === candidates.length - 1}
+              className="animate-row-in"
               onClick={() => card.open(candidate)}
             />
           ))}
@@ -104,7 +106,7 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
             </div>
 
             <p className="mt-4 text-caption text-text-secondary">{t.employer.candidates.expects}</p>
-            <p className="text-title text-text">
+            <p className="text-nav text-text">
               {formatSalary(
                 card.value.salaryMin,
                 card.value.salaryMax,

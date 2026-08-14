@@ -5,7 +5,13 @@ import { useI18n } from "@/components/providers/i18n-provider";
 import { TabBar, type TabKey } from "@/components/ui/tab-bar";
 import { useUnread } from "@/lib/use-unread";
 
-const ROUTES: Record<TabKey, string> = {
+/**
+ * v2 da "Saqlangan" o'rniga "Arizalarim" keladi. Arizalarim ekrani
+ * 2-bosqichda quriladi — shu sabab hozircha eski to'plam qoladi.
+ */
+const TABS: TabKey[] = ["jobs", "messages", "saved", "profile"];
+
+const ROUTES: Partial<Record<TabKey, string>> = {
   jobs: "/jobs",
   messages: "/messages",
   saved: "/saved",
@@ -29,7 +35,11 @@ export function AppTabBar({ unread = 0 }: { unread?: number }) {
     <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[440px] -translate-x-1/2">
       <TabBar
         active={activeTab(pathname)}
-        onChange={(tab) => router.push(ROUTES[tab])}
+        tabs={TABS}
+        onChange={(tab) => {
+          const route = ROUTES[tab];
+          if (route) router.push(route);
+        }}
         labels={{
           jobs: t.tabs.jobs,
           messages: t.tabs.messages,

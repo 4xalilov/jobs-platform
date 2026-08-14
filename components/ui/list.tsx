@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { IconChevronRight } from "./icon";
 
-/** Bo'lim sarlavhasi: kichik, kulrang, BOSH HARFLARDA */
+/** Bo'lim sarlavhasi: 13px, kulrang, BOSH HARFLARDA, 0.5px oraliq */
 export function SectionHeader({
   children,
   action,
@@ -19,7 +19,7 @@ export function SectionHeader({
   );
 }
 
-/** Ro'yxat guruhi — oq yuza, elementlar orasida ingichka chiziq */
+/** Ro'yxat guruhi — oq yuza, elementlar orasida 0.5px chiziq */
 export function ListGroup({
   children,
   className,
@@ -31,7 +31,7 @@ export function ListGroup({
 }
 
 export type ListItemProps = {
-  /** Chapda: avatar yoki ikonka */
+  /** Chapda: avatar (48px) yoki ikonka */
   leading?: React.ReactNode;
   title: React.ReactNode;
   /** O'rtada sarlavha ostidagi qisqa izoh */
@@ -45,11 +45,17 @@ export type ListItemProps = {
   /** O'ngda pastda: belgi (badge) */
   trailing?: React.ReactNode;
   chevron?: boolean;
+  /** O'qilmagan — sarlavha 600 ga o'tadi */
+  unread?: boolean;
   /** Izoh uzun bo'lsa kesilmasin, bir necha qatorga bo'linsin */
   wrapSubtitle?: boolean;
+  /**
+   * Sozlamalar uslubi — 44px balandlik. Standart ro'yxatda 76px.
+   */
+  compact?: boolean;
   /** Oxirgi element — ajratuvchi chiziq chizilmaydi */
   last?: boolean;
-  /** Chiziq avatardan keyin boshlansinmi */
+  /** Chiziq avatardan keyin (76px) boshlansinmi */
   insetSeparator?: boolean;
   onClick?: () => void;
   className?: string;
@@ -64,7 +70,9 @@ export function ListItem({
   meta,
   trailing,
   chevron = false,
+  unread = false,
   wrapSubtitle = false,
+  compact = false,
   last = false,
   insetSeparator = true,
   onClick,
@@ -77,8 +85,9 @@ export function ListItem({
     <Comp
       {...(interactive ? { type: "button" as const, onClick } : {})}
       className={cn(
-        "relative flex w-full items-center gap-3 bg-surface px-4 py-2.5 text-left",
-        interactive && "transition-colors duration-100 active:bg-surface-pressed",
+        "relative flex w-full items-center gap-3 bg-surface px-4 text-left",
+        compact ? "min-h-[44px] py-1.5" : "min-h-[76px] py-[14px]",
+        interactive && "tap-flat active:bg-surface-pressed",
         !last && "hairline",
         !last && (insetSeparator ? (leading ? "hairline-inset" : "hairline-inset-sm") : ""),
         className,
@@ -88,7 +97,14 @@ export function ListItem({
 
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-1.5">
-          <span className="text-title truncate text-text">{title}</span>
+          <span
+            className={cn(
+              "text-title truncate text-text",
+              unread ? "font-semibold" : "font-normal",
+            )}
+          >
+            {title}
+          </span>
           {titleAdornment}
         </span>
         {subtitle && (
@@ -107,7 +123,7 @@ export function ListItem({
       </span>
 
       {(meta || trailing) && (
-        <span className="flex shrink-0 flex-col items-end gap-1.5 self-start pt-0.5">
+        <span className="flex shrink-0 flex-col items-end gap-1.5 self-start pt-1">
           {meta && <span className="text-caption text-text-tertiary">{meta}</span>}
           {trailing}
         </span>

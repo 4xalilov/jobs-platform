@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
 
 /**
- * Barcha ikonkalar chiziqli (outline) — to'ldirilgan emas.
- * 24×24 grid, stroke 1.8.
+ * Barcha ikonkalar chiziqli (outline), 24×24 grid, chiziq qalinligi 1.5px.
+ * Faqat faol tab to'ldirilgan (filled) variantga o'tadi — TabIcon ga qarang.
  */
 export type IconProps = React.SVGProps<SVGSVGElement> & { size?: number };
 
@@ -14,9 +14,30 @@ function Icon({ size = 24, className, children, ...props }: IconProps) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.8}
+      strokeWidth={1.5}
       strokeLinecap="round"
       strokeLinejoin="round"
+      aria-hidden="true"
+      className={cn("shrink-0", className)}
+      {...props}
+    >
+      {children}
+    </svg>
+  );
+}
+
+/**
+ * To'ldirilgan variant — faqat faol tab uchun.
+ * Alohida shakl chiziladi, chunki konturli yo'llarni shunchaki bo'yash
+ * ochiq chiziqlarni buzadi.
+ */
+function SolidIcon({ size = 24, className, children, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
       aria-hidden="true"
       className={cn("shrink-0", className)}
       {...props}
@@ -272,4 +293,59 @@ export const IconSliders = (p: IconProps) => (
     <circle cx="16" cy="7" r="2" />
     <circle cx="10" cy="17" r="2" />
   </Icon>
+);
+
+/** Arizalarim — yuborilgan arizalar ro'yxati */
+export const IconDocument = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z" />
+    <path d="M14 3v5h5M9 13h6M9 17h4" />
+  </Icon>
+);
+
+/* ——— Faol tab uchun to'ldirilgan variantlar ——— */
+
+export const IconBriefcaseSolid = (p: IconProps) => (
+  <SolidIcon {...p}>
+    <path d="M9.5 3h5A2.5 2.5 0 0 1 17 5.5V6h3a2 2 0 0 1 2 2v2.5H2V8a2 2 0 0 1 2-2h3v-.5A2.5 2.5 0 0 1 9.5 3Zm0 1.6a.9.9 0 0 0-.9.9V6h6.8v-.5a.9.9 0 0 0-.9-.9h-5ZM2 12.1h20V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-5.9Z" />
+  </SolidIcon>
+);
+
+export const IconDocumentSolid = (p: IconProps) => (
+  <SolidIcon {...p}>
+    <path d="M13.6 2H7a2.5 2.5 0 0 0-2.5 2.5v15A2.5 2.5 0 0 0 7 22h10a2.5 2.5 0 0 0 2.5-2.5V7.9L13.6 2Zm-.4 2.9 3.9 3.9h-3.9V4.9ZM9 12.2h6a.8.8 0 0 1 0 1.6H9a.8.8 0 0 1 0-1.6Zm0 3.6h4a.8.8 0 0 1 0 1.6H9a.8.8 0 0 1 0-1.6Z" />
+  </SolidIcon>
+);
+
+export const IconMessageSolid = (p: IconProps) => (
+  <SolidIcon {...p}>
+    <path d="M12.1 3.4a8.3 8.3 0 0 1 8.4 8.3 8.3 8.3 0 0 1-8.4 8.3 8.5 8.5 0 0 1-3.7-.85l-4.9 1.35 1.35-4.8A8.3 8.3 0 0 1 12.1 3.4Z" />
+  </SolidIcon>
+);
+
+export const IconUserSolid = (p: IconProps) => (
+  <SolidIcon {...p}>
+    <circle cx="12" cy="8" r="4.2" />
+    <path d="M12 14.2c-4 0-7.2 2.4-7.2 5.3 0 .8.6 1.5 1.4 1.5h11.6c.8 0 1.4-.7 1.4-1.5 0-2.9-3.2-5.3-7.2-5.3Z" />
+  </SolidIcon>
+);
+
+export const IconUsersSolid = (p: IconProps) => (
+  <SolidIcon {...p}>
+    <circle cx="9" cy="8" r="3.9" />
+    <path d="M9 13.8c-3.7 0-6.7 2.2-6.7 4.9 0 .8.6 1.4 1.3 1.4h10.8c.7 0 1.3-.6 1.3-1.4 0-2.7-3-4.9-6.7-4.9Z" />
+    <path d="M17.2 11.5a3.3 3.3 0 1 0 0-6.6 3.3 3.3 0 0 0-1.1.2 5.5 5.5 0 0 1 0 6.2c.35.13.72.2 1.1.2Zm.6 1.6c-.5 0-1 .05-1.45.15 1.3 1.2 2.05 2.75 2.05 4.45 0 .5-.1.95-.3 1.4h3.2c.7 0 1.2-.6 1.2-1.35 0-2.5-2.1-4.65-4.7-4.65Z" />
+  </SolidIcon>
+);
+
+export const IconCardSolid = (p: IconProps) => (
+  <SolidIcon {...p}>
+    <path d="M4.5 5h15A2.5 2.5 0 0 1 22 7.5V9H2V7.5A2.5 2.5 0 0 1 4.5 5ZM2 10.8h20v5.7a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 16.5v-5.7Zm3.2 3.9a.8.8 0 0 0 0 1.6h3.4a.8.8 0 0 0 0-1.6H5.2Z" />
+  </SolidIcon>
+);
+
+export const IconBookmarkSolid = (p: IconProps) => (
+  <SolidIcon {...p}>
+    <path d="M7.5 2.5h9A2.9 2.9 0 0 1 19.4 5.4v15.4a.9.9 0 0 1-1.42.73L12 17.2l-5.98 4.33a.9.9 0 0 1-1.42-.73V5.4A2.9 2.9 0 0 1 7.5 2.5Z" />
+  </SolidIcon>
 );

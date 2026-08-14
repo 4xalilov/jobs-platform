@@ -3,7 +3,17 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { CountBadge } from "@/components/ui/badge";
-import { IconBriefcase, IconCard, IconUser, IconUsers } from "@/components/ui/icon";
+import {
+  IconBriefcase,
+  IconBriefcaseSolid,
+  IconCard,
+  IconCardSolid,
+  IconUser,
+  IconUserSolid,
+  IconUsers,
+  IconUsersSolid,
+  type IconProps,
+} from "@/components/ui/icon";
 import { useUnread } from "@/lib/use-unread";
 import { cn } from "@/lib/utils";
 
@@ -16,11 +26,17 @@ const ROUTES: Record<EmployerTab, string> = {
   profile: "/employer/profile",
 };
 
-const ICONS = {
-  vacancies: IconBriefcase,
-  candidates: IconUsers,
-  plans: IconCard,
-  profile: IconUser,
+type IconPair = {
+  line: (p: IconProps) => React.ReactElement;
+  solid: (p: IconProps) => React.ReactElement;
+};
+
+/** Faol tab to'ldirilgan variantga o'tadi */
+const ICONS: Record<EmployerTab, IconPair> = {
+  vacancies: { line: IconBriefcase, solid: IconBriefcaseSolid },
+  candidates: { line: IconUsers, solid: IconUsersSolid },
+  plans: { line: IconCard, solid: IconCardSolid },
+  profile: { line: IconUser, solid: IconUserSolid },
 };
 
 function activeTab(pathname: string): EmployerTab {
@@ -42,10 +58,10 @@ export function EmployerTabBar({ unread = 0 }: { unread?: number }) {
 
   return (
     <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[440px] -translate-x-1/2">
-      <nav className="flex border-t border-separator bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">
+      <nav className="hairline-top relative flex bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">
         {tabs.map((tab) => {
-          const TabIcon = ICONS[tab];
           const isActive = tab === active;
+          const TabIcon = isActive ? ICONS[tab].solid : ICONS[tab].line;
           return (
             <button
               key={tab}
@@ -53,8 +69,8 @@ export function EmployerTabBar({ unread = 0 }: { unread?: number }) {
               aria-current={isActive ? "page" : undefined}
               onClick={() => router.push(ROUTES[tab])}
               className={cn(
-                "relative flex flex-1 flex-col items-center gap-0.5 py-1.5 transition-colors duration-100",
-                isActive ? "text-accent" : "text-text-tertiary",
+                "tap relative flex h-[50px] flex-1 flex-col items-center justify-center gap-0.5",
+                isActive ? "text-accent" : "text-text-secondary",
               )}
             >
               <span className="relative">
@@ -66,9 +82,7 @@ export function EmployerTabBar({ unread = 0 }: { unread?: number }) {
                   />
                 )}
               </span>
-              <span className="text-[10px] leading-[12px] font-medium">
-                {t.employer.tabs[tab]}
-              </span>
+              <span className="text-[10px] leading-[12px] font-medium">{t.employer.tabs[tab]}</span>
             </button>
           );
         })}
