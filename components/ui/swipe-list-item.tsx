@@ -15,15 +15,20 @@ export type SwipeAction = {
 const ACTION_WIDTH = 76;
 
 /**
- * Ro'yxat elementini chapga tortganda tez harakatlar chiqadi (saqlash, o'chirish).
+ * Ro'yxat elementini tortganda tez harakatlar chiqadi.
+ * Chapga tortilsa o'ngdagi harakatlar, o'ngga tortilsa chapdagilar.
  * Vertikal skrollga xalaqit bermaydi — faqat gorizontal harakat ushlanadi.
  */
 export function SwipeListItem({
   actions,
+  leadingActions,
   children,
   className,
 }: {
-  actions: SwipeAction[];
+  /** Chapga tortilganda — o'ng tomonda chiqadi */
+  actions?: SwipeAction[];
+  /** O'ngga tortilganda — chap tomonda chiqadi */
+  leadingActions?: SwipeAction[];
   children: React.ReactNode;
   className?: string;
 }) {
@@ -31,8 +36,13 @@ export function SwipeListItem({
   const [dragging, setDragging] = useState(false);
   const start = useRef<{ x: number; y: number } | null>(null);
   const axis = useRef<"none" | "x" | "y">("none");
+  // Tortishdan keyingi "click" qator ustidagi harakatni ishga tushirmasin
+  const suppressClick = useRef(false);
 
-  const maxOffset = actions.length * ACTION_WIDTH;
+  const trailing = actions ?? [];
+  const leading = leadingActions ?? [];
+  const maxTrailing = trailing.length * ACTION_WIDTH;
+  const maxLeading = leading.length * ACTION_WIDTH;
 
   const onPointerDown = (e: React.PointerEvent) => {
     start.current = { x: e.clientX, y: e.clientY };
@@ -51,21 +61,48 @@ export function SwipeListItem({
     }
     if (axis.current !== "x") return;
 
-    const base = offset;
-    const next = base - dx;
+    // Musbat — chapga tortilgan, manfiy — o'ngga
+    const next = offset - dx;
+    const upper = maxTrailing;
+    const lower = -maxLeading;
     // Chegaradan tashqarida qarshilik (rubber band)
     const clamped =
-      next < 0 ? next * 0.25 : next > maxOffset ? maxOffset + (next - maxOffset) * 0.25 : next;
+      next > upper
+        ? upper + (next - upper) * 0.25
+        : next < lower
+          ? lower + (next - lower) * 0.25
+          : next;
     setOffset(clamped);
   };
 
   const finish = () => {
     if (axis.current === "x") {
-      setOffset(offset > maxOffset / 2 ? maxOffset : 0);
+      suppressClick.current = true;
+      if (offset > maxTrailing / 2) setOffset(maxTrailing);
+      else if (offset < -maxLeading / 2) setOffset(-maxLeading);
+      else setOffset(0);
     }
     setDragging(false);
     start.current = null;
     axis.current = "none";
+  };
+
+  /**
+   * Tortish tugagach brauzer baribir "click" yuboradi — u qatorni ochib
+   * yuborardi. Harakatlar ochiq turganda ham birinchi bosish ularni yopadi.
+   */
+  const onClickCapture = (e: React.MouseEvent) => {
+    if (suppressClick.current) {
+      suppressClick.current = false;
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    if (offset !== 0) {
+      e.preventDefault();
+      e.stopPropagation();
+      setOffset(0);
+    }
   };
 
   const runAction = (action: SwipeAction) => {
@@ -73,34 +110,40 @@ export function SwipeListItem({
     setOffset(0);
   };
 
+  const renderActions = (list: SwipeAction[], side: "left" | "right") => (
+    <div className={cn("absolute inset-y-0 flex", side === "right" ? "right-0" : "left-0")}>
+      {list.map((action) => (
+        <button
+          key={action.key}
+          type="button"
+          onClick={() => runAction(action)}
+          style={{ width: ACTION_WIDTH }}
+          className={cn(
+            "flex flex-col items-center justify-center gap-1 text-white",
+            "text-[11px] leading-[13px] font-medium",
+            action.className,
+          )}
+        >
+          {action.icon}
+          {action.label}
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <div className={cn("relative overflow-hidden bg-surface", className)}>
-      <div className="absolute inset-y-0 right-0 flex">
-        {actions.map((action) => (
-          <button
-            key={action.key}
-            type="button"
-            onClick={() => runAction(action)}
-            style={{ width: ACTION_WIDTH }}
-            className={cn(
-              "flex flex-col items-center justify-center gap-1 text-white",
-              "text-[11px] leading-[13px] font-medium",
-              action.className,
-            )}
-          >
-            {action.icon}
-            {action.label}
-          </button>
-        ))}
-      </div>
+      {leading.length > 0 && renderActions(leading, "left")}
+      {trailing.length > 0 && renderActions(trailing, "right")}
 
       <div
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={finish}
         onPointerCancel={finish}
+        onClickCapture={onClickCapture}
         style={{
-          transform: `translateX(${-Math.max(0, offset)}px)`,
+          transform: `translateX(${-offset}px)`,
           transition: dragging ? "none" : "transform 0.22s var(--ease-tg)",
         }}
         className="relative touch-pan-y bg-surface"

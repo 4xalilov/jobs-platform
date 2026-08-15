@@ -3,7 +3,7 @@
 Telegram uslubidagi ish topish platformasi. Asosiy raqib — hh.uz emas, Telegram
 kanallari. Demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 
-## Holat: v2 ning 2-bosqichi — ish qidiruvchi ekranlari
+## Holat: v2 ning 3-bosqichi — ish beruvchi ekranlari
 
 Spetsifikatsiya v2 ga yangilandi: aniq dizayn qiymatlari, "Arizalarim"
 bo'limi va ishonch qatlami qo'shildi. Bosqichlar shunga qarab qayta
@@ -13,7 +13,7 @@ tartiblandi.
 | --- | --- | --- |
 | 1 | Dizayn tizimi (v2 qiymatlari bilan) | ✅ tayyor |
 | 2 | Ish qidiruvchi ekranlari | ✅ tayyor |
-| 3 | Ish beruvchi ekranlari | ✅ v1 bo'yicha, v2 farqlari kutilmoqda |
+| 3 | Ish beruvchi ekranlari | ✅ tayyor |
 | 4 | Baza va API | ✅ tayyor |
 | 5 | Telegram autentifikatsiya | ✅ tayyor |
 | 6 | Ishonch qatlami — moslik, javob ko'rsatkichi, ariza holati | ⏳ |
@@ -78,7 +78,7 @@ kutubxonasiz.
 | `/profile` | Profil — kartochka, til, ko'rinish |
 | `/card` | Kartochkani tahrirlash — 5 maydon (5-si: ish turi) |
 | `/employer/vacancies` | Mening vakansiyalarim — ko'rishlar va arizalar soni |
-| `/employer/new` | Vakansiya joylash — 4 qadam, ovozli vakansiya |
+| `/employer/new` | Vakansiya joylash — 5 qadam, 90 sekund ichida |
 | `/employer/candidates` | Nomzodlar — arizalar chat ro'yxati sifatida |
 | `/employer/chat/[id]` | Nomzod bilan chat |
 | `/employer/plans` | Tariflar — Payme va Click |
@@ -108,6 +108,7 @@ olinmaydi.
 | `GET/POST /api/employer/vacancies` | Ish beruvchi vakansiyalari |
 | `DELETE /api/employer/vacancies/[id]` | Vakansiyani o'chirish |
 | `GET /api/employer/candidates` · `GET /api/employer/chats/[id]` | Nomzodlar |
+| `POST /api/employer/applications/[id]` | Arizani rad etish yoki chaqirish |
 | `GET /api/professions` · `GET /api/cities` | Ma'lumotnomalar |
 | `GET /api/chats/[id]/messages` | Yangi xabarlar: `?since=<ISO>` |
 | `POST /api/chats/[id]/messages` | Xabar yuborish (matn yoki ovoz) |
@@ -123,6 +124,20 @@ olinmaydi.
 Sahifalar ma'lumotni to'g'ridan-to'g'ri server komponentlarida oladi; API
 brauzerdan keladigan qo'shimcha so'rovlar uchun (cheksiz aylanish, qidiruv,
 ariza yuborish, yozishuv).
+
+### Ish beruvchi
+
+Vakansiya joylash — 5 ta maydon: lavozim, maosh, hudud, ish vaqti, talablar.
+Har qadamda bitta savol. Erkin matnli tavsif yo'q — talablar ro'yxatdan
+tanlanadi (3 tagacha) va bazada kalit sifatida yotadi, matni tarjimadan
+olinadi. Maosh o'rniga "kelishilgan holda" tanlansa ogohlantirish chiqadi:
+bunday vakansiyalar 3 barobar kam ariza oladi.
+
+Ovozli vakansiya olib tashlandi — v2 da u yo'q. Eski amalga oshirilishi
+haqiqatda yozmasdi, tayyor matnni qo'yardi xolos.
+
+Nomzodlar ro'yxatida arizani chapga tortsa rad etiladi, o'ngga tortsa
+chaqiruvga o'tadi. Qaror darhol ko'rinadi, so'rov fonda ketadi.
 
 ### Chat
 

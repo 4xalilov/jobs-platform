@@ -8,11 +8,12 @@ import { Avatar } from "@/components/ui/avatar";
 import { CountBadge, Tag } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
-import { IconMessage, IconUsers } from "@/components/ui/icon";
+import { IconCheck, IconMessage, IconUsers, IconX } from "@/components/ui/icon";
 import { ListGroup, ListItem } from "@/components/ui/list";
 import { NavBar } from "@/components/ui/nav-bar";
 import { Sheet } from "@/components/ui/sheet";
-import { apiGet } from "@/lib/api";
+import { SwipeListItem } from "@/components/ui/swipe-list-item";
+import { apiGet, apiPost } from "@/lib/api";
 import type { CandidateDTO } from "@/lib/db/types";
 import { usePolling } from "@/lib/use-polling";
 import { useSheet } from "@/lib/use-sheet";
@@ -31,6 +32,12 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
     setCandidates(await apiGet<CandidateDTO[]>("/employer/candidates"));
   }, []);
   usePolling(refresh, 5000);
+
+  /** Qaror darhol ko'rinadi, so'rov fonda ketadi */
+  const decide = (candidate: CandidateDTO, decision: "rad_etildi" | "qabul_qilindi") => {
+    setCandidates((prev) => prev.filter((item) => item.applicationId !== candidate.applicationId));
+    void apiPost(`/employer/applications/${candidate.applicationId}`, { decision });
+  };
 
   const location = (candidate: CandidateDTO) => {
     const city = candidate.cityName?.[locale] ?? "";
@@ -51,19 +58,41 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
       ) : (
         <ListGroup>
           {candidates.map((candidate, i) => (
-            <ListItem
-              key={candidate.chatId}
-              leading={<Avatar name={candidate.name} />}
-              title={candidate.name}
-              unread={candidate.unread > 0}
-              subtitle={systemText(candidate.lastMessage)}
-              caption={`${candidate.professionName?.[locale] ?? ""} · ${t.job.experience[candidate.experience]}`}
-              meta={candidate.lastMessageAt}
-              trailing={<CountBadge count={candidate.unread} />}
-              last={i === candidates.length - 1}
+            /* Chapga tortsa rad etish, o'ngga tortsa chaqirish */
+            <SwipeListItem
+              key={candidate.applicationId}
               className="animate-row-in"
-              onClick={() => card.open(candidate)}
-            />
+              leadingActions={[
+                {
+                  key: "invite",
+                  label: t.employer.candidates.invite,
+                  icon: <IconCheck size={20} />,
+                  className: "bg-success",
+                  onAction: () => decide(candidate, "qabul_qilindi"),
+                },
+              ]}
+              actions={[
+                {
+                  key: "reject",
+                  label: t.employer.candidates.reject,
+                  icon: <IconX size={20} />,
+                  className: "bg-danger",
+                  onAction: () => decide(candidate, "rad_etildi"),
+                },
+              ]}
+            >
+              <ListItem
+                leading={<Avatar name={candidate.name} />}
+                title={candidate.name}
+                unread={candidate.unread > 0}
+                subtitle={systemText(candidate.lastMessage)}
+                caption={`${candidate.professionName?.[locale] ?? ""} · ${t.job.experience[candidate.experience]}`}
+                meta={candidate.lastMessageAt}
+                trailing={<CountBadge count={candidate.unread} />}
+                last={i === candidates.length - 1}
+                onClick={() => card.open(candidate)}
+              />
+            </SwipeListItem>
           ))}
         </ListGroup>
       )}

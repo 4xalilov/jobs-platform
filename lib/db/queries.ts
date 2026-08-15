@@ -16,6 +16,7 @@ import type {
   MessageDTO,
   Page,
   ProfessionDTO,
+  RequirementKey,
   VacancyDTO,
 } from "./types";
 
@@ -123,6 +124,7 @@ type VacancyRow = {
   tajriba_talab: VacancyDTO["experience"];
   bandlik_turi: VacancyDTO["employment"];
   tavsif: string | null;
+  talablar: RequirementKey[] | null;
   korishlar: number;
   daqiqa: string;
   arizalar: string;
@@ -138,7 +140,7 @@ const VACANCY_COLUMNS = `
   c.nom as kompaniya, c.tasdiqlangan, c.tez_javob_belgisi as tez_javob,
   sh.nom_uz as shahar_uz, sh.nom_uz_cyrl as shahar_cyrl, sh.nom_ru as shahar_ru,
   tm.nom_uz as tuman_uz, tm.nom_uz_cyrl as tuman_cyrl, tm.nom_ru as tuman_ru,
-  v.maosh_min, v.maosh_max, v.tajriba_talab, v.bandlik_turi, v.tavsif, v.korishlar,
+  v.maosh_min, v.maosh_max, v.tajriba_talab, v.bandlik_turi, v.tavsif, v.talablar, v.korishlar,
   floor(extract(epoch from (now() - v.joylashtirilgan_sana)) / 60) as daqiqa,
   (select count(*) from applications a where a.vacancy_id = v.id) as arizalar
 `;
@@ -167,6 +169,7 @@ function mapVacancy(row: VacancyRow): VacancyDTO {
     experience: row.tajriba_talab,
     employment: row.bandlik_turi,
     description: row.tavsif ?? "",
+    requirements: row.talablar ?? [],
     postedMinutesAgo: Number(row.daqiqa),
     views: row.korishlar,
     applications: Number(row.arizalar),
@@ -473,6 +476,28 @@ export async function listApplications(userId: string): Promise<ApplicationDTO[]
   });
 }
 
+/* ——— Ish beruvchining qarori ——— */
+
+/**
+ * Arizani chapga tortsa rad etiladi, o'ngga tortsa chaqiruvga o'tadi.
+ * Nomzod buni "Arizalarim" ekranida holat sifatida ko'radi.
+ */
+export async function decideApplication(
+  companyId: string,
+  applicationId: string,
+  decision: "rad_etildi" | "qabul_qilindi",
+): Promise<boolean> {
+  const rows = await query(
+    `update applications a
+        set holat = $3, qaror_sana = now(), javob_sana = now()
+       from vacancies v
+      where a.id = $1::uuid and v.id = a.vacancy_id and v.company_id = $2::uuid
+      returning a.id`,
+    [applicationId, companyId, decision],
+  );
+  return rows.length > 0;
+}
+
 /* ——— Yashirish ——— */
 
 /** Chapga tortib yashirish. Qaytadi: endi yashiringanmi. */
@@ -756,14 +781,16 @@ export type NewVacancyInput = {
   salaryMax: number | null;
   employment: EmployerVacancyDTO["employment"];
   description: string;
+  /** 3 tagacha, ro'yxatdan tanlangan */
+  requirements: RequirementKey[];
 };
 
 export async function createVacancy(input: NewVacancyInput): Promise<string> {
   const row = await queryOne<{ id: string }>(
     `insert into vacancies
        (company_id, lavozim, kasb_id, shahar_id, tuman_id, maosh_min, maosh_max,
-        bandlik_turi, tavsif, lat, lng)
-     select $1::uuid, $2, $3, $4, $5, $6, $7, $8, $9, c.lat, c.lng
+        bandlik_turi, tavsif, talablar, lat, lng)
+     select $1::uuid, $2, $3, $4, $5, $6, $7, $8, $9, $10::text[], c.lat, c.lng
      from (select 41.311081 as lat, 69.240562 as lng) c
      returning id`,
     [
@@ -776,6 +803,7 @@ export async function createVacancy(input: NewVacancyInput): Promise<string> {
       input.salaryMax,
       input.employment,
       input.description,
+      input.requirements,
     ],
   );
   if (!row) throw new Error("Vakansiya yaratilmadi");
@@ -790,6 +818,7 @@ export async function deleteVacancy(companyId: string, vacancyId: string): Promi
 }
 
 type CandidateRow = {
+  application_id: string;
   chat_id: string;
   card_id: string;
   ism: string;
@@ -813,7 +842,7 @@ type CandidateRow = {
 
 export async function listCandidates(companyId: string): Promise<CandidateDTO[]> {
   const rows = await query<CandidateRow>(
-    `select ch.id as chat_id, cc.id as card_id, u.ism,
+    `select a.id as application_id, ch.id as chat_id, cc.id as card_id, u.ism,
        p.nom_uz as kasb_uz, p.nom_uz_cyrl as kasb_cyrl, p.nom_ru as kasb_ru,
        sh.nom_uz as shahar_uz, sh.nom_uz_cyrl as shahar_cyrl, sh.nom_ru as shahar_ru,
        tm.nom_uz as tuman_uz, tm.nom_uz_cyrl as tuman_cyrl, tm.nom_ru as tuman_ru,
@@ -838,6 +867,7 @@ export async function listCandidates(companyId: string): Promise<CandidateDTO[]>
 
   return rows.map((row) => ({
     id: row.card_id,
+    applicationId: row.application_id,
     chatId: row.chat_id,
     name: row.ism,
     professionName: localized(row.kasb_uz, row.kasb_cyrl, row.kasb_ru),

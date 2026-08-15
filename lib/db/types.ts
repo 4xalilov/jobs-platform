@@ -9,6 +9,27 @@ export type Localized = Record<Locale, string>;
 
 export type ExperienceLevel = "none" | "upToOne" | "oneToThree" | "threePlus";
 export type EmploymentType = "full" | "part" | "shift" | "temporary";
+
+/**
+ * Vakansiya talablari — erkin matn emas, ro'yxatdan tanlanadi.
+ * Bazada kalit saqlanadi, matni tarjimadan olinadi.
+ */
+export const REQUIREMENT_KEYS = [
+  "noExperience",
+  "passport",
+  "medicalBook",
+  "drivingLicence",
+  "ownTransport",
+  "russian",
+  "english",
+  "computer",
+  "cashRegister",
+  "physical",
+  "nightShift",
+  "adult",
+] as const;
+
+export type RequirementKey = (typeof REQUIREMENT_KEYS)[number];
 export type PlanId = "free" | "standard" | "premium" | "pack" | "database";
 export type VacancyStatus = "faol" | "tugagan" | "yopilgan";
 
@@ -32,6 +53,7 @@ export type VacancyDTO = {
   experience: ExperienceLevel;
   employment: EmploymentType;
   description: string;
+  requirements: RequirementKey[];
   postedMinutesAgo: number;
   views: number;
   applications: number;
@@ -136,6 +158,7 @@ export type EmployerVacancyDTO = {
 
 export type CandidateDTO = {
   id: string;
+  applicationId: string;
   chatId: string;
   name: string;
   professionName: Localized | null;

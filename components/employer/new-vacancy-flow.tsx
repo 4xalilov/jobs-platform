@@ -1,34 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { Button } from "@/components/ui/button";
-import { IconArrowLeft, IconCheck, IconMic, IconX } from "@/components/ui/icon";
+import { TextField } from "@/components/ui/field";
+import { IconArrowLeft, IconCheck } from "@/components/ui/icon";
 import { ListGroup, ListItem } from "@/components/ui/list";
 import { NavBar } from "@/components/ui/nav-bar";
 import { apiPost } from "@/lib/api";
-import type { CityDTO, ProfessionDTO } from "@/lib/db/types";
+import {
+  REQUIREMENT_KEYS,
+  type CityDTO,
+  type EmploymentType,
+  type ProfessionDTO,
+  type RequirementKey,
+} from "@/lib/db/types";
 import { cn, formatSalary } from "@/lib/utils";
 
-type Step = 1 | 2 | 3 | 4;
-type VoiceState = "idle" | "recording" | "converting";
+type Step = 1 | 2 | 3 | 4 | 5;
 
-const TOTAL_STEPS = 4;
+/** v2: lavozim, maosh, hudud, ish vaqti, talablar */
+const TOTAL_STEPS = 5;
+
+const MAX_REQUIREMENTS = 3;
+
+const EMPLOYMENT_TYPES: EmploymentType[] = ["full", "part", "shift", "temporary"];
 
 const SALARY_RANGES: { min: number | null; max: number | null }[] = [
-  { min: null, max: null },
   { min: 2_000_000, max: 3_000_000 },
   { min: 3_000_000, max: 4_000_000 },
   { min: 4_000_000, max: 6_000_000 },
   { min: 6_000_000, max: 8_000_000 },
   { min: 8_000_000, max: 12_000_000 },
   { min: 12_000_000, max: null },
+  // "Kelishilgan holda" oxirida — ogohlantirish bilan
+  { min: null, max: null },
 ];
 
 /**
- * Vakansiya joylash — 4 qadam, har qadamda bitta savol.
- * Ko'p maydonli forma emas.
+ * Vakansiya joylash — 5 maydon, har qadamda bitta savol, 90 sekund ichida.
+ * Erkin matnli tavsif yo'q: v2 da talablar ro'yxatdan tanlanadi.
  */
 export function NewVacancyFlow({
   professions,
@@ -42,45 +54,40 @@ export function NewVacancyFlow({
 
   const [step, setStep] = useState<Step>(1);
   const [professionId, setProfessionId] = useState<string | null>(null);
+  const [title, setTitle] = useState("");
   const [salaryIndex, setSalaryIndex] = useState<number | null>(null);
   const [cityId, setCityId] = useState<string | null>(null);
   const [districtId, setDistrictId] = useState<string | null>(null);
-  const [description, setDescription] = useState("");
-  const [voice, setVoice] = useState<VoiceState>("idle");
-  const [seconds, setSeconds] = useState(0);
+  const [employment, setEmployment] = useState<EmploymentType | null>(null);
+  const [requirements, setRequirements] = useState<RequirementKey[]>([]);
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
 
   const city = cities.find((item) => item.id === cityId);
   const needsDistrict = Boolean(city && city.districts.length > 0);
+  const negotiable = salaryIndex !== null && SALARY_RANGES[salaryIndex].min === null;
 
-  // Ovoz yozilayotgan sekundlar — tashqi taymerga obuna
-  useEffect(() => {
-    if (voice !== "recording") return;
-    const id = window.setInterval(() => setSeconds((value) => value + 1), 1000);
-    return () => window.clearInterval(id);
-  }, [voice]);
-
-  const stopRecording = () => {
-    setVoice("converting");
-    window.setTimeout(() => {
-      setDescription(t.employer.post.voiceResult);
-      setVoice("idle");
-      setSeconds(0);
-    }, 1200);
-  };
+  const toggleRequirement = (key: RequirementKey) =>
+    setRequirements((prev) =>
+      prev.includes(key)
+        ? prev.filter((item) => item !== key)
+        : prev.length >= MAX_REQUIREMENTS
+          ? prev
+          : [...prev, key],
+    );
 
   const publish = async () => {
     setSaving(true);
     const range = salaryIndex !== null ? SALARY_RANGES[salaryIndex] : { min: null, max: null };
     await apiPost("/employer/vacancies", {
       professionId,
+      title: title.trim(),
       cityId,
       districtId,
       salaryMin: range.min,
       salaryMax: range.max,
-      employment: "full",
-      description: description.trim(),
+      employment: employment ?? "full",
+      requirements,
     });
     setDone(true);
     router.refresh();
@@ -122,10 +129,12 @@ export function NewVacancyFlow({
         ? salaryIndex !== null
         : step === 3
           ? cityId !== null && (!needsDistrict || districtId !== null)
-          : description.trim().length > 0;
+          : step === 4
+            ? employment !== null
+            : true;
 
-  const question = t.employer.post[`q${step}` as "q1" | "q2" | "q3" | "q4"];
-  const hint = t.employer.post[`q${step}Hint` as "q1Hint" | "q2Hint" | "q3Hint" | "q4Hint"];
+  const question = t.employer.post[`q${step}` as `q${Step}`];
+  const hint = t.employer.post[`q${step}Hint` as `q${Step}Hint`];
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-[440px] flex-col bg-bg">
@@ -149,7 +158,7 @@ export function NewVacancyFlow({
           {t.employer.post.step} {step} {t.employer.post.of} {TOTAL_STEPS}
         </p>
         <div className="mt-2 flex gap-1">
-          {[1, 2, 3, 4].map((index) => (
+          {[1, 2, 3, 4, 5].map((index) => (
             <span
               key={index}
               className={cn("h-[3px] flex-1 rounded-full", index <= step ? "bg-accent" : "bg-fill")}
@@ -164,40 +173,76 @@ export function NewVacancyFlow({
           <p className="mt-1 text-body text-text-secondary">{hint}</p>
         </div>
 
+        {/* 1. Lavozim — ro'yxatdan tanlanadi, xohlasa aniqlashtirib yoziladi */}
         {step === 1 && (
-          <ListGroup>
-            {professions.map((option, i) => (
-              <PickRow
-                key={option.id}
-                label={option.name[locale]}
-                selected={professionId === option.id}
-                last={i === professions.length - 1}
-                onSelect={() => {
-                  setProfessionId(option.id);
-                  setStep(2);
-                }}
-              />
-            ))}
-          </ListGroup>
+          <>
+            <ListGroup>
+              {professions.map((option, i) => (
+                <PickRow
+                  key={option.id}
+                  label={option.name[locale]}
+                  selected={professionId === option.id}
+                  last={i === professions.length - 1}
+                  // Bu yerda o'zi keyingi qadamga o'tmaydi: tanlagach
+                  // ixtiyoriy "lavozim nomi" maydoni ochiladi
+                  onSelect={() => {
+                    setProfessionId(option.id);
+                    setTitle("");
+                  }}
+                />
+              ))}
+            </ListGroup>
+
+            {professionId && (
+              <>
+                <p className="px-4 pt-5 pb-1.5 text-section text-text-secondary uppercase">
+                  {t.employer.post.titleLabel}
+                </p>
+                <ListGroup>
+                  <TextField
+                    value={title}
+                    onValueChange={setTitle}
+                    placeholder={
+                      professions.find((item) => item.id === professionId)?.name[locale] ?? ""
+                    }
+                  />
+                </ListGroup>
+                <p className="px-4 pt-2 text-caption text-text-tertiary">
+                  {t.employer.post.titleHint}
+                </p>
+              </>
+            )}
+          </>
         )}
 
+        {/* 2. Maosh */}
         {step === 2 && (
-          <ListGroup>
-            {SALARY_RANGES.map((range, i) => (
-              <PickRow
-                key={i}
-                label={formatSalary(range.min, range.max, t.job.currency, t.job.negotiable)}
-                selected={salaryIndex === i}
-                last={i === SALARY_RANGES.length - 1}
-                onSelect={() => {
-                  setSalaryIndex(i);
-                  setStep(3);
-                }}
-              />
-            ))}
-          </ListGroup>
+          <>
+            <ListGroup>
+              {SALARY_RANGES.map((range, i) => (
+                <PickRow
+                  key={i}
+                  label={formatSalary(range.min, range.max, t.job.currency, t.job.negotiable)}
+                  selected={salaryIndex === i}
+                  last={i === SALARY_RANGES.length - 1}
+                  onSelect={() => {
+                    setSalaryIndex(i);
+                    if (SALARY_RANGES[i].min !== null) setStep(3);
+                  }}
+                />
+              ))}
+            </ListGroup>
+
+            {/* Maoshsiz vakansiya kam ariza oladi — buni yashirmaymiz */}
+            {negotiable && (
+              <div className="mx-4 mt-4 rounded-tg bg-warning/12 px-4 py-3">
+                <p className="text-body text-text">{t.employer.post.salaryWarning}</p>
+              </div>
+            )}
+          </>
         )}
 
+        {/* 3. Hudud */}
         {step === 3 && (
           <>
             <ListGroup>
@@ -240,73 +285,46 @@ export function NewVacancyFlow({
           </>
         )}
 
+        {/* 4. Ish vaqti */}
         {step === 4 && (
-          <>
-            <div className="bg-surface">
-              <textarea
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                placeholder={t.employer.post.descriptionPlaceholder}
-                rows={5}
-                className="w-full resize-none bg-transparent px-4 py-3 text-body text-text placeholder:text-text-tertiary focus:outline-none"
+          <ListGroup>
+            {EMPLOYMENT_TYPES.map((option, i) => (
+              <PickRow
+                key={option}
+                label={t.job.employment[option]}
+                selected={employment === option}
+                last={i === EMPLOYMENT_TYPES.length - 1}
+                onSelect={() => {
+                  setEmployment(option);
+                  setStep(5);
+                }}
               />
-            </div>
+            ))}
+          </ListGroup>
+        )}
 
-            {/* Ovozli vakansiya — yozishni yoqtirmaganlar uchun */}
-            <div className="mt-5 bg-surface px-4 py-4">
-              {voice === "idle" && (
-                <>
-                  <Button
-                    block
-                    variant="secondary"
-                    size="lg"
-                    leading={<IconMic size={20} />}
-                    onClick={() => {
-                      setSeconds(0);
-                      setVoice("recording");
-                    }}
-                  >
-                    {t.employer.post.voice}
-                  </Button>
-                  <p className="mt-2 text-caption text-text-tertiary">
-                    {t.employer.post.voiceHint}
-                  </p>
-                </>
-              )}
-
-              {voice === "recording" && (
-                <div className="flex items-center gap-3">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-danger text-white">
-                    <IconMic size={20} />
-                  </span>
-                  <span className="flex-1">
-                    <span className="block text-body text-text">
-                      {t.employer.post.voiceRecording}
-                    </span>
-                    <span className="block text-caption text-text-tertiary tabular-nums">
-                      0:{String(Math.min(seconds, 30)).padStart(2, "0")} / 0:30
-                    </span>
-                  </span>
-                  <button
-                    type="button"
-                    aria-label={t.employer.post.voiceStop}
-                    onClick={stopRecording}
-                    className="flex size-10 items-center justify-center rounded-full bg-fill text-text"
-                  >
-                    <IconX size={20} />
-                  </button>
-                </div>
-              )}
-
-              {voice === "converting" && (
-                <div className="flex items-center gap-3">
-                  <span className="skeleton size-10 shrink-0 rounded-full" />
-                  <span className="flex-1 text-body text-text-secondary">
-                    {t.employer.post.voiceConverting}
-                  </span>
-                </div>
-              )}
-            </div>
+        {/* 5. Talablar — 3 tagacha, yozilmaydi */}
+        {step === 5 && (
+          <>
+            <ListGroup>
+              {REQUIREMENT_KEYS.map((key, i) => {
+                const selected = requirements.includes(key);
+                const full = requirements.length >= MAX_REQUIREMENTS && !selected;
+                return (
+                  <PickRow
+                    key={key}
+                    label={t.employer.requirements[key]}
+                    selected={selected}
+                    dimmed={full}
+                    last={i === REQUIREMENT_KEYS.length - 1}
+                    onSelect={() => toggleRequirement(key)}
+                  />
+                );
+              })}
+            </ListGroup>
+            <p className="px-4 pt-2 text-caption text-text-tertiary">
+              {requirements.length} / {MAX_REQUIREMENTS}
+            </p>
           </>
         )}
       </div>
@@ -315,10 +333,11 @@ export function NewVacancyFlow({
         <Button
           block
           size="lg"
+          loading={saving}
           disabled={!canContinue || saving}
-          onClick={() => (step === 4 ? void publish() : setStep((step + 1) as Step))}
+          onClick={() => (step === TOTAL_STEPS ? void publish() : setStep((step + 1) as Step))}
         >
-          {step === 4 ? t.employer.post.publish : t.employer.post.next}
+          {step === TOTAL_STEPS ? t.employer.post.publish : t.employer.post.next}
         </Button>
       </div>
     </div>
@@ -328,17 +347,22 @@ export function NewVacancyFlow({
 function PickRow({
   label,
   selected,
+  dimmed = false,
   last,
   onSelect,
 }: {
   label: string;
   selected: boolean;
+  dimmed?: boolean;
   last: boolean;
   onSelect: () => void;
 }) {
   return (
     <ListItem
-      title={<span className="text-body font-normal">{label}</span>}
+      title={
+        <span className={cn("text-body font-normal", dimmed && "text-text-tertiary")}>{label}</span>
+      }
+      compact
       insetSeparator={false}
       last={last}
       trailing={selected ? <IconCheck size={20} className="text-accent" /> : undefined}

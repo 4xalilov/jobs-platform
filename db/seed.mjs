@@ -17,7 +17,14 @@ const here = dirname(fileURLToPath(import.meta.url));
 
 const CITIES = [
   { id: "toshkent", uz: "Toshkent", cyrl: "Тошкент", ru: "Ташкент", lat: 41.3111, lng: 69.2406 },
-  { id: "samarqand", uz: "Samarqand", cyrl: "Самарқанд", ru: "Самарканд", lat: 39.627, lng: 66.975 },
+  {
+    id: "samarqand",
+    uz: "Samarqand",
+    cyrl: "Самарқанд",
+    ru: "Самарканд",
+    lat: 39.627,
+    lng: 66.975,
+  },
   { id: "buxoro", uz: "Buxoro", cyrl: "Бухоро", ru: "Бухара", lat: 39.768, lng: 64.421 },
   { id: "andijon", uz: "Andijon", cyrl: "Андижон", ru: "Андижан", lat: 40.783, lng: 72.344 },
   { id: "fargona", uz: "Farg'ona", cyrl: "Фарғона", ru: "Фергана", lat: 40.386, lng: 71.787 },
@@ -28,9 +35,30 @@ const CITIES = [
 const DISTRICTS = [
   { id: "chilonzor", uz: "Chilonzor", cyrl: "Чилонзор", ru: "Чиланзар", lat: 41.275, lng: 69.205 },
   { id: "yunusobod", uz: "Yunusobod", cyrl: "Юнусобод", ru: "Юнусабад", lat: 41.36, lng: 69.29 },
-  { id: "mirzo-ulugbek", uz: "Mirzo Ulug'bek", cyrl: "Мирзо Улуғбек", ru: "Мирзо-Улугбек", lat: 41.33, lng: 69.34 },
-  { id: "shayxontohur", uz: "Shayxontohur", cyrl: "Шайхонтоҳур", ru: "Шайхантахур", lat: 41.32, lng: 69.23 },
-  { id: "yakkasaroy", uz: "Yakkasaroy", cyrl: "Яккасарой", ru: "Яккасарай", lat: 41.287, lng: 69.256 },
+  {
+    id: "mirzo-ulugbek",
+    uz: "Mirzo Ulug'bek",
+    cyrl: "Мирзо Улуғбек",
+    ru: "Мирзо-Улугбек",
+    lat: 41.33,
+    lng: 69.34,
+  },
+  {
+    id: "shayxontohur",
+    uz: "Shayxontohur",
+    cyrl: "Шайхонтоҳур",
+    ru: "Шайхантахур",
+    lat: 41.32,
+    lng: 69.23,
+  },
+  {
+    id: "yakkasaroy",
+    uz: "Yakkasaroy",
+    cyrl: "Яккасарой",
+    ru: "Яккасарай",
+    lat: 41.287,
+    lng: 69.256,
+  },
   { id: "olmazor", uz: "Olmazor", cyrl: "Олмазор", ru: "Алмазар", lat: 41.35, lng: 69.21 },
   { id: "sergeli", uz: "Sergeli", cyrl: "Сергели", ru: "Сергели", lat: 41.22, lng: 69.22 },
   { id: "uchtepa", uz: "Uchtepa", cyrl: "Учтепа", ru: "Учтепа", lat: 41.295, lng: 69.17 },
@@ -47,7 +75,13 @@ const PROFESSIONS = [
   { id: "kuryer", uz: "Kuryer", cyrl: "Курьер", ru: "Курьер", kat: "logistika" },
   { id: "haydovchi", uz: "Haydovchi", cyrl: "Ҳайдовчи", ru: "Водитель", kat: "logistika" },
   { id: "omborchi", uz: "Omborchi", cyrl: "Омборчи", ru: "Кладовщик", kat: "logistika" },
-  { id: "administrator", uz: "Administrator", cyrl: "Администратор", ru: "Администратор", kat: "xizmat" },
+  {
+    id: "administrator",
+    uz: "Administrator",
+    cyrl: "Администратор",
+    ru: "Администратор",
+    kat: "xizmat",
+  },
   { id: "farrosh", uz: "Farrosh", cyrl: "Фаррош", ru: "Уборщик", kat: "xizmat" },
   { id: "sartarosh", uz: "Sartarosh", cyrl: "Сартарош", ru: "Парикмахер", kat: "xizmat" },
   { id: "quruvchi", uz: "Quruvchi", cyrl: "Қурувчи", ru: "Строитель", kat: "qurilish" },
@@ -59,13 +93,62 @@ const PROFESSIONS = [
  * Kompaniya turiga mos kasblar, vazn bilan: takrorlangan kasb ko'proq
  * uchraydi. Aks holda ro'yxatda farrosh sotuvchidan ko'p chiqib qoladi.
  */
+/** Kasbga mos keladigan talablar — tasodifiy emas, mantiqli */
+const PROFESSION_REQUIREMENTS = {
+  sotuvchi: ["noExperience", "passport", "cashRegister"],
+  kassir: ["cashRegister", "passport", "computer"],
+  oshpaz: ["medicalBook", "passport", "nightShift"],
+  ofitsiant: ["medicalBook", "noExperience", "russian"],
+  haydovchi: ["drivingLicence", "ownTransport", "adult"],
+  kuryer: ["ownTransport", "adult", "passport"],
+  omborchi: ["physical", "passport", "adult"],
+  farrosh: ["noExperience", "physical", "passport"],
+  qorovul: ["nightShift", "adult", "passport"],
+  sartarosh: ["noExperience", "passport", "russian"],
+  administrator: ["computer", "russian", "passport"],
+  usta: ["physical", "passport", "adult"],
+};
+
 const KIND_PROFESSIONS = {
-  market: ["sotuvchi", "sotuvchi", "sotuvchi", "sotuvchi", "kassir", "kassir", "kassir",
-           "omborchi", "omborchi", "administrator", "qorovul", "farrosh"],
-  cafe: ["oshpaz", "oshpaz", "oshpaz", "ofitsiant", "ofitsiant", "ofitsiant",
-         "barmen", "barmen", "kassir", "administrator", "farrosh"],
-  logistics: ["kuryer", "kuryer", "kuryer", "kuryer", "haydovchi", "haydovchi", "haydovchi",
-              "omborchi", "omborchi", "qorovul"],
+  market: [
+    "sotuvchi",
+    "sotuvchi",
+    "sotuvchi",
+    "sotuvchi",
+    "kassir",
+    "kassir",
+    "kassir",
+    "omborchi",
+    "omborchi",
+    "administrator",
+    "qorovul",
+    "farrosh",
+  ],
+  cafe: [
+    "oshpaz",
+    "oshpaz",
+    "oshpaz",
+    "ofitsiant",
+    "ofitsiant",
+    "ofitsiant",
+    "barmen",
+    "barmen",
+    "kassir",
+    "administrator",
+    "farrosh",
+  ],
+  logistics: [
+    "kuryer",
+    "kuryer",
+    "kuryer",
+    "kuryer",
+    "haydovchi",
+    "haydovchi",
+    "haydovchi",
+    "omborchi",
+    "omborchi",
+    "qorovul",
+  ],
   salon: ["sartarosh", "sartarosh", "sartarosh", "sartarosh", "administrator", "farrosh"],
   construction: ["quruvchi", "quruvchi", "quruvchi", "quruvchi", "qorovul", "haydovchi"],
   workshop: ["tikuvchi", "tikuvchi", "tikuvchi", "tikuvchi", "omborchi", "farrosh"],
@@ -96,22 +179,46 @@ const COMPANIES = [
 ];
 
 const DESCRIPTIONS = [
-  { employment: "full", experience: "none",
-    text: "Ishga xodim kerak. Ish vaqti 9:00–18:00, dam olish kuni — yakshanba. Tajriba shart emas, o'rgatamiz." },
-  { employment: "shift", experience: null,
-    text: "Smenali ish: 2 kun ishlaysiz, 2 kun dam olasiz. Ovqat va forma bepul. Maosh har oyning 5-sanasida." },
-  { employment: "full", experience: null,
-    text: "Jamoamizga mas'uliyatli xodim qidiryapmiz. Ish joyi metro yaqinida. Sinov muddati 7 kun." },
-  { employment: "part", experience: "none",
-    text: "Yarim kun ish. Tajribasiz ham bo'ladi — birinchi hafta o'rgatamiz. Maosh har hafta." },
-  { employment: "full", experience: null,
-    text: "To'liq kun ish. Rasmiy ishga joylashtiramiz. Tushlik va yo'l puli kompaniya hisobidan." },
-  { employment: "shift", experience: null,
-    text: "Kechki smenaga xodim kerak: 15:00–23:00. Uyga yetkazib qo'yamiz. Kunlik to'lov ham mumkin." },
-  { employment: "full", experience: "threePlus",
-    text: "Tajribali xodim kerak — kamida 3 yil. Maosh natijaga qarab oshadi. Jamoa yosh va do'stona." },
-  { employment: "temporary", experience: "none",
-    text: "Vaqtinchalik ish — 1 oyga. Kunlik to'lov. Ish vaqti moslashuvchan, o'qish bilan birga bo'ladi." },
+  {
+    employment: "full",
+    experience: "none",
+    text: "Ishga xodim kerak. Ish vaqti 9:00–18:00, dam olish kuni — yakshanba. Tajriba shart emas, o'rgatamiz.",
+  },
+  {
+    employment: "shift",
+    experience: null,
+    text: "Smenali ish: 2 kun ishlaysiz, 2 kun dam olasiz. Ovqat va forma bepul. Maosh har oyning 5-sanasida.",
+  },
+  {
+    employment: "full",
+    experience: null,
+    text: "Jamoamizga mas'uliyatli xodim qidiryapmiz. Ish joyi metro yaqinida. Sinov muddati 7 kun.",
+  },
+  {
+    employment: "part",
+    experience: "none",
+    text: "Yarim kun ish. Tajribasiz ham bo'ladi — birinchi hafta o'rgatamiz. Maosh har hafta.",
+  },
+  {
+    employment: "full",
+    experience: null,
+    text: "To'liq kun ish. Rasmiy ishga joylashtiramiz. Tushlik va yo'l puli kompaniya hisobidan.",
+  },
+  {
+    employment: "shift",
+    experience: null,
+    text: "Kechki smenaga xodim kerak: 15:00–23:00. Uyga yetkazib qo'yamiz. Kunlik to'lov ham mumkin.",
+  },
+  {
+    employment: "full",
+    experience: "threePlus",
+    text: "Tajribali xodim kerak — kamida 3 yil. Maosh natijaga qarab oshadi. Jamoa yosh va do'stona.",
+  },
+  {
+    employment: "temporary",
+    experience: "none",
+    text: "Vaqtinchalik ish — 1 oyga. Kunlik to'lov. Ish vaqti moslashuvchan, o'qish bilan birga bo'ladi.",
+  },
 ];
 
 /** Turg'un tasodifiy (mulberry32) — har safar bir xil, taqsimoti tekis */
@@ -176,12 +283,13 @@ async function main() {
     // Ish beruvchilar va kompaniyalar
     const companyIds = [];
     for (const company of COMPANIES) {
-      const user = company.name === "Chorsu Market"
-        ? { rows: [{ id: demoUserId }] }
-        : await client.query(
-            "insert into users (ism, rol) values ($1, 'ish_beruvchi') returning id",
-            [company.name],
-          );
+      const user =
+        company.name === "Chorsu Market"
+          ? { rows: [{ id: demoUserId }] }
+          : await client.query(
+              "insert into users (ism, rol) values ($1, 'ish_beruvchi') returning id",
+              [company.name],
+            );
       const row = await client.query(
         `insert into companies (user_id, nom, telefon, tavsif, tasdiqlangan, tez_javob_belgisi)
          values ($1, $2, $3, $4, $5, $6) returning id`,
@@ -210,15 +318,15 @@ async function main() {
       const candidates = KIND_PROFESSIONS[company.kind];
       const professionId = candidates[Math.floor(rand() * candidates.length)];
       const cityRow = CITIES.find((c) => c.id === company.city);
-      const district = company.city === "toshkent"
-        ? DISTRICTS[Math.floor(rand() * DISTRICTS.length)]
-        : null;
+      const district =
+        company.city === "toshkent" ? DISTRICTS[Math.floor(rand() * DISTRICTS.length)] : null;
       const description = DESCRIPTIONS[Math.floor(rand() * DESCRIPTIONS.length)];
       const base = 3_000_000 + Math.floor(rand() * 6) * 500_000;
       const hasRange = rand() < 0.75;
       const negotiable = rand() < 0.08;
       const minutesAgo = Math.floor(rand() * 5000);
-      const experience = description.experience ?? openExperiences[Math.floor(rand() * openExperiences.length)];
+      const experience =
+        description.experience ?? openExperiences[Math.floor(rand() * openExperiences.length)];
       const views = 20 + Math.floor(rand() * 900);
 
       const point = district ?? cityRow;
@@ -227,12 +335,12 @@ async function main() {
       const inserted = await client.query(
         `insert into vacancies
            (company_id, lavozim, kasb_id, shahar_id, tuman_id, maosh_min, maosh_max,
-            tajriba_talab, tavsif, bandlik_turi, tarif, korishlar,
+            tajriba_talab, tavsif, talablar, bandlik_turi, tarif, korishlar,
             joylashtirilgan_sana, tugash_sana, lat, lng)
-         values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,
-                 now() - ($13 || ' minutes')::interval,
-                 now() - ($13 || ' minutes')::interval + interval '30 days',
-                 $14,$15)
+         values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::text[],$11,$12,$13,
+                 now() - ($14 || ' minutes')::interval,
+                 now() - ($14 || ' minutes')::interval + interval '30 days',
+                 $15,$16)
          returning id`,
         [
           company.id,
@@ -244,6 +352,8 @@ async function main() {
           negotiable ? null : hasRange ? base + 1_000_000 + Math.floor(rand() * 4) * 500_000 : null,
           experience,
           description.text,
+          // 1–3 ta talab, kasbga qarab
+          (PROFESSION_REQUIREMENTS[professionId] ?? []).slice(0, 1 + Math.floor(rand() * 3)),
           description.employment,
           rand() < 0.15 ? "standard" : "free",
           views,
@@ -285,7 +395,6 @@ async function main() {
       );
     }
 
-
     // Demo foydalanuvchi o'z kompaniyasiga ariza yubormaydi
     const conversations = [
       {
@@ -293,13 +402,19 @@ async function main() {
         messages: [
           ["ish_beruvchi", "Assalomu alaykum! Kartochkangizni ko'rdik.", false],
           ["nomzod", "Assalomu alaykum, rahmat! Qachon kelay?", true],
-          ["ish_beruvchi", "Ertaga soat 10 da kela olasizmi? Manzil: Havas Market, 2-qavat.", false],
+          [
+            "ish_beruvchi",
+            "Ertaga soat 10 da kela olasizmi? Manzil: Havas Market, 2-qavat.",
+            false,
+          ],
           ["ish_beruvchi", "Pasport nusxasini olib keling.", false],
         ],
       },
       {
         vacancy: pickVacancy(milano.id),
-        messages: [["ish_beruvchi", "Kartochkangizni ko'rdik, rahmat. Bir-ikki kunda javob beramiz.", true]],
+        messages: [
+          ["ish_beruvchi", "Kartochkangizni ko'rdik, rahmat. Bir-ikki kunda javob beramiz.", true],
+        ],
       },
       {
         vacancy: pickVacancy(express.id),
@@ -355,10 +470,42 @@ async function main() {
 
     // ——— Chorsu Market vakansiyalariga boshqa nomzodlar ———
     const otherCandidates = [
-      { name: "Nodira Yusupova", profession: "kassir", district: "yunusobod", experience: "oneToThree", min: 4_000_000, max: 5_000_000, message: "Salom, ikki yil kassir bo'lib ishlaganman." },
-      { name: "Jasur Toshmatov", profession: "sotuvchi", district: "olmazor", experience: "threePlus", min: 6_000_000, max: 8_000_000, message: "Uch yildan ortiq savdo sohasida ishlaganman." },
-      { name: "Malika Rahimova", profession: "sotuvchi", district: "sergeli", experience: "none", min: 3_000_000, max: 4_000_000, message: null },
-      { name: "Bekzod Ergashev", profession: "kassir", district: "mirzo-ulugbek", experience: "upToOne", min: 4_000_000, max: 6_000_000, message: null },
+      {
+        name: "Nodira Yusupova",
+        profession: "kassir",
+        district: "yunusobod",
+        experience: "oneToThree",
+        min: 4_000_000,
+        max: 5_000_000,
+        message: "Salom, ikki yil kassir bo'lib ishlaganman.",
+      },
+      {
+        name: "Jasur Toshmatov",
+        profession: "sotuvchi",
+        district: "olmazor",
+        experience: "threePlus",
+        min: 6_000_000,
+        max: 8_000_000,
+        message: "Uch yildan ortiq savdo sohasida ishlaganman.",
+      },
+      {
+        name: "Malika Rahimova",
+        profession: "sotuvchi",
+        district: "sergeli",
+        experience: "none",
+        min: 3_000_000,
+        max: 4_000_000,
+        message: null,
+      },
+      {
+        name: "Bekzod Ergashev",
+        profession: "kassir",
+        district: "mirzo-ulugbek",
+        experience: "upToOne",
+        min: 4_000_000,
+        max: 6_000_000,
+        message: null,
+      },
     ];
 
     const chorsuVacancies = vacancies.filter((v) => v.companyId === chorsu.id);
@@ -374,7 +521,14 @@ async function main() {
         `insert into candidate_cards
            (user_id, kasb_id, shahar_id, tuman_id, tajriba_daraja, maosh_min, maosh_max)
          values ($1,$2,'toshkent',$3,$4,$5,$6) returning id`,
-        [user.rows[0].id, candidate.profession, candidate.district, candidate.experience, candidate.min, candidate.max],
+        [
+          user.rows[0].id,
+          candidate.profession,
+          candidate.district,
+          candidate.experience,
+          candidate.min,
+          candidate.max,
+        ],
       );
       const application = await client.query(
         "insert into applications (vacancy_id, candidate_card_id) values ($1,$2) returning id",

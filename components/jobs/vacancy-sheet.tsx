@@ -122,7 +122,24 @@ export function VacancySheet({
           <Tag>{t.job.experience[vacancy.experience]}</Tag>
         </div>
 
-        <p className="mt-4 text-body text-text">{vacancy.description}</p>
+        {vacancy.description && <p className="mt-4 text-body text-text">{vacancy.description}</p>}
+
+        {/* v2: talablar erkin matn emas, tanlangan ro'yxat */}
+        {vacancy.requirements.length > 0 && (
+          <>
+            <p className="mt-4 text-section text-text-secondary uppercase">
+              {t.employer.requirements.label}
+            </p>
+            <ul className="mt-2 space-y-1.5">
+              {vacancy.requirements.map((key) => (
+                <li key={key} className="flex items-start gap-2">
+                  <IconCheck size={17} className="mt-0.5 shrink-0 text-accent" />
+                  <span className="text-body text-text">{t.employer.requirements[key]}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
 
         <div className="mt-4 flex gap-4 text-caption text-text-tertiary">
           <span className="flex items-center gap-1">
