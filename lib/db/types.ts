@@ -8,7 +8,63 @@ import type { Locale } from "@/lib/i18n";
 export type Localized = Record<Locale, string>;
 
 export type ExperienceLevel = "none" | "upToOne" | "oneToThree" | "threePlus";
-export type EmploymentType = "full" | "part" | "shift" | "temporary";
+
+/** v4: "daily" va "online" qo'shildi — kanal ichidagi chip qatori shular */
+export type EmploymentType = "full" | "part" | "shift" | "temporary" | "daily" | "online";
+
+/** Chip qatorining tartibi (§2). "Hammasi" alohida, ro'yxatda emas. */
+export const EMPLOYMENT_TYPES: EmploymentType[] = [
+  "full",
+  "daily",
+  "online",
+  "part",
+  "shift",
+  "temporary",
+];
+
+/* ——— Kanallar (v4, 1-bo'lim) ——— */
+
+/** Kanal ro'yxatidagi bitta qator — Telegram chat list'ining aynan o'zi */
+export type ChannelListItemDTO = {
+  id: string;
+  name: Localized;
+  group: string;
+  subscribed: boolean;
+  muted: boolean;
+  pinned: boolean;
+  /** Oxirgi kirgandan keyin qo'shilgan vakansiyalar — qatordagi belgi */
+  newCount: number;
+  vacancyCount: number;
+  subscriberCount: number;
+  /** Izoh qatori: kanaldagi eng oxirgi vakansiya */
+  last: {
+    title: string;
+    company: string;
+    salaryMin: number | null;
+    salaryMax: number | null;
+    minutesAgo: number;
+  } | null;
+};
+
+/** Katalog: kanallar kasb guruhlari bo'yicha ajratilgan */
+export type ChannelGroupDTO = {
+  id: string;
+  channels: ChannelListItemDTO[];
+};
+
+/** Kanal ichi — sarlavha uchun */
+export type ChannelDTO = {
+  id: string;
+  name: Localized;
+  group: string;
+  subscribed: boolean;
+  muted: boolean;
+  pinned: boolean;
+  subscriberCount: number;
+  vacancyCount: number;
+  /** Chip qatoridagi sonlar: To'liq kun 24 */
+  employmentCounts: Partial<Record<EmploymentType, number>>;
+};
 
 /**
  * Vakansiya talablari — erkin matn emas, ro'yxatdan tanlanadi.
@@ -93,6 +149,8 @@ export type VacancyDTO = {
   distanceKm: number | null;
   saved: boolean;
   applied: boolean;
+  /** Ish beruvchi shoshilinch deb belgilagan — sariq chip (§4.2) */
+  urgent: boolean;
   /** Kirgan nomzod uchun hisoblanadi */
   match: MatchDTO | null;
   responseStats: ResponseStatsDTO;

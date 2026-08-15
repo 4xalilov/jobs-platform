@@ -129,6 +129,7 @@ type VacancyRow = {
   tavsif: string | null;
   talablar: RequirementKey[] | null;
   korishlar: number;
+  shoshilinch: boolean;
   daqiqa: string;
   arizalar: string;
   masofa: number | null;
@@ -156,7 +157,7 @@ const VACANCY_COLUMNS = `
   c.nom as kompaniya, c.tasdiqlangan, c.tez_javob_belgisi as tez_javob,
   sh.nom_uz as shahar_uz, sh.nom_uz_cyrl as shahar_cyrl, sh.nom_ru as shahar_ru,
   tm.nom_uz as tuman_uz, tm.nom_uz_cyrl as tuman_cyrl, tm.nom_ru as tuman_ru,
-  v.maosh_min, v.maosh_max, v.tajriba_talab, v.bandlik_turi, v.tavsif, v.talablar, v.korishlar,
+  v.maosh_min, v.maosh_max, v.tajriba_talab, v.bandlik_turi, v.tavsif, v.talablar, v.korishlar, v.shoshilinch,
   floor(extract(epoch from (now() - v.joylashtirilgan_sana)) / 60) as daqiqa,
   (select count(*) from applications a where a.vacancy_id = v.id) as arizalar,
   js.jami_ariza, js.javob_berilgan, js.ortacha_soat,
@@ -223,6 +224,7 @@ function mapVacancy(row: VacancyRow): VacancyDTO {
     distanceKm: row.masofa === null ? null : Math.round(row.masofa * 10) / 10,
     saved: row.saqlangan,
     applied: row.ariza,
+    urgent: row.shoshilinch,
     match: buildMatch(row),
     responseStats: buildResponseStats(row),
   };
@@ -288,8 +290,12 @@ export type ListVacanciesOptions = {
   limit?: number;
   lat?: number | null;
   lng?: number | null;
-  /** Faqat saqlanganlar — v2 da "Saqlangan" Ishlar ichidagi filtr */
+  /** Faqat saqlanganlar — v4 da "Saqlangan" Profil ichidagi bo'lim */
   savedOnly?: boolean;
+  /** v4: kanal ichidagi oqim */
+  channelId?: string | null;
+  /** v4: kanal ichidagi bandlik chipi */
+  employment?: string | null;
 };
 
 /**
@@ -309,6 +315,8 @@ export async function listVacancies(options: ListVacanciesOptions): Promise<Page
     lat = null,
     lng = null,
     savedOnly = false,
+    channelId = null,
+    employment = null,
   } = options;
 
   const params: unknown[] = [userId, lat, lng];
@@ -329,6 +337,19 @@ export async function listVacancies(options: ListVacanciesOptions): Promise<Page
   if (professionId) {
     params.push(professionId);
     where.push(`v.kasb_id = $${params.length}`);
+  }
+  // Kanal a'zoligi ko'rinishdan keladi: kasb kanali kasb_id bo'yicha,
+  // "Kunlik ishlar" bandlik_turi bo'yicha
+  if (channelId) {
+    params.push(channelId);
+    where.push(
+      `exists (select 1 from channel_vacancies cv
+                where cv.channel_id = $${params.length} and cv.vacancy_id = v.id)`,
+    );
+  }
+  if (employment) {
+    params.push(employment);
+    where.push(`v.bandlik_turi = $${params.length}`);
   }
   if (cityId) {
     params.push(cityId);
