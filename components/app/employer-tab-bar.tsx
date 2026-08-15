@@ -6,8 +6,8 @@ import { CountBadge } from "@/components/ui/badge";
 import {
   IconBriefcase,
   IconBriefcaseSolid,
-  IconCard,
-  IconCardSolid,
+  IconSearch,
+  IconSearchSolid,
   IconUser,
   IconUserSolid,
   IconUsers,
@@ -17,12 +17,12 @@ import {
 import { useUnread } from "@/lib/use-unread";
 import { cn } from "@/lib/utils";
 
-type EmployerTab = "vacancies" | "candidates" | "plans" | "profile";
+type EmployerTab = "vacancies" | "candidates" | "search" | "profile";
 
 const ROUTES: Record<EmployerTab, string> = {
   vacancies: "/employer/vacancies",
   candidates: "/employer/candidates",
-  plans: "/employer/plans",
+  search: "/employer/qidiruv",
   profile: "/employer/profile",
 };
 
@@ -35,13 +35,13 @@ type IconPair = {
 const ICONS: Record<EmployerTab, IconPair> = {
   vacancies: { line: IconBriefcase, solid: IconBriefcaseSolid },
   candidates: { line: IconUsers, solid: IconUsersSolid },
-  plans: { line: IconCard, solid: IconCardSolid },
+  search: { line: IconSearch, solid: IconSearchSolid },
   profile: { line: IconUser, solid: IconUserSolid },
 };
 
 function activeTab(pathname: string): EmployerTab {
   if (pathname.startsWith("/employer/candidates")) return "candidates";
-  if (pathname.startsWith("/employer/plans")) return "plans";
+  if (pathname.startsWith("/employer/qidiruv")) return "search";
   if (pathname.startsWith("/employer/profile")) return "profile";
   return "vacancies";
 }
@@ -54,7 +54,7 @@ export function EmployerTabBar({ unread = 0 }: { unread?: number }) {
   const live = useUnread(unread);
 
   const active = activeTab(pathname);
-  const tabs: EmployerTab[] = ["vacancies", "candidates", "plans", "profile"];
+  const tabs: EmployerTab[] = ["vacancies", "candidates", "search", "profile"];
 
   return (
     <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[440px] -translate-x-1/2">

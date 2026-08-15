@@ -519,8 +519,9 @@ async function main() {
       );
       const card = await client.query(
         `insert into candidate_cards
-           (user_id, kasb_id, shahar_id, tuman_id, tajriba_daraja, maosh_min, maosh_max)
-         values ($1,$2,'toshkent',$3,$4,$5,$6) returning id`,
+           (user_id, kasb_id, shahar_id, tuman_id, tajriba_daraja, maosh_min, maosh_max,
+            bandlik_turi, ish_qidiryapman, korinish)
+         values ($1,$2,'toshkent',$3,$4,$5,$6,$7,$8,$9) returning id`,
         [
           user.rows[0].id,
           candidate.profession,
@@ -528,6 +529,10 @@ async function main() {
           candidate.experience,
           candidate.min,
           candidate.max,
+          // Ish turi va "ish qidiryapman" — turg'un urug'dan
+          ["full", "part", "shift", "full"][Math.floor(rand() * 4)],
+          rand() < 0.6,
+          rand() < 0.7 ? "ish_beruvchilar" : "hamma",
         ],
       );
       const application = await client.query(
@@ -553,6 +558,46 @@ async function main() {
       await client.query(
         "update chats set oxirgi_xabar_sana = (select max(sana) from messages where chat_id = $1) where id = $1",
         [chat.rows[0].id],
+      );
+    }
+
+    // ——— Ariza yubormagan, lekin "Ish qidiryapman" yoqilgan nomzodlar ———
+    // v2 6.1 ning mohiyati shu: passiv nomzod ham bozorda ko'rinadi.
+    const openCandidates = [
+      ["Dilnoza Karimova", "sotuvchi", "yunusobod", "oneToThree", "full"],
+      ["Sardor Aliyev", "haydovchi", "chilonzor", "threePlus", "shift"],
+      ["Gulnora Yusupova", "oshpaz", "mirobod", "oneToThree", "full"],
+      ["Aziz Nazarov", "kuryer", "sergeli", "none", "part"],
+      ["Kamola Sobirova", "administrator", "yakkasaroy", "upToOne", "full"],
+      ["Jahongir Umarov", "omborchi", "olmazor", "oneToThree", "shift"],
+      ["Nilufar Hasanova", "ofitsiant", "shayxontohur", "none", "part"],
+      ["Otabek Rasulov", "quruvchi", "uchtepa", "threePlus", "full"],
+      ["Shahnoza Tursunova", "farrosh", "mirzo-ulugbek", "upToOne", "part"],
+      ["Rustam Qodirov", "qorovul", "yashnobod", "oneToThree", "shift"],
+    ];
+
+    for (const [
+      index,
+      [name, profession, district, experience, employment],
+    ] of openCandidates.entries()) {
+      const user = await client.query(
+        `insert into users (ism, rol, oxirgi_kirish)
+         values ($1, 'nomzod', now() - ($2 || ' days')::interval) returning id`,
+        [name, String(index % 5)],
+      );
+      await client.query(
+        `insert into candidate_cards
+           (user_id, kasb_id, shahar_id, tuman_id, tajriba_daraja, bandlik_turi,
+            ish_qidiryapman, korinish)
+         values ($1,$2,'toshkent',$3,$4,$5,true,$6)`,
+        [
+          user.rows[0].id,
+          profession,
+          district,
+          experience,
+          employment,
+          index % 3 === 0 ? "hamma" : "ish_beruvchilar",
+        ],
       );
     }
 

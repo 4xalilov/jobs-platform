@@ -7,6 +7,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Tag } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
+  IconCard,
   IconBolt,
   IconCheck,
   IconGlobe,
@@ -97,6 +98,19 @@ export function EmployerProfileScreen({
       <p className="px-4 pt-2 text-caption text-text-tertiary">
         {t.employer.company.fastReplyHint}
       </p>
+
+      {/* Tariflar tab bardan chiqdi — o'rniga nomzod qidiruvi keldi.
+          Sahifaning o'zi shu yerdan ochiladi. */}
+      <ListGroup className="mt-5">
+        <ListItem
+          leading={<IconCard size={22} className="text-text-secondary" />}
+          title={<span className="text-body font-normal">{t.employer.tabs.plans}</span>}
+          insetSeparator={false}
+          chevron
+          last
+          onClick={() => router.push("/employer/plans")}
+        />
+      </ListGroup>
 
       <SectionHeader>{t.screens.profile.settings}</SectionHeader>
       <ListGroup>

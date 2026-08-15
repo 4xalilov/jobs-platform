@@ -13,10 +13,13 @@ import type {
   CompanyDTO,
   EmployerVacancyDTO,
   Localized,
+  MatchDTO,
+  MatchItem,
   MessageDTO,
   Page,
   ProfessionDTO,
   RequirementKey,
+  ResponseStatsDTO,
   VacancyDTO,
 } from "./types";
 
@@ -132,6 +135,19 @@ type VacancyRow = {
   saqlangan: boolean;
   ariza: boolean;
   saralash_qiymati: string | number | null;
+  jami_ariza: string | null;
+  javob_berilgan: string | null;
+  ortacha_soat: string | null;
+  faollik_kun: string | null;
+  // Moslik uchun — kirgan nomzod kartochkasi
+  kasb_mos: boolean | null;
+  shahar_mos: boolean | null;
+  tajriba_mos: boolean | null;
+  bandlik_mos: boolean | null;
+  mening_tajribam: CardDTO["experience"] | null;
+  mening_bandligim: CardDTO["employment"] | null;
+  mening_shahrim: string | null;
+  mening_kasbim: string | null;
 };
 
 const VACANCY_COLUMNS = `
@@ -142,15 +158,46 @@ const VACANCY_COLUMNS = `
   tm.nom_uz as tuman_uz, tm.nom_uz_cyrl as tuman_cyrl, tm.nom_ru as tuman_ru,
   v.maosh_min, v.maosh_max, v.tajriba_talab, v.bandlik_turi, v.tavsif, v.talablar, v.korishlar,
   floor(extract(epoch from (now() - v.joylashtirilgan_sana)) / 60) as daqiqa,
-  (select count(*) from applications a where a.vacancy_id = v.id) as arizalar
+  (select count(*) from applications a where a.vacancy_id = v.id) as arizalar,
+  js.jami_ariza, js.javob_berilgan, js.ortacha_soat,
+  floor(extract(epoch from (now() - c.oxirgi_faollik)) / 86400) as faollik_kun,
+  mc.kasb_id is not null and mc.kasb_id = v.kasb_id as kasb_mos,
+  mc.shahar_id is not null and mc.shahar_id = v.shahar_id as shahar_mos,
+  -- Tajriba darajalari tartibi o'zgarmas, shuning uchun parametr emas
+  mc.tajriba_daraja is not null
+    and array_position(array['none','upToOne','oneToThree','threePlus'], mc.tajriba_daraja)
+        >= array_position(array['none','upToOne','oneToThree','threePlus'], v.tajriba_talab)
+    as tajriba_mos,
+  mc.bandlik_turi is not null and mc.bandlik_turi = v.bandlik_turi as bandlik_mos,
+  mc.tajriba_daraja as mening_tajribam,
+  mc.bandlik_turi as mening_bandligim,
+  msh.nom_uz as mening_shahrim,
+  mp.nom_uz as mening_kasbim
 `;
 
+/**
+ * Javob ko'rsatkichi har safar hisoblanadi, keshlanmaydi.
+ * Kompaniyalar soni kichik, ariza jadvali indekslangan — bu yetadi.
+ * Sekinlashsa, `companies` ga uchta ustun qo'yib yangilash kifoya.
+ */
 const VACANCY_JOINS = `
   from vacancies v
   join companies c on c.id = v.company_id
   left join professions p on p.id = v.kasb_id
   left join cities sh on sh.id = v.shahar_id
   left join districts tm on tm.id = v.tuman_id
+  left join lateral (
+    select count(*) as jami_ariza,
+           count(a.birinchi_javob_sana) as javob_berilgan,
+           avg(extract(epoch from (a.birinchi_javob_sana - a.yaratilgan_sana)) / 3600)
+             as ortacha_soat
+      from applications a
+      join vacancies vv on vv.id = a.vacancy_id
+     where vv.company_id = c.id
+  ) js on true
+  left join candidate_cards mc on mc.user_id = $1::uuid
+  left join cities msh on msh.id = mc.shahar_id
+  left join professions mp on mp.id = mc.kasb_id
 `;
 
 function mapVacancy(row: VacancyRow): VacancyDTO {
@@ -176,6 +223,56 @@ function mapVacancy(row: VacancyRow): VacancyDTO {
     distanceKm: row.masofa === null ? null : Math.round(row.masofa * 10) / 10,
     saved: row.saqlangan,
     applied: row.ariza,
+    match: buildMatch(row),
+    responseStats: buildResponseStats(row),
+  };
+}
+
+/** Moslik faqat kirgan va kartochkasi bor nomzod uchun hisoblanadi */
+function buildMatch(row: VacancyRow): MatchDTO | null {
+  if (row.kasb_mos === null) return null;
+
+  const items: MatchItem[] = [
+    {
+      key: "profession",
+      ok: Boolean(row.kasb_mos),
+      required: row.kasb_uz ?? "",
+      mine: row.mening_kasbim,
+    },
+    {
+      key: "city",
+      ok: Boolean(row.shahar_mos),
+      required: row.shahar_uz ?? "",
+      mine: row.mening_shahrim,
+    },
+    {
+      key: "experience",
+      ok: Boolean(row.tajriba_mos),
+      required: row.tajriba_talab,
+      mine: row.mening_tajribam,
+    },
+    {
+      key: "employment",
+      ok: Boolean(row.bandlik_mos),
+      required: row.bandlik_turi,
+      mine: row.mening_bandligim,
+    },
+  ];
+
+  return { items, matched: items.filter((item) => item.ok).length, total: items.length };
+}
+
+function buildResponseStats(row: VacancyRow): ResponseStatsDTO {
+  const total = Number(row.jami_ariza ?? 0);
+  const answered = Number(row.javob_berilgan ?? 0);
+  const hours = row.ortacha_soat === null ? null : Number(row.ortacha_soat);
+  const days = row.faollik_kun === null ? null : Number(row.faollik_kun);
+
+  return {
+    rate: total > 0 ? Math.round((answered / total) * 100) : null,
+    averageHours: hours === null || Number.isNaN(hours) ? null : Math.round(hours),
+    lastActiveDays: days === null || Number.isNaN(days) ? null : Math.max(0, days),
+    applications: total,
   };
 }
 
@@ -245,12 +342,28 @@ export async function listVacancies(options: ListVacanciesOptions): Promise<Page
   // Saralash ustuni: keyset kursori shu qiymatga tayanadi.
   // "Yaqinimda"da koordinatasi yo'q vakansiya oxirida qolishi uchun coalesce.
   const distanceExpr = "haversine_km($2, $3, v.lat, v.lng)";
+  /**
+   * v2: javob ko'rsatkichi past ish beruvchi ro'yxatda pastroq chiqadi.
+   * Bu jazo emas, tartib — javob beradigan ish beruvchi mukofotlanadi.
+   *
+   * Alohida saralash mezoni sifatida emas, sanani "eskirtirish" orqali
+   * qo'llanadi: shunda kursor qiymati baribir timestamp bo'lib qoladi va
+   * keyset sahifalash o'zgarishsiz ishlayveradi.
+   * Hali arizasi yo'q vakansiya jazolanmaydi.
+   */
+  const responseDemotion = `
+    case
+      when coalesce(js.jami_ariza, 0) = 0 then interval '0'
+      when js.javob_berilgan * 100.0 / js.jami_ariza >= 70 then interval '0'
+      when js.javob_berilgan * 100.0 / js.jami_ariza >= 40 then interval '3 days'
+      else interval '10 days'
+    end`;
   const sortColumn =
     sort === "nearby"
       ? `coalesce(${distanceExpr}, 1e9)`
       : sort === "salary"
         ? "coalesce(v.maosh_max, v.maosh_min, 0)"
-        : "v.joylashtirilgan_sana";
+        : `(v.joylashtirilgan_sana - ${responseDemotion})`;
   // Yangi va maosh — kamayish tartibida, yaqinlik — o'sish tartibida
   const ascending = sort === "nearby";
   const direction = ascending ? "asc" : "desc";
@@ -417,6 +530,7 @@ type ApplicationRow = {
   shahar_uz: string | null;
   shahar_cyrl: string | null;
   shahar_ru: string | null;
+  kasb_id: string | null;
   holat: string;
   korilgan_sana: Date | null;
   javob_sana: Date | null;
@@ -438,7 +552,7 @@ function applicationStatus(row: ApplicationRow): ApplicationStatus {
 
 export async function listApplications(userId: string): Promise<ApplicationDTO[]> {
   const rows = await query<ApplicationRow>(
-    `select a.id, ch.id as chat_id, co.nom as kompaniya, v.lavozim,
+    `select a.id, ch.id as chat_id, co.nom as kompaniya, v.lavozim, v.kasb_id,
        p.nom_uz as kasb_uz, p.nom_uz_cyrl as kasb_cyrl, p.nom_ru as kasb_ru,
        sh.nom_uz as shahar_uz, sh.nom_uz_cyrl as shahar_cyrl, sh.nom_ru as shahar_ru,
        a.holat, a.korilgan_sana, a.javob_sana, a.yaratilgan_sana,
@@ -459,8 +573,25 @@ export async function listApplications(userId: string): Promise<ApplicationDTO[]
     [userId],
   );
 
-  return rows.map((row) => {
+  const applications = rows.map((row) => {
     const status = applicationStatus(row);
+    const iso = (value: Date | null) => (value ? value.toISOString() : null);
+
+    // Zanjir chiziqli: keyingi bosqich bo'lsa, oldingisi ham bo'lgan
+    const order: ApplicationStatus[] = [
+      "yuborildi",
+      "korildi",
+      "korib_chiqilmoqda",
+      "javob_berildi",
+    ];
+    const reached = order.indexOf(status);
+    const times: Record<ApplicationStatus, Date | null> = {
+      yuborildi: row.yaratilgan_sana,
+      korildi: row.korilgan_sana ?? null,
+      korib_chiqilmoqda: row.korilgan_sana ?? null,
+      javob_berildi: row.javob_sana ?? null,
+    };
+
     return {
       id: row.id,
       chatId: row.chat_id,
@@ -471,9 +602,133 @@ export async function listApplications(userId: string): Promise<ApplicationDTO[]
       status,
       sentAt: row.yaratilgan_sana.toISOString(),
       sentLabel: timeLabel(row.yaratilgan_sana),
+      chain: order.map((step, i) => ({
+        step,
+        at: i <= reached ? iso(times[step]) : null,
+      })),
       stale: status === "yuborildi" && Number(row.kunlar) >= STALE_DAYS,
+      similar: [] as { id: string; title: string; company: string }[],
     };
   });
+
+  // 7 kun javob bo'lmasa — shunga o'xshash uchta vakansiya taklif qilinadi
+  const stale = applications.filter((item) => item.stale);
+  if (stale.length > 0) {
+    const suggestions = await query<{ id: string; lavozim: string; nom: string; kasb_id: string }>(
+      `select distinct on (v.kasb_id, v.id) v.id, v.lavozim, co.nom, v.kasb_id
+         from vacancies v
+         join companies co on co.id = v.company_id
+        where v.holat = 'faol'
+          and v.kasb_id = any($1::text[])
+          and not exists (
+            select 1 from applications a
+              join candidate_cards cc on cc.id = a.candidate_card_id
+             where a.vacancy_id = v.id and cc.user_id = $2::uuid
+          )
+        order by v.kasb_id, v.id, v.joylashtirilgan_sana desc`,
+      [rows.filter((r) => r.kasb_id).map((r) => r.kasb_id), userId],
+    );
+
+    for (const item of stale) {
+      const kasbId = rows.find((r) => r.id === item.id)?.kasb_id;
+      item.similar = suggestions
+        .filter((s) => s.kasb_id === kasbId)
+        .slice(0, 3)
+        .map((s) => ({ id: s.id, title: s.lavozim, company: s.nom }));
+    }
+  }
+
+  return applications;
+}
+
+export async function setOpenToWork(
+  userId: string,
+  openToWork: boolean,
+  visibility: CardDTO["visibility"],
+): Promise<void> {
+  await query(
+    "update candidate_cards set ish_qidiryapman = $2, korinish = $3 where user_id = $1::uuid",
+    [userId, openToWork, visibility],
+  );
+}
+
+/* ——— "Ish qidiryapman" nomzodlari ——— */
+
+export type OpenCandidateDTO = {
+  id: string;
+  name: string;
+  professionId: string | null;
+  professionName: Localized | null;
+  cityName: Localized | null;
+  districtName: Localized | null;
+  experience: CardDTO["experience"];
+  employment: CardDTO["employment"];
+  /** Oxirgi kirishdan beri o'tgan kun */
+  lastSeenDays: number | null;
+};
+
+type OpenCandidateRow = {
+  id: string;
+  ism: string;
+  kasb_id: string | null;
+  kasb_uz: string | null;
+  kasb_cyrl: string | null;
+  kasb_ru: string | null;
+  shahar_uz: string | null;
+  shahar_cyrl: string | null;
+  shahar_ru: string | null;
+  tuman_uz: string | null;
+  tuman_cyrl: string | null;
+  tuman_ru: string | null;
+  tajriba_daraja: CardDTO["experience"];
+  bandlik_turi: CardDTO["employment"];
+  kun: string | null;
+};
+
+/**
+ * "Ish qidiryapman" belgisi yoqilgan nomzodlar.
+ * Ko'rinish darajasi hurmat qilinadi: "faqat ish beruvchilarga" ham,
+ * "hamma" ham ish beruvchiga ko'rinadi — cheklov aksincha tomonda.
+ */
+export async function listOpenCandidates(options: {
+  professionId?: string | null;
+  cityId?: string | null;
+  limit?: number;
+}): Promise<OpenCandidateDTO[]> {
+  const { professionId = null, cityId = null, limit = 30 } = options;
+
+  const rows = await query<OpenCandidateRow>(
+    `select cc.id, u.ism, cc.kasb_id,
+       p.nom_uz as kasb_uz, p.nom_uz_cyrl as kasb_cyrl, p.nom_ru as kasb_ru,
+       sh.nom_uz as shahar_uz, sh.nom_uz_cyrl as shahar_cyrl, sh.nom_ru as shahar_ru,
+       tm.nom_uz as tuman_uz, tm.nom_uz_cyrl as tuman_cyrl, tm.nom_ru as tuman_ru,
+       cc.tajriba_daraja, cc.bandlik_turi,
+       floor(extract(epoch from (now() - u.oxirgi_kirish)) / 86400) as kun
+     from candidate_cards cc
+     join users u on u.id = cc.user_id
+     left join professions p on p.id = cc.kasb_id
+     left join cities sh on sh.id = cc.shahar_id
+     left join districts tm on tm.id = cc.tuman_id
+     where cc.ish_qidiryapman = true
+       and cc.faol = true
+       and ($1::text is null or cc.kasb_id = $1)
+       and ($2::text is null or cc.shahar_id = $2)
+     order by u.oxirgi_kirish desc nulls last
+     limit $3`,
+    [professionId, cityId, limit],
+  );
+
+  return rows.map((row) => ({
+    id: row.id,
+    name: row.ism,
+    professionId: row.kasb_id,
+    professionName: localized(row.kasb_uz, row.kasb_cyrl, row.kasb_ru),
+    cityName: localized(row.shahar_uz, row.shahar_cyrl, row.shahar_ru),
+    districtName: localized(row.tuman_uz, row.tuman_cyrl, row.tuman_ru),
+    experience: row.tajriba_daraja,
+    employment: row.bandlik_turi,
+    lastSeenDays: row.kun === null ? null : Math.max(0, Number(row.kun)),
+  }));
 }
 
 /* ——— Ish beruvchining qarori ——— */
@@ -489,13 +744,19 @@ export async function decideApplication(
 ): Promise<boolean> {
   const rows = await query(
     `update applications a
-        set holat = $3, qaror_sana = now(), javob_sana = now()
+        set holat = $3,
+            qaror_sana = now(),
+            javob_sana = now(),
+            birinchi_javob_sana = coalesce(a.birinchi_javob_sana, now())
        from vacancies v
       where a.id = $1::uuid and v.id = a.vacancy_id and v.company_id = $2::uuid
       returning a.id`,
     [applicationId, companyId, decision],
   );
-  return rows.length > 0;
+  if (rows.length === 0) return false;
+
+  await query("update companies set oxirgi_faollik = now() where id = $1::uuid", [companyId]);
+  return true;
 }
 
 /* ——— Yashirish ——— */
@@ -635,6 +896,8 @@ type CardRow = {
   tuman_id: string | null;
   tajriba_daraja: CardDTO["experience"];
   bandlik_turi: CardDTO["employment"];
+  ish_qidiryapman: boolean;
+  korinish: CardDTO["visibility"];
   foto_url: string | null;
   ovoz_url: string | null;
 };
@@ -642,7 +905,7 @@ type CardRow = {
 export async function getCard(userId: string): Promise<CardDTO | null> {
   const row = await queryOne<CardRow>(
     `select cc.id, u.ism, cc.kasb_id, cc.shahar_id, cc.tuman_id, cc.tajriba_daraja,
-            cc.bandlik_turi, cc.foto_url, cc.ovoz_url
+            cc.bandlik_turi, cc.ish_qidiryapman, cc.korinish, cc.foto_url, cc.ovoz_url
      from candidate_cards cc
      join users u on u.id = cc.user_id
      where cc.user_id = $1::uuid`,
@@ -658,6 +921,8 @@ export async function getCard(userId: string): Promise<CardDTO | null> {
     districtId: row.tuman_id,
     experience: row.tajriba_daraja,
     employment: row.bandlik_turi,
+    openToWork: row.ish_qidiryapman,
+    visibility: row.korinish,
     photoUrl: row.foto_url,
     voiceUrl: row.ovoz_url,
   };
@@ -668,15 +933,27 @@ export async function saveCard(userId: string, card: Omit<CardDTO, "id">): Promi
     await run("update users set ism = $2 where id = $1::uuid", [userId, card.name]);
     await run(
       `insert into candidate_cards
-         (user_id, kasb_id, shahar_id, tuman_id, tajriba_daraja, bandlik_turi)
-       values ($1::uuid, $2, $3, $4, $5, $6)
+         (user_id, kasb_id, shahar_id, tuman_id, tajriba_daraja, bandlik_turi,
+          ish_qidiryapman, korinish)
+       values ($1::uuid, $2, $3, $4, $5, $6, $7, $8)
        on conflict (user_id) do update set
          kasb_id = excluded.kasb_id,
          shahar_id = excluded.shahar_id,
          tuman_id = excluded.tuman_id,
          tajriba_daraja = excluded.tajriba_daraja,
-         bandlik_turi = excluded.bandlik_turi`,
-      [userId, card.professionId, card.cityId, card.districtId, card.experience, card.employment],
+         bandlik_turi = excluded.bandlik_turi,
+         ish_qidiryapman = excluded.ish_qidiryapman,
+         korinish = excluded.korinish`,
+      [
+        userId,
+        card.professionId,
+        card.cityId,
+        card.districtId,
+        card.experience,
+        card.employment,
+        card.openToWork,
+        card.visibility,
+      ],
     );
   });
 }
@@ -960,6 +1237,27 @@ export async function sendMessage(
       chatId,
       rows[0].sana,
     ]);
+
+    // Javob ko'rsatkichi shu ikki ustunga tayanadi
+    if (from === "ish_beruvchi") {
+      await run(
+        `update applications a
+            set birinchi_javob_sana = coalesce(a.birinchi_javob_sana, $2)
+           from chats ch
+          where ch.id = $1::uuid and a.id = ch.application_id`,
+        [chatId, rows[0].sana],
+      );
+      await run(
+        `update companies co
+            set oxirgi_faollik = $2
+           from chats ch
+           join applications a on a.id = ch.application_id
+           join vacancies v on v.id = a.vacancy_id
+          where ch.id = $1::uuid and co.id = v.company_id`,
+        [chatId, rows[0].sana],
+      );
+    }
+
     return toMessage(rows[0]);
   });
 }

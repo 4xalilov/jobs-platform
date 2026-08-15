@@ -14,8 +14,7 @@ import { cn } from "@/lib/utils";
 
 /** Kun ajratgichi: bugungi va kechagi kun nomlanadi, qolgani sana */
 function useDayLabel() {
-  const { t, locale } = useI18n();
-  const tag = locale === "ru" ? "ru-RU" : "uz-UZ";
+  const { t } = useI18n();
 
   return (iso: string) => {
     const date = new Date(iso);
@@ -27,7 +26,8 @@ function useDayLabel() {
     );
     if (days <= 0) return t.screens.chat.today;
     if (days === 1) return t.screens.chat.yesterday;
-    return date.toLocaleDateString(tag, { day: "numeric", month: "long" });
+    // Brauzer o'zbek lokalini bilmasligi mumkin — qo'lda yig'amiz
+    return `${date.getDate()} ${t.time.months[date.getMonth()]}`;
   };
 }
 

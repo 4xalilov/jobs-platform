@@ -16,10 +16,11 @@ import {
   IconMessage,
   IconShieldCheck,
   IconUsers,
+  IconX,
 } from "@/components/ui/icon";
 import { Sheet } from "@/components/ui/sheet";
 import { apiPost } from "@/lib/api";
-import type { VacancyDTO } from "@/lib/db/types";
+import type { MatchDTO, ResponseStatsDTO, VacancyDTO } from "@/lib/db/types";
 import { formatSalary } from "@/lib/utils";
 
 /**
@@ -124,6 +125,13 @@ export function VacancySheet({
 
         {vacancy.description && <p className="mt-4 text-body text-text">{vacancy.description}</p>}
 
+        {/* v2 6.2: foiz emas, ro'yxat. Foiz ishonchni yo'qotadi,
+            ro'yxat esa harakatga aylanadi. */}
+        {vacancy.match && <MatchList match={vacancy.match} />}
+
+        {/* v2 6.3: Telegram kanalida bunday ma'lumot yo'q — bu ustunlik */}
+        <ResponseStats stats={vacancy.responseStats} />
+
         {/* v2: talablar erkin matn emas, tanlangan ro'yxat */}
         {vacancy.requirements.length > 0 && (
           <>
@@ -141,7 +149,15 @@ export function VacancySheet({
           </>
         )}
 
-        <div className="mt-4 flex gap-4 text-caption text-text-tertiary">
+        {/* v2 6.5: faqat raqam. Nomzodning o'rni ko'rsatilmaydi — uni
+            tekshirib bo'lmaydi va noto'g'ri chiqsa ishonch yo'qoladi. */}
+        <p className="mt-4 text-body text-text-secondary">
+          {vacancy.applications === 0
+            ? t.trust.competitionFirst
+            : t.trust.competition.replace("{count}", String(vacancy.applications))}
+        </p>
+
+        <div className="mt-3 flex gap-4 text-caption text-text-tertiary">
           <span className="flex items-center gap-1">
             <IconEye size={15} /> {vacancy.views} {t.job.views}
           </span>
@@ -151,5 +167,93 @@ export function VacancySheet({
         </div>
       </div>
     </Sheet>
+  );
+}
+
+/** Moslik ro'yxati — mos kelmagani kulrang, ostida nima yetishmasligi */
+function MatchList({ match }: { match: MatchDTO }) {
+  const { t } = useI18n();
+
+  const label: Record<MatchDTO["items"][number]["key"], string> = {
+    profession: t.trust.matchProfession,
+    city: t.trust.matchCity,
+    experience: t.trust.matchExperience,
+    employment: t.trust.matchEmployment,
+  };
+
+  const value = (key: string, raw: string | null) => {
+    if (!raw) return null;
+    if (key === "experience") return t.job.experience[raw as keyof typeof t.job.experience] ?? raw;
+    if (key === "employment") return t.job.employment[raw as keyof typeof t.job.employment] ?? raw;
+    return raw;
+  };
+
+  return (
+    <div className="mt-4 rounded-tg bg-fill px-4 py-3">
+      <p className="text-body font-semibold text-text">
+        {t.trust.match
+          .replace("{matched}", String(match.matched))
+          .replace("{total}", String(match.total))}
+      </p>
+      <ul className="mt-2.5 space-y-2">
+        {match.items.map((item) => (
+          <li key={item.key} className="flex items-start gap-2">
+            {item.ok ? (
+              <IconCheck size={17} className="mt-0.5 shrink-0 text-success" />
+            ) : (
+              <IconX size={17} className="mt-0.5 shrink-0 text-text-tertiary" />
+            )}
+            <span className="min-w-0">
+              <span className={item.ok ? "text-body text-text" : "text-body text-text-secondary"}>
+                {label[item.key]}: {value(item.key, item.required)}
+              </span>
+              {!item.ok && (
+                <span className="block text-caption text-text-tertiary">
+                  {t.trust.matchYours}: {value(item.key, item.mine) ?? t.trust.matchMissing}
+                </span>
+              )}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** Javob ko'rsatkichi — ochiq ko'rsatiladi, yashirilmaydi */
+function ResponseStats({ stats }: { stats: ResponseStatsDTO }) {
+  const { t } = useI18n();
+
+  const time =
+    stats.averageHours === null
+      ? null
+      : stats.averageHours < 24
+        ? t.trust.responseHours.replace("{count}", String(Math.max(1, stats.averageHours)))
+        : t.trust.responseDays.replace("{count}", String(Math.round(stats.averageHours / 24)));
+
+  const lastActive =
+    stats.lastActiveDays === null
+      ? t.trust.lastActiveNever
+      : stats.lastActiveDays === 0
+        ? t.trust.lastActiveToday
+        : t.trust.lastActiveDays.replace("{count}", String(stats.lastActiveDays));
+
+  return (
+    <>
+      <p className="mt-4 text-section text-text-secondary uppercase">{t.trust.responseTitle}</p>
+      <ul className="mt-2 space-y-1">
+        <li className="text-body text-text">
+          {stats.rate === null
+            ? t.trust.responseNone
+            : t.trust.responseRate.replace("{rate}", String(stats.rate))}
+        </li>
+        {time && (
+          <li className="text-body text-text-secondary">
+            {t.trust.responseTime.replace("{value}", time)}
+          </li>
+        )}
+        <li className="text-body text-text-secondary">{lastActive}</li>
+      </ul>
+    </>
   );
 }

@@ -357,3 +357,9 @@ export const IconEyeOff = (p: IconProps) => (
     <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18" />
   </Icon>
 );
+
+export const IconSearchSolid = (p: IconProps) => (
+  <SolidIcon {...p}>
+    <path d="M11 3a8 8 0 1 0 4.9 14.3l4.4 4.4a1.1 1.1 0 0 0 1.56-1.56l-4.4-4.4A8 8 0 0 0 11 3Zm0 2.2a5.8 5.8 0 1 1 0 11.6 5.8 5.8 0 0 1 0-11.6Z" />
+  </SolidIcon>
+);

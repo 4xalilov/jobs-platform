@@ -30,6 +30,38 @@ export const REQUIREMENT_KEYS = [
 ] as const;
 
 export type RequirementKey = (typeof REQUIREMENT_KEYS)[number];
+
+/**
+ * Moslik — foiz emas, ro'yxat. Foiz ishonchni yo'qotadi, ro'yxat esa
+ * harakatga aylanadi: nima yetishmasa, nima qilish kerakligi yoziladi.
+ */
+export type MatchCriterion = "profession" | "city" | "experience" | "employment";
+
+export type MatchItem = {
+  key: MatchCriterion;
+  ok: boolean;
+  /** Vakansiya nimani kutadi */
+  required: string;
+  /** Nomzodda nima bor — mos kelmasa ko'rsatiladi */
+  mine: string | null;
+};
+
+export type MatchDTO = {
+  items: MatchItem[];
+  matched: number;
+  total: number;
+};
+
+/** Ish beruvchining javob berish odati — Telegram kanalida bunday ma'lumot yo'q */
+export type ResponseStatsDTO = {
+  /** Arizalarning necha foiziga javob bergan; ariza bo'lmasa null */
+  rate: number | null;
+  /** O'rtacha javob vaqti, soatlarda */
+  averageHours: number | null;
+  /** Oxirgi faollikdan beri o'tgan kun; hech qachon bo'lmasa null */
+  lastActiveDays: number | null;
+  applications: number;
+};
 export type PlanId = "free" | "standard" | "premium" | "pack" | "database";
 export type VacancyStatus = "faol" | "tugagan" | "yopilgan";
 
@@ -61,6 +93,9 @@ export type VacancyDTO = {
   distanceKm: number | null;
   saved: boolean;
   applied: boolean;
+  /** Kirgan nomzod uchun hisoblanadi */
+  match: MatchDTO | null;
+  responseStats: ResponseStatsDTO;
 };
 
 export type Page<T> = { items: T[]; cursor: string | null };
@@ -109,6 +144,9 @@ export type ChatUpdateDTO = {
 
 export type CardDTO = {
   id: string | null;
+  /** "Ish qidiryapman" — yoqilsa ish beruvchilar ro'yxatida ko'rinadi */
+  openToWork: boolean;
+  visibility: "hamma" | "ish_beruvchilar";
   name: string;
   professionId: string | null;
   cityId: string | null;
@@ -131,8 +169,12 @@ export type ApplicationDTO = {
   status: ApplicationStatus;
   sentAt: string;
   sentLabel: string;
+  /** To'rt bosqichning har biri: bo'lgan bo'lsa vaqti bilan */
+  chain: { step: ApplicationStatus; at: string | null }[];
   /** Ish beruvchi 7 kundan beri ko'rmagan */
   stale: boolean;
+  /** Javob bo'lmasa taklif qilinadigan o'xshash vakansiyalar */
+  similar: { id: string; title: string; company: string }[];
 };
 
 export type ApplicationStatus = "yuborildi" | "korildi" | "korib_chiqilmoqda" | "javob_berildi";

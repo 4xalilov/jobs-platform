@@ -75,6 +75,7 @@ export const ru: Dictionary = {
     hoursShort: "ч",
     daysShort: "дн",
     yesterday: "вчера",
+    months: ["янв", "фев", "мар", "апр", "мая", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"],
   },
 
   design: {
@@ -211,6 +212,42 @@ export const ru: Dictionary = {
     },
   },
 
+  trust: {
+    openToWork: "Ищу работу",
+    openToWorkOn: "Работодатели смогут вас найти",
+    openToWorkOff: "Вы откликаетесь сами",
+    visibility: "Кому видно",
+    visibilityAll: "Всем",
+    visibilityEmployers: "Только работодателям",
+    visibilityHint:
+      "Если не хотите, чтобы узнали на нынешней работе — оставьте только работодателям",
+    match: "Вы подходите по {matched} из {total} требований",
+    matchProfession: "Профессия",
+    matchCity: "Регион",
+    matchExperience: "Опыт",
+    matchEmployment: "Тип занятости",
+    matchYours: "У вас",
+    matchMissing: "Не совпадает",
+    responseTitle: "О работодателе",
+    responseRate: "Отвечает на {rate}% откликов",
+    responseNone: "Откликов ещё не было",
+    responseTime: "Среднее время ответа: {value}",
+    responseHours: "{count} ч",
+    responseDays: "{count} дн",
+    lastActiveToday: "Последняя активность: сегодня",
+    lastActiveDays: "Последняя активность: {count} дн назад",
+    lastActiveNever: "Ещё не был активен",
+    competition: "На эту вакансию откликнулись {count} человек",
+    competitionFirst: "Вы будете первым",
+    candidatesTitle: "Ищут работу",
+    candidatesHint: "Кандидаты, включившие «Ищу работу»",
+    candidatesEmpty: "Пока никого нет",
+    seenToday: "заходил сегодня",
+    seenDays: "заходил {count} дн назад",
+    chain: "Путь отклика",
+    similar: "Похожие вакансии",
+  },
+
   screens: {
     jobs: {
       sort: "Сортировка",
@@ -342,6 +379,7 @@ export const ru: Dictionary = {
     tabs: {
       vacancies: "Вакансии",
       candidates: "Кандидаты",
+      search: "Поиск",
       plans: "Тарифы",
       profile: "Профиль",
     },

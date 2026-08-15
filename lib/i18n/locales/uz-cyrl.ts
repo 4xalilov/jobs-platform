@@ -75,6 +75,7 @@ export const uzCyrl: Dictionary = {
     hoursShort: "соат",
     daysShort: "кун",
     yesterday: "кеча",
+    months: ["янв", "фев", "март", "апр", "май", "июн", "июл", "авг", "сент", "окт", "ноя", "дек"],
   },
 
   design: {
@@ -211,6 +212,41 @@ export const uzCyrl: Dictionary = {
     },
   },
 
+  trust: {
+    openToWork: "Иш қидиряпман",
+    openToWorkOn: "Иш берувчилар сизни топа олади",
+    openToWorkOff: "Фақат ўзингиз ариза юборасиз",
+    visibility: "Кимга кўринсин",
+    visibilityAll: "Ҳаммага",
+    visibilityEmployers: "Фақат иш берувчиларга",
+    visibilityHint: "Ҳозирги ишингизда билишларини истамасангиз — фақат иш берувчиларга қолдиринг",
+    match: "Сиз {total} та талабдан {matched} тасига мос келасиз",
+    matchProfession: "Касб",
+    matchCity: "Ҳудуд",
+    matchExperience: "Тажриба",
+    matchEmployment: "Иш тури",
+    matchYours: "Сизда",
+    matchMissing: "Мос келмайди",
+    responseTitle: "Иш берувчи ҳақида",
+    responseRate: "Аризаларнинг {rate}%ига жавоб беради",
+    responseNone: "Ҳали ариза келмаган",
+    responseTime: "Ўртача жавоб вақти: {value}",
+    responseHours: "{count} соат",
+    responseDays: "{count} кун",
+    lastActiveToday: "Охирги фаоллик: бугун",
+    lastActiveDays: "Охирги фаоллик: {count} кун олдин",
+    lastActiveNever: "Ҳали фаол бўлмаган",
+    competition: "Бу вакансияга {count} киши ариза юборган",
+    competitionFirst: "Сиз биринчи бўласиз",
+    candidatesTitle: "Иш қидираётганлар",
+    candidatesHint: '"Иш қидиряпман" белгисини ёққан номзодлар',
+    candidatesEmpty: "Ҳозирча ҳеч ким йўқ",
+    seenToday: "бугун кирган",
+    seenDays: "{count} кун олдин кирган",
+    chain: "Ариза йўли",
+    similar: "Шунга ўхшаш вакансиялар",
+  },
+
   screens: {
     jobs: {
       sort: "Саралаш",
@@ -342,6 +378,7 @@ export const uzCyrl: Dictionary = {
     tabs: {
       vacancies: "Вакансиялар",
       candidates: "Номзодлар",
+      search: "Қидириш",
       plans: "Тарифлар",
       profile: "Профил",
     },

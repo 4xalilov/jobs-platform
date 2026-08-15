@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { useTheme } from "@/components/providers/theme-provider";
@@ -19,10 +20,12 @@ import { ListGroup, ListItem, SectionHeader } from "@/components/ui/list";
 import { LargeTitle } from "@/components/ui/large-title";
 import { Segmented } from "@/components/ui/segmented";
 import { Sheet } from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
 import { apiPost } from "@/lib/api";
 import type { CardDTO, CityDTO, ProfessionDTO } from "@/lib/db/types";
 import { locales, type Locale } from "@/lib/i18n";
 import { useSheet } from "@/lib/use-sheet";
+import { cn } from "@/lib/utils";
 
 export function ProfileScreen({
   card,
@@ -41,6 +44,24 @@ export function ProfileScreen({
   const { mode, setMode } = useTheme();
   const router = useRouter();
   const languageSheet = useSheet<true>();
+  const visibilitySheet = useSheet<true>();
+
+  // Optimistik: tugma darhol o'zgaradi, so'rov fonda ketadi
+  const [openToWork, setOpenToWork] = useState(card?.openToWork ?? false);
+  const [visibility, setVisibility] = useState<CardDTO["visibility"]>(
+    card?.visibility ?? "ish_beruvchilar",
+  );
+
+  const toggleOpenToWork = (next: boolean) => {
+    setOpenToWork(next);
+    void apiPost("/card/open-to-work", { openToWork: next, visibility });
+  };
+
+  const chooseVisibility = (next: CardDTO["visibility"]) => {
+    setVisibility(next);
+    visibilitySheet.close();
+    void apiPost("/card/open-to-work", { openToWork, visibility: next });
+  };
 
   const profession = professions.find((item) => item.id === card?.professionId);
   const city = cities.find((item) => item.id === card?.cityId);
@@ -65,7 +86,15 @@ export function ProfileScreen({
       {/* Kartochka — rezyume o'rniga */}
       <div className="bg-surface px-4 pt-4 pb-4">
         <div className="flex items-center gap-3">
-          <Avatar name={card?.name || "?"} size={64} />
+          <span
+            className={cn(
+              "rounded-full",
+              // "Ish qidiryapman" yoqilgan bo'lsa avatarda yashil halqa
+              openToWork && "ring-[3px] ring-success ring-offset-2 ring-offset-surface",
+            )}
+          >
+            <Avatar name={card?.name || "?"} size={64} />
+          </span>
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-[20px] leading-6 font-semibold text-text">
               {card?.name || t.screens.profile.notFilled}
@@ -92,6 +121,39 @@ export function ProfileScreen({
           {t.screens.profile.editCard}
         </Button>
       </div>
+
+      {/* v2 6.1: ariza yuborish bir tomonlama harakat — bu tugma oqimni
+          ikki tomonli qiladi va passiv nomzodni ham bozorga olib kiradi */}
+      <SectionHeader>{t.trust.openToWork}</SectionHeader>
+      <ListGroup>
+        <ListItem
+          title={<span className="text-body font-normal">{t.trust.openToWork}</span>}
+          subtitle={openToWork ? t.trust.openToWorkOn : t.trust.openToWorkOff}
+          wrapSubtitle
+          insetSeparator={false}
+          last={!openToWork}
+          trailing={
+            <Switch
+              checked={openToWork}
+              onCheckedChange={toggleOpenToWork}
+              label={t.trust.openToWork}
+            />
+          }
+        />
+        {openToWork && (
+          <ListItem
+            title={<span className="text-body font-normal">{t.trust.visibility}</span>}
+            subtitle={visibility === "hamma" ? t.trust.visibilityAll : t.trust.visibilityEmployers}
+            insetSeparator={false}
+            chevron
+            last
+            onClick={() => visibilitySheet.open(true)}
+          />
+        )}
+      </ListGroup>
+      {openToWork && (
+        <p className="px-4 pt-2 text-caption text-text-tertiary">{t.trust.visibilityHint}</p>
+      )}
 
       <SectionHeader>{t.screens.profile.media}</SectionHeader>
       <ListGroup>
@@ -214,6 +276,35 @@ export function ProfileScreen({
             />
           ))}
         </ListGroup>
+        <div className="h-4" />
+      </Sheet>
+
+      <Sheet
+        open={visibilitySheet.isOpen}
+        onClose={visibilitySheet.close}
+        closeLabel={t.common.close}
+        title={t.trust.visibility}
+      >
+        <ListGroup>
+          {(["hamma", "ish_beruvchilar"] as const).map((value, i) => (
+            <ListItem
+              key={value}
+              title={
+                <span className="text-body font-normal">
+                  {value === "hamma" ? t.trust.visibilityAll : t.trust.visibilityEmployers}
+                </span>
+              }
+              insetSeparator={false}
+              last={i === 1}
+              trailing={
+                visibility === value ? <IconCheck size={20} className="text-accent" /> : undefined
+              }
+              onClick={() => chooseVisibility(value)}
+              className="py-3"
+            />
+          ))}
+        </ListGroup>
+        <p className="px-4 pt-3 text-caption text-text-tertiary">{t.trust.visibilityHint}</p>
         <div className="h-4" />
       </Sheet>
     </>

@@ -3,7 +3,7 @@
 Telegram uslubidagi ish topish platformasi. Asosiy raqib — hh.uz emas, Telegram
 kanallari. Demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 
-## Holat: v2 ning 3-bosqichi — ish beruvchi ekranlari
+## Holat: v2 ning 6-bosqichi — ishonch qatlami
 
 Spetsifikatsiya v2 ga yangilandi: aniq dizayn qiymatlari, "Arizalarim"
 bo'limi va ishonch qatlami qo'shildi. Bosqichlar shunga qarab qayta
@@ -16,7 +16,7 @@ tartiblandi.
 | 3 | Ish beruvchi ekranlari | ✅ tayyor |
 | 4 | Baza va API | ✅ tayyor |
 | 5 | Telegram autentifikatsiya | ✅ tayyor |
-| 6 | Ishonch qatlami — moslik, javob ko'rsatkichi, ariza holati | ⏳ |
+| 6 | Ishonch qatlami — moslik, javob ko'rsatkichi, ariza holati | ✅ tayyor |
 | 7 | Chat funksiyasi | ✅ tayyor |
 | 8 | To'lov integratsiyasi (Payme, Click) | ⏳ tashlab ketildi |
 
@@ -81,7 +81,8 @@ kutubxonasiz.
 | `/employer/new` | Vakansiya joylash — 5 qadam, 90 sekund ichida |
 | `/employer/candidates` | Nomzodlar — arizalar chat ro'yxati sifatida |
 | `/employer/chat/[id]` | Nomzod bilan chat |
-| `/employer/plans` | Tariflar — Payme va Click |
+| `/employer/qidiruv` | "Ish qidiryapman" belgisini yoqqan nomzodlar |
+| `/employer/plans` | Tariflar — Payme va Click (Profil orqali) |
 | `/employer/profile` | Kompaniya profili |
 | `/kirish` | Kirish — Telegram Login Widget |
 | `/boshlash` | Tanishtiruv — rol, kasb, shahar yoki kompaniya, telefon |
@@ -109,6 +110,7 @@ olinmaydi.
 | `DELETE /api/employer/vacancies/[id]` | Vakansiyani o'chirish |
 | `GET /api/employer/candidates` · `GET /api/employer/chats/[id]` | Nomzodlar |
 | `POST /api/employer/applications/[id]` | Arizani rad etish yoki chaqirish |
+| `POST /api/card/open-to-work` | "Ish qidiryapman" va ko'rinish darajasi |
 | `GET /api/professions` · `GET /api/cities` | Ma'lumotnomalar |
 | `GET /api/chats/[id]/messages` | Yangi xabarlar: `?since=<ISO>` |
 | `POST /api/chats/[id]/messages` | Xabar yuborish (matn yoki ovoz) |
@@ -124,6 +126,37 @@ olinmaydi.
 Sahifalar ma'lumotni to'g'ridan-to'g'ri server komponentlarida oladi; API
 brauzerdan keladigan qo'shimcha so'rovlar uchun (cheksiz aylanish, qidiruv,
 ariza yuborish, yozishuv).
+
+### Ishonch qatlami
+
+Loyihaning markaziy muammosi — ariza yuborgan odam javob kutib qoladi va hech
+nima bilmaydi. Beshta funksiya shu noaniqlikni yo'q qiladi.
+
+**"Ish qidiryapman"** — yoqilsa nomzod ish beruvchilar ro'yxatida ko'rinadi,
+avatarda yashil halqa paydo bo'ladi. Ko'rinish darajasi majburiy: hozirgi
+ishida ishlayotgan odam xo'jayini bilishidan qo'rqadi, shuning uchun "faqat
+ish beruvchilarga" varianti bor va u standart.
+
+**Moslik** — foiz emas, ro'yxat: kasb, hudud, tajriba, ish turi. Mos
+kelmagani kulrang va ostida nomzodda nima borligi yozilgan. Foiz ishonchni
+yo'qotadi, ro'yxat esa harakatga aylanadi.
+
+**Javob ko'rsatkichi** — arizalarning necha foiziga javob berilgani, o'rtacha
+javob vaqti va oxirgi faollik. Telegram kanalida bunday ma'lumot yo'q va
+bo'lishi ham mumkin emas — bu strukturaviy ustunlik. Ko'rsatkich past bo'lsa
+vakansiya ro'yxatda pastroq chiqadi: jazo emas, tartib.
+
+Saralashga alohida mezon sifatida emas, sanani "eskirtirish" orqali
+qo'shilgan — shunda kursor qiymati timestamp bo'lib qoladi va keyset
+sahifalash o'zgarishsiz ishlaydi.
+
+**Ariza holati** — to'rt bosqich vaqti bilan: Yuborildi → Ko'rildi → Ko'rib
+chiqilmoqda → Javob berildi. 7 kun javob bo'lmasa turtki va shunga o'xshash
+uchta vakansiya taklif qilinadi.
+
+**Raqobat** — faqat raqam: "bu vakansiyaga 12 kishi ariza yuborgan".
+Nomzodning o'rni ko'rsatilmaydi: uni tekshirib bo'lmaydi va noto'g'ri chiqsa
+foydalanuvchi platformaga ishonmay qo'yadi.
 
 ### Ish beruvchi
 
