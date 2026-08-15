@@ -3,22 +3,26 @@
 Telegram uslubidagi ish topish platformasi. Asosiy raqib — hh.uz emas, Telegram
 kanallari. Demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 
-## Holat: v2 ning 6-bosqichi — ishonch qatlami
+## Holat
 
-Spetsifikatsiya v2 ga yangilandi: aniq dizayn qiymatlari, "Arizalarim"
-bo'limi va ishonch qatlami qo'shildi. Bosqichlar shunga qarab qayta
-tartiblandi.
+Barcha ekranlar ishlaydi va bazaga ulangan. Hozirgi ish — v3
+spetsifikatsiyasi: dizayn qatlamini SCSS modullariga ko'chirish,
+animatsiya, unumdorlik va oflayn.
 
-| Bosqich | Nima | Holat |
-| --- | --- | --- |
-| 1 | Dizayn tizimi (v2 qiymatlari bilan) | ✅ tayyor |
-| 2 | Ish qidiruvchi ekranlari | ✅ tayyor |
-| 3 | Ish beruvchi ekranlari | ✅ tayyor |
-| 4 | Baza va API | ✅ tayyor |
-| 5 | Telegram autentifikatsiya | ✅ tayyor |
-| 6 | Ishonch qatlami — moslik, javob ko'rsatkichi, ariza holati | ✅ tayyor |
-| 7 | Chat funksiyasi | ✅ tayyor |
-| 8 | To'lov integratsiyasi (Payme, Click) | ⏳ tashlab ketildi |
+| Nima | Holat |
+| --- | --- |
+| Dizayn tizimi | ✅ tayyor |
+| Ish qidiruvchi ekranlari | ✅ tayyor |
+| Ish beruvchi ekranlari | ✅ tayyor |
+| Baza va API | ✅ tayyor |
+| Telegram autentifikatsiya | ✅ tayyor |
+| Ishonch qatlami — moslik, javob ko'rsatkichi, ariza holati | ✅ tayyor |
+| Chat — matn va ovoz | ✅ tayyor |
+| v3 poydevori — themes.json, rem, Telegram egri chiziqlari | ✅ tayyor |
+| v3 — UI kit SCSS modullarida | ✅ tayyor |
+| v3 — ekran komponentlari SCSS ga, Tailwind olib tashlash | 🔨 ishda |
+| v3 — universal `Transition`, virtualizatsiya, oflayn | ⏳ navbatda |
+| To'lov integratsiyasi (Payme, Click) | ⏳ tashlab ketildi |
 
 ## Ishga tushirish
 
@@ -208,11 +212,18 @@ npx tsc --noEmit
 
 ## Dizayn qoidalari
 
-- Bitta asosiy rang (`#0088CC`), qolgan hammasi kulrang shkalada
-- Fon `#EFEFF4`, elementlar oq; burchaklar karta 12px, tugma 10px, sheet 16px
-- Tungi rejim iOS uslubida: fon `#000000`, yuza `#1C1C1E`, sheet `#2C2C2E`
+Ranglar kodga yozilmaydi — **`styles/themes.json`** yagona manba. Undan
+`app/themes.generated.css` chiqadi (`npm run themes`, `predev` va
+`prebuild` da o'z-o'zidan ishlaydi). O'lchamlar va animatsiya egri
+chiziqlari — `styles/_variables.scss`.
+
+- Bitta asosiy rang: yorug'da `#3390EC`, tungida `#8774E1`; qolgani kulrang
+- Fon `#F4F4F5`, yuza oq; tungida fon `#181818`, yuza `#212121`
+- Burchaklar: karta 15px, standart 12px, tugma 10px
 - Tizim shrifti; sahifa sarlavhasi 34px, panel 17px semibold, ro'yxat
   elementi 17px (o'qilmagan — semibold), izoh 15px, meta 13px
+- Hamma o'lcham `rem` da (ildiz 16px) — brauzer shrifti kattalashsa
+  interfeys proporsional o'sadi, sindirmaydi
 - Ro'yxat elementi 76px, avatar 48px, tab bar va asosiy tugma 50px
 - Ajratuvchi 0,5px, avatar tugagan joydan (chapdan 76px) boshlanadi
 - Ikonkalar 1,5px chiziqli; faqat faol tab to'ldirilgan variantga o'tadi
@@ -229,8 +240,12 @@ npx tsc --noEmit
 ## Tuzilma
 
 ```
+styles/
+  themes.json           RANGLARNING YAGONA MANBAI (yorug' + tungi)
+  _variables.scss       o'lchamlar va animatsiya egri chiziqlari
 app/
-  globals.css           dizayn tokenlari (@theme), yorug'/tungi
+  globals.css           tokenlar, ingichka chiziq, skeleton, tap
+  themes.generated.css  themes.json dan chiqadi — qo'lda tahrirlanmaydi
   layout.tsx            providerlar, PWA meta, chaqnashsiz tungi rejim
   (app)/                tab bar bilan ekranlar: jobs, messages, saved, profile
   search/ chat/ card/   to'liq ekran (tab barsiz)
@@ -294,7 +309,16 @@ kalit kompilyatsiya xatosi beradi.
 
 ## Texnik stack
 
-Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · PostgreSQL 16 ·
+Next.js 16 (App Router) · TypeScript · SCSS modullari · PostgreSQL 16 ·
 Telegram Login Widget · PWA (manifest)
+
+Uslublar SCSS modullariga ko'chirilmoqda. `components/ui/` allaqachon
+to'liq modullarda — har bir komponentning o'z `.module.scss` fayli bor.
+Ekran komponentlari hali Tailwind'da; ular ko'chgach Tailwind butunlay
+olib tashlanadi.
+
+> SCSS modullari o'zgaruvchilarni **nisbiy yo'l** bilan chaqiradi
+> (`@use "../../styles/variables" as *`) — Turbopack `loadPaths` ni
+> qo'llamaydi, mutlaq yo'l 500 xatosi beradi.
 
 Keyingi bosqichda: Payme va Click to'lovlari. Undan keyin S3 mos fayl saqlash.
