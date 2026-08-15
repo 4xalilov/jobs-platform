@@ -9,34 +9,52 @@ Barcha ekranlar ishlaydi va bazaga ulangan. Hozirgi ish — v3
 spetsifikatsiyasi: dizayn qatlamini SCSS modullariga ko'chirish,
 animatsiya, unumdorlik va oflayn.
 
-| Nima | Holat |
-| --- | --- |
-| Dizayn tizimi | ✅ tayyor |
-| Ish qidiruvchi ekranlari | ✅ tayyor |
-| Ish beruvchi ekranlari | ✅ tayyor |
-| Baza va API | ✅ tayyor |
-| Telegram autentifikatsiya | ✅ tayyor |
-| Ishonch qatlami — moslik, javob ko'rsatkichi, ariza holati | ✅ tayyor |
-| Chat — matn va ovoz | ✅ tayyor |
-| v3 poydevori — themes.json, rem, Telegram egri chiziqlari | ✅ tayyor |
-| v3 — UI kit SCSS modullarida | ✅ tayyor |
-| v3 — ekran komponentlari SCSS ga, Tailwind olib tashlash | 🔨 ishda |
-| v3 — universal `Transition`, virtualizatsiya, oflayn | ⏳ navbatda |
-| To'lov integratsiyasi (Payme, Click) | ⏳ tashlab ketildi |
+| Nima                                                       | Holat              |
+| ---------------------------------------------------------- | ------------------ |
+| Dizayn tizimi                                              | ✅ tayyor          |
+| Ish qidiruvchi ekranlari                                   | ✅ tayyor          |
+| Ish beruvchi ekranlari                                     | ✅ tayyor          |
+| Baza va API                                                | ✅ tayyor          |
+| Telegram autentifikatsiya                                  | ✅ tayyor          |
+| Ishonch qatlami — moslik, javob ko'rsatkichi, ariza holati | ✅ tayyor          |
+| Chat — matn va ovoz                                        | ✅ tayyor          |
+| v3 poydevori — themes.json, rem, Telegram egri chiziqlari  | ✅ tayyor          |
+| v3 — UI kit SCSS modullarida                               | ✅ tayyor          |
+| v3 — ekran komponentlari SCSS ga, Tailwind olib tashlash   | 🔨 ishda           |
+| v3 — universal `Transition`, virtualizatsiya, oflayn       | ⏳ navbatda        |
+| To'lov integratsiyasi (Payme, Click)                       | ⏳ tashlab ketildi |
 
 ## Ishga tushirish
 
 ### Bazani ko'tarish
 
-Ilova PostgreSQL'siz ishlamaydi — barcha ekranlar bazadan o'qiydi.
+Kerak: **Node 20.9+** va **Docker**. Ilova PostgreSQL'siz ishlamaydi —
+barcha ekranlar bazadan o'qiydi.
 
 ```bash
 cp .env.example .env.local
-docker compose up -d          # postgres:16, 5432-portda
+docker compose up -d --wait   # postgres:16 — baza tayyor bo'lguncha kutadi
 npm install
 npm run db:setup              # migratsiya + namunaviy ma'lumotlar
 npm run dev                   # http://localhost:3000 → /jobs
 ```
+
+`--wait` muhim: usiz `docker compose up -d` konteyner yaratilishi bilanoq
+qaytadi, Postgres esa yana bir necha sekund ishga tushadi — shu orada
+`db:setup` ulanolmay xato beradi.
+
+### Ishga tushmasa
+
+| Xato                                     | Sabab va yechim                                                                                                                                      |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Baza javob bermayapti`                  | Postgres ko'tarilmagan. `docker compose ps` — holat `healthy` bo'lsin. Docker Desktop ochiqmi?                                                       |
+| `Ports are not available: 5432`          | Kompyuterda boshqa Postgres ishlayapti. Uni to'xtating yoki `docker-compose.yml` da portni `5433:5432` qiling va `.env.local` ni ham shunga moslang. |
+| `Foydalanuvchi nomi yoki paroli...`      | `.env.local` dagi `DATABASE_URL` `docker-compose.yml` bilan mos emas.                                                                                |
+| `Bunday baza yo'q`                       | `docker compose down -v && docker compose up -d --wait`                                                                                              |
+| `EBADENGINE` yoki `next` ishga tushmaydi | Node eskirgan. `node --version` → 20.9 dan katta bo'lsin.                                                                                            |
+
+`db:migrate` va `db:seed` ulanish xatolarini o'zbekcha, yechimi bilan
+chiqaradi — stack trace o'rniga nima qilish kerakligini yozadi.
 
 `npm run db:setup` = `db:migrate` + `db:seed`. Seed jadvallarni tozalab,
 20 ta kompaniya, 48 ta vakansiya, demo nomzod va uning chatlarini yozadi.
@@ -72,25 +90,25 @@ kutubxonasiz.
 
 ### Ekranlar
 
-| Manzil | Ekran |
-| --- | --- |
-| `/jobs` | Ishlar — kasb va Saqlangan filtri, cheksiz aylanish, saralash |
-| `/search` | Qidiruv — bitta maydon va so'nggi qidiruvlar |
-| `/messages` | Xabarlar — ish beruvchilar bilan chatlar |
-| `/chat/[id]` | Chat — ariza shu yerda davom etadi |
-| `/arizalarim` | Arizalarim — yuborilgan arizalar va holati |
-| `/profile` | Profil — kartochka, til, ko'rinish |
-| `/card` | Kartochkani tahrirlash — 5 maydon (5-si: ish turi) |
-| `/employer/vacancies` | Mening vakansiyalarim — ko'rishlar va arizalar soni |
-| `/employer/new` | Vakansiya joylash — 5 qadam, 90 sekund ichida |
-| `/employer/candidates` | Nomzodlar — arizalar chat ro'yxati sifatida |
-| `/employer/chat/[id]` | Nomzod bilan chat |
-| `/employer/qidiruv` | "Ish qidiryapman" belgisini yoqqan nomzodlar |
-| `/employer/plans` | Tariflar — Payme va Click (Profil orqali) |
-| `/employer/profile` | Kompaniya profili |
-| `/kirish` | Kirish — Telegram Login Widget |
-| `/boshlash` | Tanishtiruv — rol, kasb, shahar yoki kompaniya, telefon |
-| `/design` | Dizayn tizimi (1-bosqich) |
+| Manzil                 | Ekran                                                         |
+| ---------------------- | ------------------------------------------------------------- |
+| `/jobs`                | Ishlar — kasb va Saqlangan filtri, cheksiz aylanish, saralash |
+| `/search`              | Qidiruv — bitta maydon va so'nggi qidiruvlar                  |
+| `/messages`            | Xabarlar — ish beruvchilar bilan chatlar                      |
+| `/chat/[id]`           | Chat — ariza shu yerda davom etadi                            |
+| `/arizalarim`          | Arizalarim — yuborilgan arizalar va holati                    |
+| `/profile`             | Profil — kartochka, til, ko'rinish                            |
+| `/card`                | Kartochkani tahrirlash — 5 maydon (5-si: ish turi)            |
+| `/employer/vacancies`  | Mening vakansiyalarim — ko'rishlar va arizalar soni           |
+| `/employer/new`        | Vakansiya joylash — 5 qadam, 90 sekund ichida                 |
+| `/employer/candidates` | Nomzodlar — arizalar chat ro'yxati sifatida                   |
+| `/employer/chat/[id]`  | Nomzod bilan chat                                             |
+| `/employer/qidiruv`    | "Ish qidiryapman" belgisini yoqqan nomzodlar                  |
+| `/employer/plans`      | Tariflar — Payme va Click (Profil orqali)                     |
+| `/employer/profile`    | Kompaniya profili                                             |
+| `/kirish`              | Kirish — Telegram Login Widget                                |
+| `/boshlash`            | Tanishtiruv — rol, kasb, shahar yoki kompaniya, telefon       |
+| `/design`              | Dizayn tizimi (1-bosqich)                                     |
 
 Rol Profil ekranidagi tugma orqali almashadi (ish qidiruvchi ↔ ish beruvchi).
 Yangi rolda kartochka yoki kompaniya bo'lmasa, `/boshlash` ga yo'naltiriladi.
@@ -101,31 +119,31 @@ olinmaydi.
 
 ### API
 
-| Yo'l | Nima qiladi |
-| --- | --- |
-| `GET /api/vacancies` | Ro'yxat: `kasb`, `shahar`, `q`, `sort`, `cursor`, `lat`, `lng` |
-| `GET /api/vacancies/[id]` | Bitta vakansiya, ko'rishlar soni oshadi |
-| `POST /api/vacancies/[id]/apply` | Ariza + chat ochish |
-| `POST /api/vacancies/[id]/save` | Saqlashni almashtirish |
-| `GET /api/saved` · `GET /api/chats` · `GET /api/chats/[id]` | Nomzod ekranlari |
-| `POST /api/vacancies/[id]/hide` | Chapga tortib yashirish |
-| `GET/PUT /api/card` | Nomzod kartochkasi |
-| `GET/POST /api/employer/vacancies` | Ish beruvchi vakansiyalari |
-| `DELETE /api/employer/vacancies/[id]` | Vakansiyani o'chirish |
-| `GET /api/employer/candidates` · `GET /api/employer/chats/[id]` | Nomzodlar |
-| `POST /api/employer/applications/[id]` | Arizani rad etish yoki chaqirish |
-| `POST /api/card/open-to-work` | "Ish qidiryapman" va ko'rinish darajasi |
-| `GET /api/professions` · `GET /api/cities` | Ma'lumotnomalar |
-| `GET /api/chats/[id]/messages` | Yangi xabarlar: `?since=<ISO>` |
-| `POST /api/chats/[id]/messages` | Xabar yuborish (matn yoki ovoz) |
-| `POST /api/chats/[id]/read` | Chat ochildi — qarshi tomon xabarlari o'qildi |
-| `POST /api/audio` · `GET /api/audio/[id]` | Ovozli xabar |
-| `GET /api/unread` | Tab bardagi o'qilmagan belgisi |
-| `GET /api/auth/telegram` | Login Widget qaytaradigan manzil — imzo tekshiriladi |
-| `POST /api/auth/dev` | Namunaviy kirish (bot ulanmagan bo'lsagina) |
-| `POST /api/auth/logout` | Chiqish — cookie tozalanadi |
-| `POST /api/auth/role` | Rolni almashtirish |
-| `POST /api/onboarding` | Tanishtiruvni yakunlash — kartochka yoki kompaniya |
+| Yo'l                                                            | Nima qiladi                                                    |
+| --------------------------------------------------------------- | -------------------------------------------------------------- |
+| `GET /api/vacancies`                                            | Ro'yxat: `kasb`, `shahar`, `q`, `sort`, `cursor`, `lat`, `lng` |
+| `GET /api/vacancies/[id]`                                       | Bitta vakansiya, ko'rishlar soni oshadi                        |
+| `POST /api/vacancies/[id]/apply`                                | Ariza + chat ochish                                            |
+| `POST /api/vacancies/[id]/save`                                 | Saqlashni almashtirish                                         |
+| `GET /api/saved` · `GET /api/chats` · `GET /api/chats/[id]`     | Nomzod ekranlari                                               |
+| `POST /api/vacancies/[id]/hide`                                 | Chapga tortib yashirish                                        |
+| `GET/PUT /api/card`                                             | Nomzod kartochkasi                                             |
+| `GET/POST /api/employer/vacancies`                              | Ish beruvchi vakansiyalari                                     |
+| `DELETE /api/employer/vacancies/[id]`                           | Vakansiyani o'chirish                                          |
+| `GET /api/employer/candidates` · `GET /api/employer/chats/[id]` | Nomzodlar                                                      |
+| `POST /api/employer/applications/[id]`                          | Arizani rad etish yoki chaqirish                               |
+| `POST /api/card/open-to-work`                                   | "Ish qidiryapman" va ko'rinish darajasi                        |
+| `GET /api/professions` · `GET /api/cities`                      | Ma'lumotnomalar                                                |
+| `GET /api/chats/[id]/messages`                                  | Yangi xabarlar: `?since=<ISO>`                                 |
+| `POST /api/chats/[id]/messages`                                 | Xabar yuborish (matn yoki ovoz)                                |
+| `POST /api/chats/[id]/read`                                     | Chat ochildi — qarshi tomon xabarlari o'qildi                  |
+| `POST /api/audio` · `GET /api/audio/[id]`                       | Ovozli xabar                                                   |
+| `GET /api/unread`                                               | Tab bardagi o'qilmagan belgisi                                 |
+| `GET /api/auth/telegram`                                        | Login Widget qaytaradigan manzil — imzo tekshiriladi           |
+| `POST /api/auth/dev`                                            | Namunaviy kirish (bot ulanmagan bo'lsagina)                    |
+| `POST /api/auth/logout`                                         | Chiqish — cookie tozalanadi                                    |
+| `POST /api/auth/role`                                           | Rolni almashtirish                                             |
+| `POST /api/onboarding`                                          | Tanishtiruvni yakunlash — kartochka yoki kompaniya             |
 
 Sahifalar ma'lumotni to'g'ridan-to'g'ri server komponentlarida oladi; API
 brauzerdan keladigan qo'shimcha so'rovlar uchun (cheksiz aylanish, qidiruv,

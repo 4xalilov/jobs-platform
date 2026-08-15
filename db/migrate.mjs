@@ -8,6 +8,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import pg from "pg";
+import { failWith } from "./explain-error.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const migrationsDir = join(here, "migrations");
@@ -60,7 +61,4 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+main().catch((error) => failWith(error, process.env.DATABASE_URL));

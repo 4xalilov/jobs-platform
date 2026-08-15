@@ -10,6 +10,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import pg from "pg";
+import { failWith } from "./explain-error.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -624,7 +625,4 @@ async function main() {
 // Migratsiya faylini eslatib qo'yish uchun — mavjudligini tekshiramiz
 readFileSync(join(here, "migrations", "0001_init.sql"), "utf8");
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+main().catch((error) => failWith(error, process.env.DATABASE_URL));
