@@ -1,6 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
+import styles from "./segmented.module.scss";
 
 export type SegmentedOption<T extends string> = { value: T; label: string };
 
@@ -25,18 +26,13 @@ export function Segmented<T extends string>({
   );
 
   return (
-    <div
-      role="tablist"
-      aria-label={label}
-      className={cn("relative flex rounded-tg-sm bg-fill p-[3px]", className)}
-    >
+    <div role="tablist" aria-label={label} className={cx(styles.group, className)}>
       <span
         aria-hidden="true"
-        className="absolute top-[3px] bottom-[3px] rounded-[0.5rem] bg-surface shadow-[0_1px_3px_rgba(0,0,0,0.12)] transition-transform duration-200 ease-[var(--ease-tg)]"
+        className={styles.indicator}
         style={{
           width: `calc((100% - 6px) / ${options.length})`,
           transform: `translateX(calc(${index} * 100%))`,
-          left: 3,
         }}
       />
       {options.map((option) => (
@@ -46,11 +42,7 @@ export function Segmented<T extends string>({
           role="tab"
           aria-selected={option.value === value}
           onClick={() => onChange(option.value)}
-          className={cn(
-            "relative z-10 flex-1 rounded-[0.5rem] px-2 py-1.5 text-caption font-medium whitespace-nowrap",
-            "transition-colors duration-150",
-            option.value === value ? "text-fg" : "text-fg-secondary",
-          )}
+          className={styles.option}
         >
           {option.label}
         </button>

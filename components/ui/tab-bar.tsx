@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
 import { CountBadge } from "./badge";
 import {
   IconBookmark,
@@ -15,6 +15,7 @@ import {
   IconUserSolid,
   type IconProps,
 } from "./icon";
+import styles from "./tab-bar.module.scss";
 
 export type TabKey = "jobs" | "applications" | "messages" | "saved" | "profile";
 
@@ -35,7 +36,7 @@ const ICONS: Record<TabKey, IconPair> = {
 /** v2 tuzilmasi: Ishlar / Arizalarim / Xabarlar / Profil */
 export const DEFAULT_TABS: TabKey[] = ["jobs", "applications", "messages", "profile"];
 
-/** Pastda tab bar — faqat 4 ta bo'lim, balandligi 50px + safe area */
+/** Pastda tab bar — faqat 4 ta bo'lim, balandligi 3.125rem + safe area */
 export function TabBar({
   active,
   tabs = DEFAULT_TABS,
@@ -53,13 +54,7 @@ export function TabBar({
   className?: string;
 }) {
   return (
-    <nav
-      className={cn(
-        "hairline-top relative flex bg-surface/95 backdrop-blur-md",
-        "pb-[env(safe-area-inset-bottom)]",
-        className,
-      )}
-    >
+    <nav className={cx(styles.bar, "hairline-top", className)}>
       {tabs.map((tab) => {
         const isActive = tab === active;
         const TabIcon = isActive ? ICONS[tab].solid : ICONS[tab].line;
@@ -71,21 +66,13 @@ export function TabBar({
             type="button"
             aria-current={isActive ? "page" : undefined}
             onClick={() => onChange(tab)}
-            className={cn(
-              "tap relative flex h-[3.125rem] flex-1 flex-col items-center justify-center gap-0.5",
-              isActive ? "text-accent" : "text-fg-secondary",
-            )}
+            className={cx(styles.tab, isActive && styles.active)}
           >
-            <span className="relative">
+            <span className={styles.iconWrap}>
               <TabIcon size={26} />
-              {count > 0 && (
-                <CountBadge
-                  count={count}
-                  className="badge-pop absolute -top-1 -right-2.5 border-2 border-surface"
-                />
-              )}
+              {count > 0 && <CountBadge count={count} className={styles.badge} />}
             </span>
-            <span className="text-[0.625rem] leading-[0.75rem] font-medium">{labels[tab]}</span>
+            <span className={styles.label}>{labels[tab]}</span>
           </button>
         );
       })}

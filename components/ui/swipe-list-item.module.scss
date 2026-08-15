@@ -1,0 +1,57 @@
+@use "../../styles/variables" as *;
+
+.root {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-background);
+}
+
+.actions {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+}
+
+.left {
+  left: 0;
+}
+
+.right {
+  right: 0;
+}
+
+.action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  line-height: 0.8125rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.accent {
+  background: var(--color-primary);
+}
+
+.danger {
+  background: var(--color-error);
+}
+
+.success {
+  background: var(--color-green);
+}
+
+.neutral {
+  background: var(--color-text-secondary);
+}
+
+/* Tortiladigan yuza — vertikal skroll ishlab turadi */
+.surface {
+  position: relative;
+  background: var(--color-background);
+  touch-action: pan-y;
+}

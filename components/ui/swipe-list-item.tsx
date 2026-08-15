@@ -1,15 +1,25 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
+import styles from "./swipe-list-item.module.scss";
+
+export type SwipeTone = "accent" | "danger" | "success" | "neutral";
 
 export type SwipeAction = {
   key: string;
   label: string;
   icon: React.ReactNode;
-  /** Fon rangi (Tailwind sinfi) */
-  className: string;
+  /** Fon rangi — dizayn tizimidagi to'rt ohangdan biri */
+  tone: SwipeTone;
   onAction: () => void;
+};
+
+const TONES: Record<SwipeTone, string> = {
+  accent: styles.accent,
+  danger: styles.danger,
+  success: styles.success,
+  neutral: styles.neutral,
 };
 
 const ACTION_WIDTH = 76;
@@ -111,18 +121,14 @@ export function SwipeListItem({
   };
 
   const renderActions = (list: SwipeAction[], side: "left" | "right") => (
-    <div className={cn("absolute inset-y-0 flex", side === "right" ? "right-0" : "left-0")}>
+    <div className={cx(styles.actions, side === "right" ? styles.right : styles.left)}>
       {list.map((action) => (
         <button
           key={action.key}
           type="button"
           onClick={() => runAction(action)}
           style={{ width: ACTION_WIDTH }}
-          className={cn(
-            "flex flex-col items-center justify-center gap-1 text-white",
-            "text-[0.6875rem] leading-[0.8125rem] font-medium",
-            action.className,
-          )}
+          className={cx(styles.action, TONES[action.tone])}
         >
           {action.icon}
           {action.label}
@@ -132,7 +138,7 @@ export function SwipeListItem({
   );
 
   return (
-    <div className={cn("relative overflow-hidden bg-surface", className)}>
+    <div className={cx(styles.root, className)}>
       {leading.length > 0 && renderActions(leading, "left")}
       {trailing.length > 0 && renderActions(trailing, "right")}
 
@@ -144,9 +150,9 @@ export function SwipeListItem({
         onClickCapture={onClickCapture}
         style={{
           transform: `translateX(${-offset}px)`,
-          transition: dragging ? "none" : "transform 0.22s var(--ease-tg)",
+          transition: dragging ? "none" : "transform 0.22s cubic-bezier(0.25, 1, 0.5, 1)",
         }}
-        className="relative touch-pan-y bg-surface"
+        className={styles.surface}
       >
         {children}
       </div>

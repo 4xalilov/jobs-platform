@@ -1,0 +1,32 @@
+@use "../../styles/variables" as *;
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6rem 2.5rem 0;
+  text-align: center;
+}
+
+.icon {
+  color: var(--color-text-tertiary);
+}
+
+.title {
+  margin-top: 0.75rem;
+  font-size: $font-nav;
+  line-height: $font-nav-line;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.hint {
+  margin-top: 0.25rem;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text-secondary);
+}
+
+.action {
+  margin-top: 1.25rem;
+}

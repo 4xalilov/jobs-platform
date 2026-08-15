@@ -1,0 +1,18 @@
+@use "../../styles/variables" as *;
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem $side-padding 0.5rem;
+  background: var(--color-background-secondary);
+}
+
+.title {
+  font-size: $font-large;
+  line-height: $font-large-line;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-text);
+}

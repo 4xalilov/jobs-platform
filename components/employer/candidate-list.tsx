@@ -67,7 +67,7 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
                   key: "invite",
                   label: t.employer.candidates.invite,
                   icon: <IconCheck size={20} />,
-                  className: "bg-success",
+                  tone: "success",
                   onAction: () => decide(candidate, "qabul_qilindi"),
                 },
               ]}
@@ -76,7 +76,7 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
                   key: "reject",
                   label: t.employer.candidates.reject,
                   icon: <IconX size={20} />,
-                  className: "bg-danger",
+                  tone: "danger",
                   onAction: () => decide(candidate, "rad_etildi"),
                 },
               ]}

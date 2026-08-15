@@ -1,0 +1,71 @@
+@use "../../styles/variables" as *;
+
+/* O'qilmagan xabarlar soni — dumaloq belgi */
+.count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.25rem;
+  min-width: 1.25rem;
+  padding: 0 0.375rem;
+  border-radius: 999px;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Matnli belgi: "Tez javob", "Tasdiqlangan" */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 999px;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  font-weight: 500;
+}
+
+.dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+/* ——— Ohanglar ——— */
+.countAccent {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.countSuccess {
+  background: var(--color-green);
+  color: #fff;
+}
+.countWarning {
+  background: var(--color-warning);
+  color: #fff;
+}
+.countNeutral {
+  background: var(--color-text-tertiary);
+  color: #fff;
+}
+
+.tagAccent {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+.tagSuccess {
+  background: color-mix(in srgb, var(--color-green) 12%, transparent);
+  color: var(--color-green);
+}
+.tagWarning {
+  background: color-mix(in srgb, var(--color-warning) 12%, transparent);
+  color: var(--color-warning);
+}
+.tagNeutral {
+  background: var(--color-fill);
+  color: var(--color-text-secondary);
+}

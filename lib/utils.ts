@@ -40,6 +40,15 @@ const twMerge = extendTailwindMerge({
   },
 });
 
+/**
+ * SCSS Modules ga ko'chgan komponentlar uchun — sinf nomlarini shunchaki
+ * qo'shadi. tailwind-merge kerak emas: modul sinflari hashlangan va
+ * ular orasida ziddiyat bo'lmaydi.
+ */
+export function cx(...inputs: ClassValue[]): string {
+  return clsx(inputs);
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }

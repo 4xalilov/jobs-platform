@@ -30,8 +30,10 @@ $font-caption: 0.8125rem;
 $font-caption-line: 1.125rem;
 
 // ——— Animatsiya: Telegram ning haqiqiy egri chiziqlari ———
-$slide-transition: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-$layer-transition: 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+$ease-slide: cubic-bezier(0.25, 1, 0.5, 1);
+$ease-layer: cubic-bezier(0.33, 1, 0.68, 1);
+$slide-transition: 0.3s $ease-slide;
+$layer-transition: 0.3s $ease-layer;
 $fast-transition: 0.15s ease-out;
 $tap-feedback: 0.1s;
 $tap-scale: 0.97;

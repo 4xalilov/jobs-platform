@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { avatarColor, cn, initials } from "@/lib/utils";
+import { avatarColor, cx, initials } from "@/lib/utils";
+import styles from "./avatar.module.scss";
 
 export type AvatarProps = {
   name: string;
@@ -10,24 +11,15 @@ export type AvatarProps = {
   className?: string;
 };
 
-/** Logo bo'lmasa — nom harfi va nomdan hisoblangan turg'un rang */
+/** Logo bo'lmasa — nom harfi va nomdan hisoblangan turg'un peer rangi */
 export function Avatar({ name, src, size = 48, online = false, className }: AvatarProps) {
   return (
-    <span
-      className={cn("relative inline-flex shrink-0", className)}
-      style={{ width: size, height: size }}
-    >
+    <span className={cx(styles.avatar, className)} style={{ width: size, height: size }}>
       {src ? (
-        <Image
-          src={src}
-          alt={name}
-          width={size}
-          height={size}
-          className="size-full rounded-full object-cover"
-        />
+        <Image src={src} alt={name} width={size} height={size} className={styles.image} />
       ) : (
         <span
-          className="flex size-full items-center justify-center rounded-full font-medium text-white select-none"
+          className={styles.initials}
           style={{ background: avatarColor(name), fontSize: size * 0.38 }}
           aria-hidden="true"
         >
@@ -35,10 +27,7 @@ export function Avatar({ name, src, size = 48, online = false, className }: Avat
         </span>
       )}
       {online && (
-        <span
-          className="absolute right-0 bottom-0 rounded-full border-2 border-surface bg-success"
-          style={{ width: size * 0.28, height: size * 0.28 }}
-        />
+        <span className={styles.online} style={{ width: size * 0.28, height: size * 0.28 }} />
       )}
     </span>
   );

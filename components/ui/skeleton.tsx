@@ -1,6 +1,7 @@
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
+import styles from "./skeleton.module.scss";
 
-/** Yuklanishda spinner emas — skeleton */
+/** Yuklanishda spinner emas — skeleton, haqiqiy kontent shakli takrorlanadi */
 export function Skeleton({
   className,
   style,
@@ -8,24 +9,21 @@ export function Skeleton({
   className?: string;
   style?: React.CSSProperties;
 }) {
-  return <div className={cn("skeleton rounded-md", className)} style={style} aria-hidden="true" />;
+  return (
+    <div className={cx("skeleton", styles.block, className)} style={style} aria-hidden="true" />
+  );
 }
 
 /** Vakansiya ro'yxati uchun tayyor skeleton qatori */
 export function ListItemSkeleton({ last = false }: { last?: boolean }) {
   return (
-    <div
-      className={cn(
-        "relative flex items-center gap-3 bg-surface px-4 py-2.5",
-        !last && "hairline hairline-inset",
-      )}
-    >
-      <Skeleton className="size-12 rounded-full" />
-      <div className="flex-1 space-y-2">
-        <Skeleton className="h-[0.9375rem] w-2/5" />
-        <Skeleton className="h-[0.8125rem] w-3/5" />
+    <div className={cx(styles.row, !last && "hairline hairline-inset")}>
+      <Skeleton className={styles.avatar} />
+      <div className={styles.lines}>
+        <Skeleton className={styles.lineTitle} />
+        <Skeleton className={styles.lineSubtitle} />
       </div>
-      <Skeleton className="h-[0.8125rem] w-8" />
+      <Skeleton className={styles.meta} />
     </div>
   );
 }

@@ -1,0 +1,38 @@
+@use "../../styles/variables" as *;
+
+.bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.75rem;
+  padding: env(safe-area-inset-top) 0.5rem 0;
+  background: color-mix(in srgb, var(--color-background) 95%, transparent);
+  backdrop-filter: blur(0.75rem);
+}
+
+.side {
+  display: flex;
+  align-items: center;
+  min-width: 2.75rem;
+}
+
+.leading {
+  justify-content: flex-start;
+}
+
+.trailing {
+  justify-content: flex-end;
+}
+
+.title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  font-size: $font-nav;
+  line-height: $font-nav-line;
+  font-weight: 600;
+  color: var(--color-text);
+}

@@ -1,9 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
 import { IconSearch, IconX } from "./icon";
-
-const SHELL = "relative flex h-9 items-center rounded-tg-sm bg-fill";
+import styles from "./search-field.module.scss";
 
 /** Qidiruv maydoni — yuqorida turadi, pastga tortilganda ko'rinadi */
 export function SearchField({
@@ -22,27 +21,23 @@ export function SearchField({
   className?: string;
 }) {
   return (
-    <div className={cn("px-4 py-2", className)}>
-      <div className={SHELL}>
-        <IconSearch size={18} className="absolute left-2.5 text-fg-tertiary" />
+    <div className={cx(styles.wrap, className)}>
+      <div className={styles.shell}>
+        <IconSearch size={18} className={styles.icon} />
         <input
           type="search"
           value={value}
           autoFocus={autoFocus}
           onChange={(e) => onValueChange(e.target.value)}
           placeholder={placeholder}
-          className={cn(
-            "h-full w-full bg-transparent pr-9 pl-9 text-body text-fg",
-            "placeholder:text-fg-tertiary focus:outline-none",
-            "[&::-webkit-search-cancel-button]:hidden",
-          )}
+          className={styles.input}
         />
         {value && (
           <button
             type="button"
             aria-label={clearLabel}
             onClick={() => onValueChange("")}
-            className="absolute right-2 flex size-6 items-center justify-center rounded-full text-fg-tertiary active:bg-separator"
+            className={styles.clear}
           >
             <IconX size={16} />
           </button>
@@ -66,10 +61,10 @@ export function SearchFieldButton({
   className?: string;
 }) {
   return (
-    <div className={cn("px-4 py-2", className)}>
-      <button type="button" onClick={onClick} className={cn(SHELL, "w-full text-left")}>
-        <IconSearch size={18} className="absolute left-2.5 text-fg-tertiary" />
-        <span className="pl-9 text-body text-fg-tertiary">{placeholder}</span>
+    <div className={cx(styles.wrap, className)}>
+      <button type="button" onClick={onClick} className={styles.shell}>
+        <IconSearch size={18} className={styles.icon} />
+        <span className={styles.placeholder}>{placeholder}</span>
       </button>
     </div>
   );

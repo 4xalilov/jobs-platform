@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
 import { IconChevronRight } from "./icon";
+import styles from "./list.module.scss";
 
 /** Bo'lim sarlavhasi: 13px, kulrang, BOSH HARFLARDA, 0.5px oraliq */
 export function SectionHeader({
@@ -12,8 +13,8 @@ export function SectionHeader({
   className?: string;
 }) {
   return (
-    <div className={cn("flex items-end justify-between px-4 pt-5 pb-1.5", className)}>
-      <h2 className="text-section text-fg-secondary uppercase">{children}</h2>
+    <div className={cx(styles.sectionHeader, className)}>
+      <h2 className={styles.sectionTitle}>{children}</h2>
       {action}
     </div>
   );
@@ -27,11 +28,11 @@ export function ListGroup({
   children: React.ReactNode;
   className?: string;
 }) {
-  return <div className={cn("bg-surface", className)}>{children}</div>;
+  return <div className={cx(styles.group, className)}>{children}</div>;
 }
 
 export type ListItemProps = {
-  /** Chapda: avatar (48px) yoki ikonka */
+  /** Chapda: avatar (3rem) yoki ikonka */
   leading?: React.ReactNode;
   title: React.ReactNode;
   /** O'rtada sarlavha ostidagi qisqa izoh */
@@ -52,12 +53,12 @@ export type ListItemProps = {
   /** Izoh uzun bo'lsa kesilmasin, bir necha qatorga bo'linsin */
   wrapSubtitle?: boolean;
   /**
-   * Sozlamalar uslubi — 44px balandlik. Standart ro'yxatda 76px.
+   * Sozlamalar uslubi — 2.75rem balandlik. Standart ro'yxatda 4.75rem.
    */
   compact?: boolean;
   /** Oxirgi element — ajratuvchi chiziq chizilmaydi */
   last?: boolean;
-  /** Chiziq avatardan keyin (76px) boshlansinmi */
+  /** Chiziq avatardan keyin (4.75rem) boshlansinmi */
   insetSeparator?: boolean;
   onClick?: () => void;
   className?: string;
@@ -87,52 +88,38 @@ export function ListItem({
   return (
     <Comp
       {...(interactive ? { type: "button" as const, onClick } : {})}
-      className={cn(
-        "relative flex w-full items-center gap-3 bg-surface px-4 text-left",
-        compact ? "min-h-[2.75rem] py-1.5" : "min-h-[4.75rem] py-[0.875rem]",
-        interactive && "tap-flat active:bg-surface-pressed",
+      className={cx(
+        styles.item,
+        compact && styles.compact,
+        interactive && styles.interactive,
         !last && "hairline",
-        !last && (insetSeparator ? (leading ? "hairline-inset" : "hairline-inset-sm") : ""),
+        !last && insetSeparator && (leading ? "hairline-inset" : "hairline-inset-sm"),
         className,
       )}
     >
       {leading}
 
-      <span className="min-w-0 flex-1">
-        <span className="flex items-center gap-1.5">
-          <span
-            className={cn(
-              "text-title truncate text-fg",
-              unread || strongTitle ? "font-semibold" : "font-normal",
-            )}
-          >
+      <span className={styles.main}>
+        <span className={styles.titleRow}>
+          <span className={cx(styles.title, (unread || strongTitle) && styles.strong)}>
             {title}
           </span>
           {titleAdornment}
         </span>
         {subtitle && (
-          <span
-            className={cn(
-              "mt-0.5 block text-body text-fg-secondary",
-              wrapSubtitle ? "whitespace-normal" : "truncate",
-            )}
-          >
-            {subtitle}
-          </span>
+          <span className={cx(styles.subtitle, wrapSubtitle && styles.wrap)}>{subtitle}</span>
         )}
-        {caption && (
-          <span className="mt-0.5 block truncate text-caption text-fg-tertiary">{caption}</span>
-        )}
+        {caption && <span className={styles.caption}>{caption}</span>}
       </span>
 
       {(meta || trailing) && (
-        <span className="flex shrink-0 flex-col items-end gap-1.5 self-start pt-1">
-          {meta && <span className="text-caption text-fg-tertiary">{meta}</span>}
+        <span className={styles.side}>
+          {meta && <span className={styles.meta}>{meta}</span>}
           {trailing}
         </span>
       )}
 
-      {chevron && <IconChevronRight size={20} className="shrink-0 text-fg-tertiary" />}
+      {chevron && <IconChevronRight size={20} className={styles.chevron} />}
     </Comp>
   );
 }

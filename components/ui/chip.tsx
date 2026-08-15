@@ -1,6 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
+import styles from "./chip.module.scss";
 
 export function Chip({
   selected = false,
@@ -16,13 +17,7 @@ export function Chip({
     <button
       type="button"
       aria-pressed={selected}
-      className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5",
-        "text-body font-medium whitespace-nowrap",
-        "transition-[background-color,transform] duration-100 ease-[var(--ease-tg)] active:scale-[0.97]",
-        selected ? "bg-accent text-on-accent" : "bg-fill text-fg-secondary",
-        className,
-      )}
+      className={cx(styles.chip, selected && styles.selected, className)}
       {...props}
     >
       {leading}
@@ -39,9 +34,5 @@ export function ChipRow({
   children: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <div className={cn("no-scrollbar flex gap-2 overflow-x-auto px-4 py-2", className)}>
-      {children}
-    </div>
-  );
+  return <div className={cx(styles.row, className)}>{children}</div>;
 }

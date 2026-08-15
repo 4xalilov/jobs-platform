@@ -1,4 +1,5 @@
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
+import styles from "./icon.module.scss";
 
 /**
  * Barcha ikonkalar chiziqli (outline), 24×24 grid, chiziq qalinligi 1.5px.
@@ -18,7 +19,7 @@ function Icon({ size = 24, className, children, ...props }: IconProps) {
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className={cn("shrink-0", className)}
+      className={cx(styles.icon, className)}
       {...props}
     >
       {children}
@@ -39,7 +40,7 @@ function SolidIcon({ size = 24, className, children, ...props }: IconProps) {
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"
-      className={cn("shrink-0", className)}
+      className={cx(styles.icon, className)}
       {...props}
     >
       {children}

@@ -1,7 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
 import { IconChevronRight } from "./icon";
+import styles from "./field.module.scss";
 
 /** Bitta savol — bitta maydon. Ramka yo'q, faqat yuza va ingichka chiziq. */
 export function TextField({
@@ -26,11 +27,7 @@ export function TextField({
       placeholder={placeholder}
       inputMode={inputMode}
       autoFocus={autoFocus}
-      className={cn(
-        "h-12 w-full bg-surface px-4 text-title text-fg",
-        "placeholder:font-normal placeholder:text-fg-tertiary focus:outline-none",
-        className,
-      )}
+      className={cx(styles.input, className)}
     />
   );
 }
@@ -55,21 +52,14 @@ export function SelectField({
     <button
       type="button"
       onClick={onClick}
-      className={cn(
-        "relative flex h-12 w-full items-center justify-between gap-3 bg-surface px-4 text-left",
-        "transition-colors duration-100 active:bg-surface-pressed",
-        !last && "hairline hairline-inset-sm",
-        className,
-      )}
+      className={cx(styles.select, !last && "hairline hairline-inset-sm", className)}
     >
-      <span className="text-body text-fg">{label}</span>
-      <span className="flex min-w-0 items-center gap-1">
-        <span
-          className={cn("truncate text-body", value ? "text-fg-secondary" : "text-fg-tertiary")}
-        >
+      <span className={styles.label}>{label}</span>
+      <span className={styles.value}>
+        <span className={cx(styles.valueText, !value && styles.placeholder)}>
           {value || placeholder}
         </span>
-        <IconChevronRight size={18} className="text-fg-tertiary" />
+        <IconChevronRight size={18} className={styles.chevron} />
       </span>
     </button>
   );
@@ -90,16 +80,10 @@ export function FieldRow({
   className?: string;
 }) {
   return (
-    <div
-      className={cn(
-        "relative flex min-h-12 items-center justify-between gap-3 bg-surface px-4 py-2",
-        !last && "hairline hairline-inset-sm",
-        className,
-      )}
-    >
-      <span className="min-w-0">
-        <span className="block text-body text-fg">{label}</span>
-        {hint && <span className="mt-0.5 block text-caption text-fg-tertiary">{hint}</span>}
+    <div className={cx(styles.row, !last && "hairline hairline-inset-sm", className)}>
+      <span className={styles.rowText}>
+        <span className={cx(styles.label, styles.rowLabel)}>{label}</span>
+        {hint && <span className={styles.hint}>{hint}</span>}
       </span>
       {control}
     </div>

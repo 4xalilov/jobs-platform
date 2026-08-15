@@ -1,0 +1,39 @@
+@use "../../styles/variables" as *;
+
+.track {
+  position: relative;
+  flex-shrink: 0;
+  width: 3.1875rem;
+  height: 1.9375rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-text-tertiary) 40%, transparent);
+  transition: background-color 0.2s ease-out;
+
+  &[aria-checked="true"] {
+    background: var(--color-primary);
+  }
+}
+
+.thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 1.6875rem;
+  height: 1.6875rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+}
+
+.checked {
+  transform: translateX(1.25rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track,
+  .thumb {
+    transition: none;
+  }
+}

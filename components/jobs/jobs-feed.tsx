@@ -228,14 +228,14 @@ export function JobsFeed({
                   key: "save",
                   label: vacancy.saved ? t.common.saved : t.common.save,
                   icon: <IconBookmark size={20} />,
-                  className: "bg-accent",
+                  tone: "accent",
                   onAction: () => toggleSaved(vacancy),
                 },
                 {
                   key: "hide",
                   label: t.screens.jobs.hide,
                   icon: <IconEyeOff size={20} />,
-                  className: "bg-fg-secondary",
+                  tone: "neutral",
                   onAction: () => hide(vacancy),
                 },
               ]}

@@ -52,7 +52,7 @@ export function SavedList({ initial }: { initial: VacancyDTO[] }) {
                   key: "remove",
                   label: t.common.remove,
                   icon: <IconTrash size={20} />,
-                  className: "bg-danger",
+                  tone: "danger",
                   onAction: () => remove(vacancy),
                 },
               ]}

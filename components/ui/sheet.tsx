@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useIsClient } from "@/lib/client-store";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
+import styles from "./sheet.module.scss";
 
 export type SheetProps = {
   open: boolean;
@@ -71,13 +72,8 @@ export function Sheet({
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex flex-col justify-end">
-      <button
-        type="button"
-        aria-label={closeLabel}
-        onClick={close}
-        className="animate-fade-in absolute inset-0 bg-black/40"
-      />
+    <div className={styles.layer}>
+      <button type="button" aria-label={closeLabel} onClick={close} className={styles.backdrop} />
 
       <div
         role="dialog"
@@ -86,40 +82,33 @@ export function Sheet({
         ref={(node) => {
           node?.focus();
         }}
-        className={cn(
-          "animate-sheet-up relative max-h-[88vh] overflow-hidden rounded-t-sheet bg-surface-elevated outline-none",
-          className,
-        )}
+        className={cx(styles.panel, className)}
         style={
           dragY
             ? { transform: `translateY(${dragY}px)`, transition: "none" }
-            : { transition: "transform 0.22s var(--ease-tg)" }
+            : { transition: "transform 0.22s cubic-bezier(0.33, 1, 0.68, 1)" }
         }
       >
         {/* Tortish uchun dastak */}
         <div
-          className="flex cursor-grab touch-none justify-center pt-2.5 pb-1 active:cursor-grabbing"
+          className={styles.grabber}
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
         >
-          <span className="h-1 w-9 rounded-full bg-text-tertiary/50" />
+          <span className={styles.grabberBar} />
         </div>
 
         {title && (
-          <div className="relative px-4 pt-1 pb-3">
-            <h3 className="text-nav text-fg">{title}</h3>
+          <div className={styles.header}>
+            <h3 className={styles.title}>{title}</h3>
           </div>
         )}
 
-        <div className="max-h-[70vh] overflow-y-auto overscroll-contain">{children}</div>
+        <div className={styles.body}>{children}</div>
 
-        {footer && (
-          <div className="border-t border-separator bg-surface-elevated px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
-            {footer}
-          </div>
-        )}
+        {footer && <div className={styles.footer}>{footer}</div>}
       </div>
     </div>,
     // Barcha qatlam bitta ildizda — ota elementning overflow yoki

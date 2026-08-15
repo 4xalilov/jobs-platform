@@ -1,7 +1,8 @@
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
+import styles from "./large-title.module.scss";
 
 /**
- * Sahifa sarlavhasi — 34px / 700 / -0.4px.
+ * Sahifa sarlavhasi — 2.125rem / 700 / -0.025em.
  * Asosiy bo'limlar ro'yxatning tepasida shu bilan boshlanadi.
  */
 export function LargeTitle({
@@ -14,8 +15,8 @@ export function LargeTitle({
   className?: string;
 }) {
   return (
-    <div className={cn("flex items-end justify-between gap-3 bg-bg px-4 pt-3 pb-2", className)}>
-      <h1 className="text-large text-fg">{children}</h1>
+    <div className={cx(styles.header, className)}>
+      <h1 className={styles.title}>{children}</h1>
       {action}
     </div>
   );

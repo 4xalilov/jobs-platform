@@ -57,21 +57,28 @@ import {
   sampleVacancies,
 } from "@/lib/design-samples";
 import { cn, formatAgo, formatSalary } from "@/lib/utils";
+import themes from "@/styles/themes.json";
 
-/** Tokenlar va ularning ikkala rejimdagi qiymatlari (globals.css bilan bir xil) */
-const COLOR_TOKENS: { token: string; light: string; dark: string }[] = [
-  { token: "accent", light: "#0088CC", dark: "#2EA6FF" },
-  { token: "accent-pressed", light: "#0077B3", dark: "#2690DD" },
-  { token: "bg", light: "#EFEFF4", dark: "#000000" },
-  { token: "surface", light: "#FFFFFF", dark: "#1C1C1E" },
-  { token: "surface-elevated", light: "#FFFFFF", dark: "#2C2C2E" },
-  { token: "separator", light: "#C6C6C8", dark: "#38383A" },
-  { token: "text", light: "#000000", dark: "#FFFFFF" },
-  { token: "text-secondary", light: "#8E8E93", dark: "#98989E" },
-  { token: "success", light: "#4DB74D", dark: "#4DB74D" },
-  { token: "warning", light: "#F5A623", dark: "#F5A623" },
-  { token: "danger", light: "#E53935", dark: "#E53935" },
-];
+/**
+ * Ko'rsatiladigan tokenlar. Hex qiymatlar bu yerda takrorlanmaydi —
+ * to'g'ridan-to'g'ri themes.json dan olinadi, shuning uchun ro'yxat
+ * ranglar o'zgarganda eskirib qolmaydi.
+ */
+const COLOR_TOKENS = [
+  "color-primary",
+  "color-primary-shade",
+  "color-background",
+  "color-background-secondary",
+  "color-background-pressed",
+  "color-fill",
+  "color-borders",
+  "color-text",
+  "color-text-secondary",
+  "color-text-tertiary",
+  "color-green",
+  "color-warning",
+  "color-error",
+] as const;
 
 type ExperienceLevel = "none" | "upToOne" | "oneToThree" | "threePlus";
 
@@ -517,14 +524,14 @@ export default function DesignSystemPage() {
                 key: "save",
                 label: saved.includes(vacancy.id) ? t.common.saved : t.common.save,
                 icon: <IconBookmark size={20} />,
-                className: "bg-accent",
+                tone: "accent",
                 onAction: () => toggleSaved(vacancy.id),
               },
               {
                 key: "remove",
                 label: t.common.remove,
                 icon: <IconTrash size={20} />,
-                className: "bg-danger",
+                tone: "danger",
                 onAction: () => undefined,
               },
             ]}
@@ -721,18 +728,22 @@ function TypeSample({ spec, children }: { spec: string; children: React.ReactNod
 }
 
 function ColorGrid({ themeKey }: { themeKey: "light" | "dark" }) {
+  const palette = themes[themeKey];
+
   return (
     <div className="grid grid-cols-2 gap-x-4 gap-y-2.5">
-      {COLOR_TOKENS.map(({ token, light, dark }) => (
+      {COLOR_TOKENS.map((token) => (
         <div key={token} className="flex items-center gap-2.5">
           <span
             className="size-8 shrink-0 rounded-tg-sm border border-separator"
             style={{ background: `var(--${token})` }}
           />
           <span className="min-w-0">
-            <span className="block truncate text-caption text-fg">{token}</span>
+            <span className="block truncate text-caption text-fg">
+              {token.replace("color-", "")}
+            </span>
             <span className="block truncate text-[0.6875rem] leading-[0.8125rem] text-fg-tertiary">
-              {themeKey === "dark" ? dark : light}
+              {palette[token]}
             </span>
           </span>
         </div>
