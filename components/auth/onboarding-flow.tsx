@@ -53,13 +53,13 @@ export function OnboardingFlow({
 
   const heading = (title: string, hint: string) => (
     <div className="px-4 pt-6 pb-4">
-      <h1 className="text-[24px] leading-7 font-semibold text-text">{title}</h1>
-      <p className="mt-1 text-body text-text-secondary">{hint}</p>
+      <h1 className="text-[1.5rem] leading-7 font-semibold text-fg">{title}</h1>
+      <p className="mt-1 text-body text-fg-secondary">{hint}</p>
     </div>
   );
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-[440px] flex-col bg-bg">
+    <div className="mx-auto flex min-h-dvh max-w-[27.5rem] flex-col bg-bg">
       <NavBar
         title=""
         className="sticky top-0 z-20"
@@ -80,7 +80,7 @@ export function OnboardingFlow({
       {step === "role" && (
         <>
           <div className="px-4 pt-2">
-            <p className="text-body text-text-secondary">
+            <p className="text-body text-fg-secondary">
               {t.auth.title} — {name}
             </p>
           </div>
@@ -172,13 +172,8 @@ export function OnboardingFlow({
               autoFocus
             />
           </ListGroup>
-          <div className="mt-auto px-4 pb-[calc(24px+env(safe-area-inset-bottom))] pt-6">
-            <Button
-              block
-              size="lg"
-              disabled={!companyName.trim()}
-              onClick={() => setStep("phone")}
-            >
+          <div className="mt-auto px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-6">
+            <Button block size="lg" disabled={!companyName.trim()} onClick={() => setStep("phone")}>
               {t.employer.post.next}
             </Button>
           </div>
@@ -197,7 +192,7 @@ export function OnboardingFlow({
               autoFocus
             />
           </ListGroup>
-          <div className="mt-auto space-y-2 px-4 pb-[calc(24px+env(safe-area-inset-bottom))] pt-6">
+          <div className="mt-auto space-y-2 px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-6">
             <Button
               block
               size="lg"

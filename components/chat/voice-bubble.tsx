@@ -72,7 +72,7 @@ export function VoiceBubble({
         {playing ? <IconPause size={18} /> : <IconPlay size={18} />}
       </button>
 
-      <div className="min-w-[104px] flex-1">
+      <div className="min-w-[6.5rem] flex-1">
         <div className={cn("h-1 rounded-full", mine ? "bg-on-accent/30" : "bg-fill")}>
           <div
             className={cn("h-1 rounded-full", mine ? "bg-on-accent" : "bg-accent")}
@@ -81,8 +81,8 @@ export function VoiceBubble({
         </div>
         <span
           className={cn(
-            "mt-1 block text-[11px] leading-[13px]",
-            mine ? "text-on-accent/70" : "text-text-tertiary",
+            "mt-1 block text-[0.6875rem] leading-[0.8125rem]",
+            mine ? "text-on-accent/70" : "text-fg-tertiary",
           )}
         >
           {formatDuration(playing || positionMs > 0 ? total - positionMs : total)}

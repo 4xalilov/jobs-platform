@@ -50,7 +50,7 @@ export function Tag({
     accent: "bg-accent-soft text-accent",
     success: "bg-success/12 text-success",
     warning: "bg-warning/12 text-warning",
-    neutral: "bg-fill text-text-secondary",
+    neutral: "bg-fill text-fg-secondary",
   };
   return (
     <span

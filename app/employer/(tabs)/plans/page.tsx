@@ -54,15 +54,13 @@ export default function PlansPage() {
             >
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-2">
-                  <span className="text-nav text-text">{label(plan)}</span>
+                  <span className="text-nav text-fg">{label(plan)}</span>
                   {current && <Tag tone="accent">{t.employer.plans.current}</Tag>}
                 </span>
-                <span className="mt-1 block text-body text-text-secondary">
-                  {description(plan)}
-                </span>
+                <span className="mt-1 block text-body text-fg-secondary">{description(plan)}</span>
               </span>
               <span className="shrink-0 pt-0.5 text-right">
-                <span className="block text-nav whitespace-nowrap text-text">{price(plan)}</span>
+                <span className="block text-nav whitespace-nowrap text-fg">{price(plan)}</span>
                 {!current && (
                   <span className="mt-0.5 block text-caption font-medium text-accent">
                     {t.employer.plans.choose}
@@ -74,7 +72,7 @@ export default function PlansPage() {
         })}
       </ListGroup>
 
-      <p className="px-4 pt-2 text-caption text-text-tertiary">{t.employer.plans.payHint}</p>
+      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.employer.plans.payHint}</p>
 
       <Sheet
         open={payment.isOpen}
@@ -85,11 +83,11 @@ export default function PlansPage() {
         <div className="px-4 pb-4">
           {payment.value && (
             <>
-              <p className="text-body text-text-secondary">{label(payment.value)}</p>
-              <p className="text-[24px] leading-7 font-semibold text-text">
+              <p className="text-body text-fg-secondary">{label(payment.value)}</p>
+              <p className="text-[1.5rem] leading-7 font-semibold text-fg">
                 {price(payment.value)}
               </p>
-              <p className="mt-1 text-body text-text-secondary">{description(payment.value)}</p>
+              <p className="mt-1 text-body text-fg-secondary">{description(payment.value)}</p>
             </>
           )}
 
@@ -102,11 +100,11 @@ export default function PlansPage() {
             </Button>
           </div>
 
-          <p className="mt-3 flex items-start gap-1.5 text-caption text-text-tertiary">
+          <p className="mt-3 flex items-start gap-1.5 text-caption text-fg-tertiary">
             <IconCheck size={15} className="mt-px shrink-0" />
             {t.employer.plans.payHint}
           </p>
-          <p className="mt-2 text-caption text-text-tertiary">{t.employer.plans.stageNote}</p>
+          <p className="mt-2 text-caption text-fg-tertiary">{t.employer.plans.stageNote}</p>
         </div>
       </Sheet>
     </>

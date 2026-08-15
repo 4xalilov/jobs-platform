@@ -37,15 +37,15 @@ export function MessageComposer({
         : null;
 
   return (
-    <div className="sticky bottom-0 z-10 border-t border-separator bg-surface px-3 py-2 pb-[calc(8px+env(safe-area-inset-bottom))]">
+    <div className="sticky bottom-0 z-10 border-t border-separator bg-surface px-3 py-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
       {notice && (
         <button
           type="button"
           onClick={recorder.dismiss}
           className="mb-2 flex w-full items-center justify-between gap-2 rounded-tg-sm bg-fill px-3 py-2 text-left"
         >
-          <span className="text-caption text-text-secondary">{notice}</span>
-          <IconX size={16} className="text-text-tertiary" />
+          <span className="text-caption text-fg-secondary">{notice}</span>
+          <IconX size={16} className="text-fg-tertiary" />
         </button>
       )}
 
@@ -55,15 +55,15 @@ export function MessageComposer({
             type="button"
             aria-label={t.screens.chat.cancelRecording}
             onClick={recorder.cancel}
-            className="p-2 text-text-secondary"
+            className="p-2 text-fg-secondary"
           >
             <IconX size={22} />
           </button>
 
           <div className="flex h-9 flex-1 items-center gap-2 rounded-tg-sm bg-fill px-3">
             <span className="size-2 animate-pulse rounded-full bg-danger" />
-            <span className="text-body text-text">{t.screens.chat.recording}</span>
-            <span className="ml-auto text-body tabular-nums text-text-secondary">
+            <span className="text-body text-fg">{t.screens.chat.recording}</span>
+            <span className="ml-auto text-body tabular-nums text-fg-secondary">
               {formatDuration(recorder.elapsedMs)}
             </span>
           </div>
@@ -99,8 +99,8 @@ export function MessageComposer({
             placeholder={t.screens.chat.placeholder}
             aria-label={t.screens.chat.placeholder}
             className={cn(
-              "max-h-[120px] min-h-9 flex-1 resize-none rounded-tg-sm bg-fill px-3 py-1.5",
-              "text-body text-text placeholder:text-text-tertiary focus:outline-none",
+              "max-h-[7.5rem] min-h-9 flex-1 resize-none rounded-tg-sm bg-fill px-3 py-1.5",
+              "text-body text-fg placeholder:text-fg-tertiary focus:outline-none",
             )}
           />
 
@@ -118,7 +118,7 @@ export function MessageComposer({
               type="button"
               aria-label={t.screens.chat.voiceMessage}
               onClick={() => void recorder.start()}
-              className="p-2 text-text-secondary"
+              className="p-2 text-fg-secondary"
             >
               <IconMic size={24} />
             </button>

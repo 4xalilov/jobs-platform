@@ -9,7 +9,10 @@
     "lint": "eslint",
     "db:migrate": "node --env-file-if-exists=.env.local db/migrate.mjs",
     "db:seed": "node --env-file-if-exists=.env.local db/seed.mjs",
-    "db:setup": "npm run db:migrate && npm run db:seed"
+    "db:setup": "npm run db:migrate && npm run db:seed",
+    "themes": "node scripts/build-themes.mjs",
+    "predev": "node scripts/build-themes.mjs",
+    "prebuild": "node scripts/build-themes.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -28,6 +31,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
+    "sass": "^1.102.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

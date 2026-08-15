@@ -58,15 +58,15 @@ export function ApplicationList({ applications }: { applications: ApplicationDTO
             >
               <Avatar name={application.company} />
               <span className="min-w-0 flex-1">
-                <span className="text-title block truncate text-text">
+                <span className="text-title block truncate text-fg">
                   {application.vacancyTitle}
                 </span>
-                <span className="mt-0.5 block truncate text-body text-text-secondary">
+                <span className="mt-0.5 block truncate text-body text-fg-secondary">
                   {application.company}
                   {application.cityName ? ` · ${application.cityName[locale]}` : ""}
                 </span>
               </span>
-              <IconChevronRight size={20} className="shrink-0 text-text-tertiary" />
+              <IconChevronRight size={20} className="shrink-0 text-fg-tertiary" />
             </button>
 
             {/* v2 6.4: to'rt bosqich, har biri vaqti bilan */}
@@ -99,14 +99,14 @@ export function ApplicationList({ applications }: { applications: ApplicationDTO
                     </span>
                     <span
                       className={cn(
-                        "mt-1.5 block pr-1 text-[11px] leading-[14px]",
-                        current ? "font-semibold text-text" : "text-text-tertiary",
+                        "mt-1.5 block pr-1 text-[0.6875rem] leading-[0.875rem]",
+                        current ? "font-semibold text-fg" : "text-fg-tertiary",
                       )}
                     >
                       {t.screens.applications.status[step]}
                     </span>
                     {entry?.at && (
-                      <span className="block text-[11px] leading-[14px] text-text-tertiary">
+                      <span className="block text-[0.6875rem] leading-[0.875rem] text-fg-tertiary">
                         {dayLabel(entry.at)}
                       </span>
                     )}
@@ -118,10 +118,10 @@ export function ApplicationList({ applications }: { applications: ApplicationDTO
             {/* 7 kun javob bo'lmasa — turtki va o'xshash vakansiyalar */}
             {application.stale && (
               <div className="border-t border-separator px-4 py-3">
-                <p className="text-body text-text-secondary">{t.screens.applications.stale}</p>
+                <p className="text-body text-fg-secondary">{t.screens.applications.stale}</p>
                 {application.similar.length > 0 && (
                   <>
-                    <p className="mt-2 text-caption text-text-tertiary">{t.trust.similar}</p>
+                    <p className="mt-2 text-caption text-fg-tertiary">{t.trust.similar}</p>
                     <div className="mt-1.5 flex flex-col gap-1.5">
                       {application.similar.map((item) => (
                         <button
@@ -130,8 +130,8 @@ export function ApplicationList({ applications }: { applications: ApplicationDTO
                           onClick={() => router.push("/jobs")}
                           className="tap-flat rounded-tg-sm bg-fill px-3 py-2 text-left"
                         >
-                          <span className="block truncate text-body text-text">{item.title}</span>
-                          <span className="block truncate text-caption text-text-secondary">
+                          <span className="block truncate text-body text-fg">{item.title}</span>
+                          <span className="block truncate text-caption text-fg-secondary">
                             {item.company}
                           </span>
                         </button>

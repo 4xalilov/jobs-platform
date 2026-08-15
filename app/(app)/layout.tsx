@@ -10,8 +10,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const unread = await unreadTotal(user.id);
 
   return (
-    <div className="mx-auto min-h-dvh max-w-[440px] bg-bg">
-      <div className="pb-[calc(58px+env(safe-area-inset-bottom))]">{children}</div>
+    <div className="mx-auto min-h-dvh max-w-[27.5rem] bg-bg">
+      <div className="pb-[calc(3.625rem+env(safe-area-inset-bottom))]">{children}</div>
       <AppTabBar unread={unread} />
     </div>
   );

@@ -71,7 +71,7 @@ export function ChatView({
       : raw;
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-[440px] flex-col bg-bg">
+    <div className="mx-auto flex min-h-dvh max-w-[27.5rem] flex-col bg-bg">
       <NavBar
         className="sticky top-0 z-20 hairline"
         leading={
@@ -90,7 +90,7 @@ export function ChatView({
             <span className="min-w-0">
               <span className="block truncate text-nav leading-tight">{chat.title}</span>
               {status && (
-                <span className="block truncate text-[11px] leading-tight font-normal text-text-secondary">
+                <span className="block truncate text-[0.6875rem] leading-tight font-normal text-fg-secondary">
                   {status}
                 </span>
               )}
@@ -101,7 +101,7 @@ export function ChatView({
 
       {context && (
         <div className="bg-surface px-4 py-2 hairline">
-          <p className="truncate text-caption text-text-secondary">{context}</p>
+          <p className="truncate text-caption text-fg-secondary">{context}</p>
         </div>
       )}
 
@@ -113,12 +113,12 @@ export function ChatView({
           return (
             <div key={message.id} className="contents">
               {newDay && (
-                <p className="py-1 text-center text-caption text-text-tertiary">
+                <p className="py-1 text-center text-caption text-fg-tertiary">
                   {dayLabel(message.at)}
                 </p>
               )}
               {message.from === "tizim" ? (
-                <p className="py-1 text-center text-caption text-text-tertiary">
+                <p className="py-1 text-center text-caption text-fg-tertiary">
                   {systemText(message.text)}
                 </p>
               ) : (
@@ -152,7 +152,7 @@ function Bubble({
       <div
         className={cn(
           "max-w-[78%] rounded-tg px-3 py-2",
-          mine ? "bg-accent text-on-accent" : "bg-surface text-text",
+          mine ? "bg-accent text-on-accent" : "bg-surface text-fg",
           message.failed && "opacity-60",
         )}
       >
@@ -169,8 +169,8 @@ function Bubble({
 
         <span
           className={cn(
-            "mt-0.5 flex items-center justify-end gap-1 text-[11px] leading-[13px]",
-            mine ? "text-on-accent/70" : "text-text-tertiary",
+            "mt-0.5 flex items-center justify-end gap-1 text-[0.6875rem] leading-[0.8125rem]",
+            mine ? "text-on-accent/70" : "text-fg-tertiary",
           )}
         >
           {message.failed ? (

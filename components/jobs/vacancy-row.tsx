@@ -16,8 +16,13 @@ export function vacancyLocation(vacancy: VacancyDTO, locale: "uz" | "uz-cyrl" | 
 }
 
 /**
- * Vakansiya qatori: kompaniya logosi, lavozim, maosh + shahar izoh sifatida,
- * o'ngda joylashtirilgan vaqti.
+ * Vakansiya qatori — v3 ning 3-bo'limidagi tuzilma:
+ *
+ *   [avatar 3rem]  Lavozim                    [vaqt]
+ *                  Kompaniya · Hudud · Maosh  [belgi]
+ *
+ * Ikki qator: shunda balandlik aynan 4.75rem chiqadi. Avval uch qator edi
+ * va qator 93px gacha cho'zilardi.
  */
 export function VacancyRow({
   vacancy,
@@ -32,10 +37,24 @@ export function VacancyRow({
 }) {
   const { t, locale } = useI18n();
 
-  const caption =
+  const place =
     showDistance && vacancy.distanceKm !== null
-      ? `${vacancy.company} · ${vacancy.distanceKm} ${t.job.km}`
-      : `${vacancy.company} · ${vacancyLocation(vacancy, locale)}`;
+      ? `${vacancy.distanceKm} ${t.job.km}`
+      : vacancyLocation(vacancy, locale);
+
+  /*
+   * v3 bu qatorni "Kompaniya · Hudud · Maosh" deb yozgan, lekin telefonda
+   * uchchalasi sig'maydi va oxiri kesiladi. Maosh bilan hudud — qaror
+   * qabul qilinadigan ikki fakt, shuning uchun ular oldinda; kesilsa
+   * kompaniya nomi kesiladi.
+   */
+  const subtitle = [
+    formatSalary(vacancy.salaryMin, vacancy.salaryMax, t.job.currency, t.job.negotiable),
+    place,
+    vacancy.company,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <ListItem
@@ -47,13 +66,8 @@ export function VacancyRow({
           {vacancy.saved && <IconBookmark size={14} className="text-accent" />}
         </span>
       }
-      subtitle={formatSalary(
-        vacancy.salaryMin,
-        vacancy.salaryMax,
-        t.job.currency,
-        t.job.negotiable,
-      )}
-      caption={caption}
+      subtitle={subtitle}
+      strongTitle
       meta={formatAgo(vacancy.postedMinutesAgo, t.time)}
       trailing={vacancy.fastReply ? <Dot className="bg-success" /> : undefined}
       last={last}

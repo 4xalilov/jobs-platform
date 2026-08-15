@@ -87,23 +87,23 @@ export function VacancySheet({
         <div className="flex items-start gap-3">
           <Avatar name={vacancy.company} size={52} online={vacancy.fastReply} />
           <div className="min-w-0 flex-1">
-            <h2 className="text-[20px] leading-6 font-semibold text-text">
+            <h2 className="text-[1.25rem] leading-6 font-semibold text-fg">
               {vacancy.professionName?.[locale] ?? vacancy.title}
             </h2>
-            <p className="mt-0.5 truncate text-body text-text-secondary">{vacancy.company}</p>
+            <p className="mt-0.5 truncate text-body text-fg-secondary">{vacancy.company}</p>
           </div>
           <button
             type="button"
             aria-label={t.common.save}
             aria-pressed={vacancy.saved}
             onClick={toggleSaved}
-            className={vacancy.saved ? "p-1 text-accent" : "p-1 text-text-tertiary"}
+            className={vacancy.saved ? "p-1 text-accent" : "p-1 text-fg-tertiary"}
           >
             <IconBookmark size={24} />
           </button>
         </div>
 
-        <p className="mt-3 text-[20px] leading-6 font-semibold text-text">
+        <p className="mt-3 text-[1.25rem] leading-6 font-semibold text-fg">
           {formatSalary(vacancy.salaryMin, vacancy.salaryMax, t.job.currency, t.job.negotiable)}
         </p>
 
@@ -123,7 +123,7 @@ export function VacancySheet({
           <Tag>{t.job.experience[vacancy.experience]}</Tag>
         </div>
 
-        {vacancy.description && <p className="mt-4 text-body text-text">{vacancy.description}</p>}
+        {vacancy.description && <p className="mt-4 text-body text-fg">{vacancy.description}</p>}
 
         {/* v2 6.2: foiz emas, ro'yxat. Foiz ishonchni yo'qotadi,
             ro'yxat esa harakatga aylanadi. */}
@@ -135,14 +135,14 @@ export function VacancySheet({
         {/* v2: talablar erkin matn emas, tanlangan ro'yxat */}
         {vacancy.requirements.length > 0 && (
           <>
-            <p className="mt-4 text-section text-text-secondary uppercase">
+            <p className="mt-4 text-section text-fg-secondary uppercase">
               {t.employer.requirements.label}
             </p>
             <ul className="mt-2 space-y-1.5">
               {vacancy.requirements.map((key) => (
                 <li key={key} className="flex items-start gap-2">
                   <IconCheck size={17} className="mt-0.5 shrink-0 text-accent" />
-                  <span className="text-body text-text">{t.employer.requirements[key]}</span>
+                  <span className="text-body text-fg">{t.employer.requirements[key]}</span>
                 </li>
               ))}
             </ul>
@@ -151,13 +151,13 @@ export function VacancySheet({
 
         {/* v2 6.5: faqat raqam. Nomzodning o'rni ko'rsatilmaydi — uni
             tekshirib bo'lmaydi va noto'g'ri chiqsa ishonch yo'qoladi. */}
-        <p className="mt-4 text-body text-text-secondary">
+        <p className="mt-4 text-body text-fg-secondary">
           {vacancy.applications === 0
             ? t.trust.competitionFirst
             : t.trust.competition.replace("{count}", String(vacancy.applications))}
         </p>
 
-        <div className="mt-3 flex gap-4 text-caption text-text-tertiary">
+        <div className="mt-3 flex gap-4 text-caption text-fg-tertiary">
           <span className="flex items-center gap-1">
             <IconEye size={15} /> {vacancy.views} {t.job.views}
           </span>
@@ -190,7 +190,7 @@ function MatchList({ match }: { match: MatchDTO }) {
 
   return (
     <div className="mt-4 rounded-tg bg-fill px-4 py-3">
-      <p className="text-body font-semibold text-text">
+      <p className="text-body font-semibold text-fg">
         {t.trust.match
           .replace("{matched}", String(match.matched))
           .replace("{total}", String(match.total))}
@@ -201,14 +201,14 @@ function MatchList({ match }: { match: MatchDTO }) {
             {item.ok ? (
               <IconCheck size={17} className="mt-0.5 shrink-0 text-success" />
             ) : (
-              <IconX size={17} className="mt-0.5 shrink-0 text-text-tertiary" />
+              <IconX size={17} className="mt-0.5 shrink-0 text-fg-tertiary" />
             )}
             <span className="min-w-0">
-              <span className={item.ok ? "text-body text-text" : "text-body text-text-secondary"}>
+              <span className={item.ok ? "text-body text-fg" : "text-body text-fg-secondary"}>
                 {label[item.key]}: {value(item.key, item.required)}
               </span>
               {!item.ok && (
-                <span className="block text-caption text-text-tertiary">
+                <span className="block text-caption text-fg-tertiary">
                   {t.trust.matchYours}: {value(item.key, item.mine) ?? t.trust.matchMissing}
                 </span>
               )}
@@ -240,19 +240,19 @@ function ResponseStats({ stats }: { stats: ResponseStatsDTO }) {
 
   return (
     <>
-      <p className="mt-4 text-section text-text-secondary uppercase">{t.trust.responseTitle}</p>
+      <p className="mt-4 text-section text-fg-secondary uppercase">{t.trust.responseTitle}</p>
       <ul className="mt-2 space-y-1">
-        <li className="text-body text-text">
+        <li className="text-body text-fg">
           {stats.rate === null
             ? t.trust.responseNone
             : t.trust.responseRate.replace("{rate}", String(stats.rate))}
         </li>
         {time && (
-          <li className="text-body text-text-secondary">
+          <li className="text-body text-fg-secondary">
             {t.trust.responseTime.replace("{value}", time)}
           </li>
         )}
-        <li className="text-body text-text-secondary">{lastActive}</li>
+        <li className="text-body text-fg-secondary">{lastActive}</li>
       </ul>
     </>
   );

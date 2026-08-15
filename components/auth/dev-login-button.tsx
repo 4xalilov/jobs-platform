@@ -24,7 +24,7 @@ export function DevLoginButton() {
       <Button block size="lg" loading={loading} onClick={login}>
         {t.auth.devButton}
       </Button>
-      <p className="mt-2 text-center text-caption text-text-tertiary">{t.auth.devHint}</p>
+      <p className="mt-2 text-center text-caption text-fg-tertiary">{t.auth.devHint}</p>
     </>
   );
 }

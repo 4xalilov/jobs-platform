@@ -95,17 +95,17 @@ export function NewVacancyFlow({
 
   if (done) {
     return (
-      <div className="mx-auto flex min-h-dvh max-w-[440px] flex-col bg-bg">
+      <div className="mx-auto flex min-h-dvh max-w-[27.5rem] flex-col bg-bg">
         <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
           <span className="flex size-16 items-center justify-center rounded-full bg-success text-white">
             <IconCheck size={34} />
           </span>
-          <h1 className="mt-4 text-[20px] leading-6 font-semibold text-text">
+          <h1 className="mt-4 text-[1.25rem] leading-6 font-semibold text-fg">
             {t.employer.post.published}
           </h1>
-          <p className="mt-2 text-body text-text-secondary">{t.employer.post.publishedHint}</p>
+          <p className="mt-2 text-body text-fg-secondary">{t.employer.post.publishedHint}</p>
         </div>
-        <div className="space-y-2 px-4 pb-[calc(24px+env(safe-area-inset-bottom))]">
+        <div className="space-y-2 px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
           <Button block size="lg" onClick={() => router.replace("/employer/plans")}>
             {t.employer.post.toPlans}
           </Button>
@@ -137,7 +137,7 @@ export function NewVacancyFlow({
   const hint = t.employer.post[`q${step}Hint` as `q${Step}Hint`];
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-[440px] flex-col bg-bg">
+    <div className="mx-auto flex min-h-dvh max-w-[27.5rem] flex-col bg-bg">
       <NavBar
         className="sticky top-0 z-20 hairline"
         title={t.employer.post.title}
@@ -154,7 +154,7 @@ export function NewVacancyFlow({
       />
 
       <div className="bg-surface px-4 pt-3 pb-4 hairline">
-        <p className="text-caption text-text-secondary">
+        <p className="text-caption text-fg-secondary">
           {t.employer.post.step} {step} {t.employer.post.of} {TOTAL_STEPS}
         </p>
         <div className="mt-2 flex gap-1">
@@ -169,8 +169,8 @@ export function NewVacancyFlow({
 
       <div className="flex-1">
         <div className="px-4 pt-5 pb-3">
-          <h2 className="text-[22px] leading-7 font-semibold text-text">{question}</h2>
-          <p className="mt-1 text-body text-text-secondary">{hint}</p>
+          <h2 className="text-[1.375rem] leading-7 font-semibold text-fg">{question}</h2>
+          <p className="mt-1 text-body text-fg-secondary">{hint}</p>
         </div>
 
         {/* 1. Lavozim — ro'yxatdan tanlanadi, xohlasa aniqlashtirib yoziladi */}
@@ -195,7 +195,7 @@ export function NewVacancyFlow({
 
             {professionId && (
               <>
-                <p className="px-4 pt-5 pb-1.5 text-section text-text-secondary uppercase">
+                <p className="px-4 pt-5 pb-1.5 text-section text-fg-secondary uppercase">
                   {t.employer.post.titleLabel}
                 </p>
                 <ListGroup>
@@ -207,7 +207,7 @@ export function NewVacancyFlow({
                     }
                   />
                 </ListGroup>
-                <p className="px-4 pt-2 text-caption text-text-tertiary">
+                <p className="px-4 pt-2 text-caption text-fg-tertiary">
                   {t.employer.post.titleHint}
                 </p>
               </>
@@ -236,7 +236,7 @@ export function NewVacancyFlow({
             {/* Maoshsiz vakansiya kam ariza oladi — buni yashirmaymiz */}
             {negotiable && (
               <div className="mx-4 mt-4 rounded-tg bg-warning/12 px-4 py-3">
-                <p className="text-body text-text">{t.employer.post.salaryWarning}</p>
+                <p className="text-body text-fg">{t.employer.post.salaryWarning}</p>
               </div>
             )}
           </>
@@ -263,7 +263,7 @@ export function NewVacancyFlow({
 
             {needsDistrict && city && (
               <>
-                <p className="px-4 pt-5 pb-1.5 text-section text-text-secondary uppercase">
+                <p className="px-4 pt-5 pb-1.5 text-section text-fg-secondary uppercase">
                   {t.screens.card.district}
                 </p>
                 <ListGroup>
@@ -322,14 +322,14 @@ export function NewVacancyFlow({
                 );
               })}
             </ListGroup>
-            <p className="px-4 pt-2 text-caption text-text-tertiary">
+            <p className="px-4 pt-2 text-caption text-fg-tertiary">
               {requirements.length} / {MAX_REQUIREMENTS}
             </p>
           </>
         )}
       </div>
 
-      <div className="sticky bottom-0 border-t border-separator bg-surface px-4 pt-3 pb-[calc(12px+env(safe-area-inset-bottom))]">
+      <div className="sticky bottom-0 border-t border-separator bg-surface px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
         <Button
           block
           size="lg"
@@ -360,7 +360,7 @@ function PickRow({
   return (
     <ListItem
       title={
-        <span className={cn("text-body font-normal", dimmed && "text-text-tertiary")}>{label}</span>
+        <span className={cn("text-body font-normal", dimmed && "text-fg-tertiary")}>{label}</span>
       }
       compact
       insetSeparator={false}

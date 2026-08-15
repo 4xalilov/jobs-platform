@@ -21,7 +21,7 @@ export function NavBar({
       )}
     >
       <span className="flex min-w-11 items-center justify-start">{leading}</span>
-      <h1 className="flex-1 truncate text-center text-nav text-text">{title}</h1>
+      <h1 className="flex-1 truncate text-center text-nav text-fg">{title}</h1>
       <span className="flex min-w-11 items-center justify-end">{trailing}</span>
     </header>
   );

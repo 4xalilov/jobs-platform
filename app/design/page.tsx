@@ -115,11 +115,11 @@ export default function DesignSystemPage() {
     setSaved((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   return (
-    <div className="mx-auto min-h-dvh max-w-[440px] bg-bg pb-16">
+    <div className="mx-auto min-h-dvh max-w-[27.5rem] bg-bg pb-16">
       {/* ——— Sarlavha va boshqaruvlar ——— */}
       <div className="sticky top-0 z-30 bg-bg/90 px-4 pt-5 pb-3 backdrop-blur-md">
-        <h1 className="text-[24px] leading-7 font-semibold text-text">{t.design.title}</h1>
-        <p className="mt-1 text-caption text-text-secondary">{t.design.subtitle}</p>
+        <h1 className="text-[1.5rem] leading-7 font-semibold text-fg">{t.design.title}</h1>
+        <p className="mt-1 text-caption text-fg-secondary">{t.design.subtitle}</p>
 
         <div className="mt-3 space-y-2">
           <Segmented options={themeOptions} value={mode} onChange={setMode} label={t.theme.label} />
@@ -136,35 +136,35 @@ export default function DesignSystemPage() {
       <SectionHeader>{t.design.sections.colors}</SectionHeader>
       <div className="bg-surface px-4 py-3">
         <ColorGrid themeKey={resolved} />
-        <p className="mt-3 text-caption text-text-tertiary">{t.design.colors.note}</p>
+        <p className="mt-3 text-caption text-fg-tertiary">{t.design.colors.note}</p>
       </div>
 
       {/* ——— 2. Tipografika ——— */}
       <SectionHeader>{t.design.sections.typography}</SectionHeader>
       <div className="space-y-3 bg-surface px-4 py-3.5">
         <TypeSample spec={t.design.typography.largeSpec}>
-          <span className="text-large text-text">{t.tabs.jobs}</span>
+          <span className="text-large text-fg">{t.tabs.jobs}</span>
         </TypeSample>
         <TypeSample spec={t.design.typography.navSpec}>
-          <span className="text-nav text-text">{t.design.typography.titleSample}</span>
+          <span className="text-nav text-fg">{t.design.typography.titleSample}</span>
         </TypeSample>
         <TypeSample spec={t.design.typography.titleSpec}>
-          <span className="text-title text-text">{t.design.typography.titleSample}</span>
+          <span className="text-title text-fg">{t.design.typography.titleSample}</span>
         </TypeSample>
         <TypeSample spec={t.design.typography.bodySpec}>
-          <span className="text-body text-text">{t.design.typography.bodySample}</span>
+          <span className="text-body text-fg">{t.design.typography.bodySample}</span>
         </TypeSample>
         <TypeSample spec={t.design.typography.captionSpec}>
-          <span className="text-caption text-text-secondary">
+          <span className="text-caption text-fg-secondary">
             {t.design.typography.captionSample}
           </span>
         </TypeSample>
         <TypeSample spec={t.design.typography.sectionSpec}>
-          <span className="text-section text-text-secondary uppercase">
+          <span className="text-section text-fg-secondary uppercase">
             {t.design.sections.typography}
           </span>
         </TypeSample>
-        <p className="pt-1 text-caption text-text-tertiary">{t.design.typography.fontNote}</p>
+        <p className="pt-1 text-caption text-fg-tertiary">{t.design.typography.fontNote}</p>
       </div>
 
       {/* ——— 3. Tugmalar ——— */}
@@ -232,7 +232,7 @@ export default function DesignSystemPage() {
           />
         ))}
       </ListGroup>
-      <p className="px-4 pt-2 text-caption text-text-tertiary">{t.design.listItem.note}</p>
+      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.design.listItem.note}</p>
 
       {/* Xabarlar ro'yxati — aynan Telegram ko'rinishi */}
       <SectionHeader>{t.tabs.messages}</SectionHeader>
@@ -265,7 +265,7 @@ export default function DesignSystemPage() {
           ))}
         </ChipRow>
       </div>
-      <p className="px-4 pt-2 text-caption text-text-tertiary">{t.design.chips.note}</p>
+      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.design.chips.note}</p>
 
       {/* ——— 6. Qidiruv ——— */}
       <SectionHeader>{t.design.sections.search}</SectionHeader>
@@ -282,7 +282,7 @@ export default function DesignSystemPage() {
         {sampleSearches.map((item, i) => (
           <ListItem
             key={item.uz}
-            leading={<IconClock size={20} className="text-text-tertiary" />}
+            leading={<IconClock size={20} className="text-fg-tertiary" />}
             title={<span className="text-body">{item[locale]}</span>}
             insetSeparator={false}
             last={i === sampleSearches.length - 1}
@@ -291,7 +291,7 @@ export default function DesignSystemPage() {
           />
         ))}
       </ListGroup>
-      <p className="px-4 pt-2 text-caption text-text-tertiary">{t.design.search.note}</p>
+      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.design.search.note}</p>
 
       {/* ——— 7. Avatar va belgilar ——— */}
       <SectionHeader>{t.design.sections.avatars}</SectionHeader>
@@ -317,7 +317,7 @@ export default function DesignSystemPage() {
           <CountBadge count={128} tone="neutral" />
           <Dot />
         </div>
-        <p className="text-caption text-text-tertiary">{t.design.avatars.note}</p>
+        <p className="text-caption text-fg-tertiary">{t.design.avatars.note}</p>
       </div>
 
       {/* ——— 8. Sheet ——— */}
@@ -326,7 +326,7 @@ export default function DesignSystemPage() {
         <Button block size="lg" variant="secondary" onClick={() => setSheetOpen(true)}>
           {t.design.sheet.open}
         </Button>
-        <p className="text-caption text-text-tertiary">{t.design.sheet.note}</p>
+        <p className="text-caption text-fg-tertiary">{t.design.sheet.note}</p>
       </div>
 
       {/* ——— 9. Skelet ——— */}
@@ -366,13 +366,13 @@ export default function DesignSystemPage() {
           ))}
         </ListGroup>
       )}
-      <p className="px-4 pt-2 text-caption text-text-tertiary">{t.design.skeleton.note}</p>
+      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.design.skeleton.note}</p>
 
       {/* ——— 10. Forma elementlari ——— */}
       <SectionHeader>{t.design.sections.forms}</SectionHeader>
       <div className="bg-surface">
         <div className="px-4 pt-3 pb-1">
-          <p className="text-caption text-text-secondary">
+          <p className="text-caption text-fg-secondary">
             {t.design.forms.stepLabel} 2 {t.design.forms.stepOf} 4
           </p>
           <div className="mt-2 flex gap-1">
@@ -414,13 +414,13 @@ export default function DesignSystemPage() {
           last
         />
         <div className="px-4 py-3">
-          <p className="pb-2 text-section text-text-secondary uppercase">
+          <p className="pb-2 text-section text-fg-secondary uppercase">
             {t.design.forms.segmentedLabel}
           </p>
           <Segmented options={experienceOptions} value={experience} onChange={setExperience} />
         </div>
       </div>
-      <p className="px-4 pt-2 text-caption text-text-tertiary">{t.design.forms.note}</p>
+      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.design.forms.note}</p>
 
       {/* ——— 11. Navigatsiya ——— */}
       <SectionHeader>{t.design.sections.navigation}</SectionHeader>
@@ -458,14 +458,14 @@ export default function DesignSystemPage() {
           badges={{ messages: 2 }}
         />
       </div>
-      <p className="px-4 pt-2 text-caption text-text-tertiary">
+      <p className="px-4 pt-2 text-caption text-fg-tertiary">
         {t.design.navigation.tabBarNote} {t.design.navigation.fabNote}
       </p>
 
       {/* ——— 12. Ikonkalar ——— */}
       <SectionHeader>{t.design.sections.icons}</SectionHeader>
       <div className="bg-surface px-4 py-4">
-        <div className="grid grid-cols-6 gap-y-4 text-text-secondary">
+        <div className="grid grid-cols-6 gap-y-4 text-fg-secondary">
           {[
             IconBriefcase,
             IconMessage,
@@ -503,7 +503,7 @@ export default function DesignSystemPage() {
             </div>
           ))}
         </div>
-        <p className="mt-4 text-caption text-text-tertiary">{t.design.icons.note}</p>
+        <p className="mt-4 text-caption text-fg-tertiary">{t.design.icons.note}</p>
       </div>
 
       {/* ——— 13. Chapga tortish ——— */}
@@ -549,14 +549,14 @@ export default function DesignSystemPage() {
           </SwipeListItem>
         ))}
       </ListGroup>
-      <p className="px-4 pt-2 text-caption text-text-tertiary">{t.design.swipe.note}</p>
+      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.design.swipe.note}</p>
 
       {/* ——— 14. Qoidalar ——— */}
       {/* ——— Animatsiya ——— */}
       <SectionHeader>{t.design.sections.motion}</SectionHeader>
       <div className="space-y-3 bg-surface px-4 py-3.5">
         <div className="flex items-center justify-between gap-3">
-          <span className="text-body text-text">{t.design.motion.tap}</span>
+          <span className="text-body text-fg">{t.design.motion.tap}</span>
           <button
             type="button"
             className="tap rounded-tg-sm bg-accent px-4 py-2 text-body font-semibold text-on-accent"
@@ -569,7 +569,7 @@ export default function DesignSystemPage() {
 
         <div>
           <div className="flex items-center justify-between gap-3">
-            <span className="text-body text-text">{t.design.motion.row}</span>
+            <span className="text-body text-fg">{t.design.motion.row}</span>
             <Button size="sm" variant="secondary" onClick={() => setMotionKey((n) => n + 1)}>
               {t.design.motion.replay}
             </Button>
@@ -586,12 +586,12 @@ export default function DesignSystemPage() {
 
         <ul className="space-y-1 pt-1">
           {[t.design.motion.page, t.design.motion.sheet, t.design.motion.badge].map((line) => (
-            <li key={line} className="text-caption text-text-secondary">
+            <li key={line} className="text-caption text-fg-secondary">
               {line}
             </li>
           ))}
         </ul>
-        <p className="text-caption text-text-tertiary">{t.design.motion.note}</p>
+        <p className="text-caption text-fg-tertiary">{t.design.motion.note}</p>
       </div>
 
       <SectionHeader>{t.design.sections.principles}</SectionHeader>
@@ -610,8 +610,8 @@ export default function DesignSystemPage() {
               i !== arr.length - 1 && "hairline hairline-inset-sm",
             )}
           >
-            <span className="text-body text-text-tertiary tabular-nums">{i + 1}</span>
-            <span className="text-body text-text">{rule}</span>
+            <span className="text-body text-fg-tertiary tabular-nums">{i + 1}</span>
+            <span className="text-body text-fg">{rule}</span>
           </div>
         ))}
       </ListGroup>
@@ -637,16 +637,16 @@ export default function DesignSystemPage() {
           <div className="flex items-center gap-3">
             <Avatar name={t.design.sheet.company} size={52} online />
             <div className="min-w-0">
-              <h3 className="text-[20px] leading-6 font-semibold text-text">
+              <h3 className="text-[1.25rem] leading-6 font-semibold text-fg">
                 {t.design.sheet.title}
               </h3>
-              <p className="mt-0.5 truncate text-body text-text-secondary">
+              <p className="mt-0.5 truncate text-body text-fg-secondary">
                 {t.design.sheet.company}
               </p>
             </div>
           </div>
 
-          <p className="mt-3 text-[20px] leading-6 font-semibold text-text">
+          <p className="mt-3 text-[1.25rem] leading-6 font-semibold text-fg">
             {formatSalary(4_000_000, 6_000_000, t.job.currency, t.job.negotiable)}
           </p>
 
@@ -665,9 +665,9 @@ export default function DesignSystemPage() {
             </Tag>
           </div>
 
-          <p className="mt-4 text-body text-text">{t.design.sheet.description}</p>
+          <p className="mt-4 text-body text-fg">{t.design.sheet.description}</p>
 
-          <div className="mt-4 flex gap-4 text-caption text-text-tertiary">
+          <div className="mt-4 flex gap-4 text-caption text-fg-tertiary">
             <span className="flex items-center gap-1">
               <IconEye size={15} /> 248 {t.job.views}
             </span>
@@ -715,7 +715,7 @@ function TypeSample({ spec, children }: { spec: string; children: React.ReactNod
   return (
     <div>
       <div className="truncate">{children}</div>
-      <p className="mt-0.5 text-caption text-text-tertiary">{spec}</p>
+      <p className="mt-0.5 text-caption text-fg-tertiary">{spec}</p>
     </div>
   );
 }
@@ -730,8 +730,8 @@ function ColorGrid({ themeKey }: { themeKey: "light" | "dark" }) {
             style={{ background: `var(--${token})` }}
           />
           <span className="min-w-0">
-            <span className="block truncate text-caption text-text">{token}</span>
-            <span className="block truncate text-[11px] leading-[13px] text-text-tertiary">
+            <span className="block truncate text-caption text-fg">{token}</span>
+            <span className="block truncate text-[0.6875rem] leading-[0.8125rem] text-fg-tertiary">
               {themeKey === "dark" ? dark : light}
             </span>
           </span>

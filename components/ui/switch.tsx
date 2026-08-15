@@ -21,7 +21,7 @@ export function Switch({
       aria-label={label}
       onClick={() => onCheckedChange(!checked)}
       className={cn(
-        "relative h-[31px] w-[51px] shrink-0 rounded-full",
+        "relative h-[1.9375rem] w-[3.1875rem] shrink-0 rounded-full",
         "transition-colors duration-200 ease-[var(--ease-tg)]",
         checked ? "bg-accent" : "bg-text-tertiary/40",
         className,
@@ -29,7 +29,7 @@ export function Switch({
     >
       <span
         className={cn(
-          "absolute top-[2px] left-[2px] size-[27px] rounded-full bg-white shadow-sm",
+          "absolute top-[2px] left-[2px] size-[1.6875rem] rounded-full bg-white shadow-sm",
           "transition-transform duration-200 ease-[var(--ease-tg)]",
           checked && "translate-x-5",
         )}

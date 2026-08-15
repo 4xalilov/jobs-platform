@@ -109,19 +109,21 @@ export function Sheet({
 
         {title && (
           <div className="relative px-4 pt-1 pb-3">
-            <h3 className="text-nav text-text">{title}</h3>
+            <h3 className="text-nav text-fg">{title}</h3>
           </div>
         )}
 
         <div className="max-h-[70vh] overflow-y-auto overscroll-contain">{children}</div>
 
         {footer && (
-          <div className="border-t border-separator bg-surface-elevated px-4 pt-3 pb-[calc(12px+env(safe-area-inset-bottom))]">
+          <div className="border-t border-separator bg-surface-elevated px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
             {footer}
           </div>
         )}
       </div>
     </div>,
-    document.body,
+    // Barcha qatlam bitta ildizda — ota elementning overflow yoki
+    // z-index i ularni hech qachon kesmaydi
+    document.getElementById("portals") ?? document.body,
   );
 }

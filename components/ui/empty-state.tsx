@@ -16,9 +16,9 @@ export function EmptyState({
 }) {
   return (
     <div className={cn("flex flex-col items-center px-10 pt-24 text-center", className)}>
-      <span className="text-text-tertiary">{icon}</span>
-      <p className="mt-3 text-nav text-text">{title}</p>
-      {hint && <p className="mt-1 text-body text-text-secondary">{hint}</p>}
+      <span className="text-fg-tertiary">{icon}</span>
+      <p className="mt-3 text-nav text-fg">{title}</p>
+      {hint && <p className="mt-1 text-body text-fg-secondary">{hint}</p>}
       {action && <div className="mt-5">{action}</div>}
     </div>
   );

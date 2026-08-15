@@ -22,10 +22,10 @@ export function ListItemSkeleton({ last = false }: { last?: boolean }) {
     >
       <Skeleton className="size-12 rounded-full" />
       <div className="flex-1 space-y-2">
-        <Skeleton className="h-[15px] w-2/5" />
-        <Skeleton className="h-[13px] w-3/5" />
+        <Skeleton className="h-[0.9375rem] w-2/5" />
+        <Skeleton className="h-[0.8125rem] w-3/5" />
       </div>
-      <Skeleton className="h-[13px] w-8" />
+      <Skeleton className="h-[0.8125rem] w-8" />
     </div>
   );
 }

@@ -1,0 +1,50 @@
+{
+  "_comment": "Ranglarning yagona manbai. Kodga qattiq yozilmaydi — bu fayldan CSS generatsiya qilinadi (scripts/build-themes.mjs). Qiymatlar Telegram Web A ning jonli CSS o'zgaruvchilaridan olingan.",
+  "light": {
+    "color-primary": "#3390EC",
+    "color-primary-shade": "#2B82CE",
+    "color-primary-soft": "#EAF3FC",
+    "color-on-primary": "#FFFFFF",
+    "color-background": "#FFFFFF",
+    "color-background-secondary": "#F4F4F5",
+    "color-background-pressed": "#EBEBEC",
+    "color-fill": "#F1F1F2",
+    "color-text": "#000000",
+    "color-text-secondary": "#707579",
+    "color-text-tertiary": "#A2ACB4",
+    "color-borders": "#DADCE0",
+    "color-green": "#4DB74D",
+    "color-warning": "#F5A623",
+    "color-error": "#E53935",
+    "color-skeleton": "#E9E9EB",
+    "color-skeleton-shine": "#F4F4F5"
+  },
+  "dark": {
+    "color-primary": "#8774E1",
+    "color-primary-shade": "#7A66D8",
+    "color-primary-soft": "#2A2438",
+    "color-on-primary": "#FFFFFF",
+    "color-background": "#212121",
+    "color-background-secondary": "#181818",
+    "color-background-pressed": "#2C2C2C",
+    "color-fill": "#2C2C2C",
+    "color-text": "#FFFFFF",
+    "color-text-secondary": "#AAAAAA",
+    "color-text-tertiary": "#7D7D7D",
+    "color-borders": "#303030",
+    "color-green": "#4DB74D",
+    "color-warning": "#F5A623",
+    "color-error": "#E53935",
+    "color-skeleton": "#2C2C2C",
+    "color-skeleton-shine": "#383838"
+  },
+  "peer": [
+    "#E17076",
+    "#EDA86C",
+    "#A695E7",
+    "#7BC862",
+    "#6EC9CB",
+    "#65AADD",
+    "#EE7AAE"
+  ]
+}

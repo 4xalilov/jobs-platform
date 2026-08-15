@@ -15,7 +15,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const VARIANTS: Record<Variant, string> = {
   primary: "bg-accent text-on-accent active:bg-accent-pressed",
-  secondary: "bg-fill text-text active:bg-separator",
+  secondary: "bg-fill text-fg active:bg-separator",
   ghost: "bg-transparent text-accent active:bg-fill",
   danger: "bg-fill text-danger active:bg-separator",
 };
@@ -24,7 +24,7 @@ const VARIANTS: Record<Variant, string> = {
 const SIZES: Record<Size, string> = {
   sm: "h-8 px-3 text-caption rounded-tg-sm gap-1.5",
   md: "h-10 px-4 text-body rounded-tg-sm gap-2",
-  lg: "h-[50px] px-5 text-nav rounded-tg-sm gap-2",
+  lg: "h-[3.125rem] px-5 text-nav rounded-tg-sm gap-2",
 };
 
 export function Button({

@@ -20,7 +20,7 @@ export function Chip({
         "inline-flex shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5",
         "text-body font-medium whitespace-nowrap",
         "transition-[background-color,transform] duration-100 ease-[var(--ease-tg)] active:scale-[0.97]",
-        selected ? "bg-accent text-on-accent" : "bg-fill text-text-secondary",
+        selected ? "bg-accent text-on-accent" : "bg-fill text-fg-secondary",
         className,
       )}
       {...props}

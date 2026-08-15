@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/button";
  */
 export default function Error({ reset }: { error: Error; reset: () => void }) {
   return (
-    <div className="mx-auto flex min-h-dvh max-w-[440px] flex-col items-center justify-center gap-4 bg-bg px-8 text-center">
-      <h1 className="text-nav text-text">Nimadir noto&apos;g&apos;ri ketdi</h1>
-      <p className="text-body text-text-secondary">
+    <div className="mx-auto flex min-h-dvh max-w-[27.5rem] flex-col items-center justify-center gap-4 bg-bg px-8 text-center">
+      <h1 className="text-nav text-fg">Nimadir noto&apos;g&apos;ri ketdi</h1>
+      <p className="text-body text-fg-secondary">
         Baza ulanmagan bo&apos;lishi mumkin. README&apos;dagi &laquo;Bazani ko&apos;tarish&raquo;
         bo&apos;limiga qarang.
       </p>

@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useSyncExternalStore } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useSyncExternalStore,
+} from "react";
 import { createStorageStore, useSystemPrefersDark } from "@/lib/client-store";
 
 export type ThemeMode = "light" | "dark" | "system";
@@ -35,7 +42,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Tashqi tizimni (DOM) React holatiga moslash
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", resolved === "dark");
+    // v3: tema <html class="theme-light|theme-dark"> orqali almashadi
+    const root = document.documentElement;
+    root.classList.toggle("theme-dark", resolved === "dark");
+    root.classList.toggle("theme-light", resolved !== "dark");
   }, [resolved]);
 
   const setMode = useCallback((next: ThemeMode) => themeStore.set(next), []);
@@ -54,4 +64,4 @@ export function useTheme() {
 /**
  * Sahifa chizilishidan oldin ishga tushadi — tungi rejimda oq "chaqnash" bo'lmasligi uchun.
  */
-export const themeInitScript = `(function(){try{var m=localStorage.getItem("${THEME_STORAGE_KEY}")||"system";var d=m==="dark"||(m==="system"&&matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d);}catch(e){}})();`;
+export const themeInitScript = `(function(){try{var m=localStorage.getItem("${THEME_STORAGE_KEY}")||"system";var d=m==="dark"||(m==="system"&&matchMedia("(prefers-color-scheme: dark)").matches);var r=document.documentElement;r.classList.toggle("theme-dark",d);r.classList.toggle("theme-light",!d);}catch(e){}})();`;

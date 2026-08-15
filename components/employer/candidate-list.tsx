@@ -120,10 +120,10 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
             <div className="flex items-center gap-3">
               <Avatar name={card.value.name} size={56} />
               <div className="min-w-0 flex-1">
-                <h2 className="truncate text-[20px] leading-6 font-semibold text-text">
+                <h2 className="truncate text-[1.25rem] leading-6 font-semibold text-fg">
                   {card.value.name}
                 </h2>
-                <p className="mt-0.5 truncate text-body text-text-secondary">
+                <p className="mt-0.5 truncate text-body text-fg-secondary">
                   {card.value.professionName?.[locale] ?? ""}
                 </p>
               </div>
@@ -134,8 +134,8 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
               <Tag>{t.job.experience[card.value.experience]}</Tag>
             </div>
 
-            <p className="mt-4 text-caption text-text-secondary">{t.employer.candidates.expects}</p>
-            <p className="text-nav text-text">
+            <p className="mt-4 text-caption text-fg-secondary">{t.employer.candidates.expects}</p>
+            <p className="text-nav text-fg">
               {formatSalary(
                 card.value.salaryMin,
                 card.value.salaryMax,
@@ -144,10 +144,8 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
               )}
             </p>
 
-            <p className="mt-3 text-caption text-text-secondary">
-              {t.employer.candidates.appliedTo}
-            </p>
-            <p className="text-body text-text">{card.value.vacancyTitle}</p>
+            <p className="mt-3 text-caption text-fg-secondary">{t.employer.candidates.appliedTo}</p>
+            <p className="text-body text-fg">{card.value.vacancyTitle}</p>
           </div>
         )}
       </Sheet>

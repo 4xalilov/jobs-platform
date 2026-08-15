@@ -57,7 +57,7 @@ export function EmployerTabBar({ unread = 0 }: { unread?: number }) {
   const tabs: EmployerTab[] = ["vacancies", "candidates", "search", "profile"];
 
   return (
-    <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[440px] -translate-x-1/2">
+    <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[27.5rem] -translate-x-1/2">
       <nav className="hairline-top relative flex bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">
         {tabs.map((tab) => {
           const isActive = tab === active;
@@ -69,8 +69,8 @@ export function EmployerTabBar({ unread = 0 }: { unread?: number }) {
               aria-current={isActive ? "page" : undefined}
               onClick={() => router.push(ROUTES[tab])}
               className={cn(
-                "tap relative flex h-[50px] flex-1 flex-col items-center justify-center gap-0.5",
-                isActive ? "text-accent" : "text-text-secondary",
+                "tap relative flex h-[3.125rem] flex-1 flex-col items-center justify-center gap-0.5",
+                isActive ? "text-accent" : "text-fg-secondary",
               )}
             >
               <span className="relative">
@@ -82,7 +82,9 @@ export function EmployerTabBar({ unread = 0 }: { unread?: number }) {
                   />
                 )}
               </span>
-              <span className="text-[10px] leading-[12px] font-medium">{t.employer.tabs[tab]}</span>
+              <span className="text-[0.625rem] leading-[0.75rem] font-medium">
+                {t.employer.tabs[tab]}
+              </span>
             </button>
           );
         })}

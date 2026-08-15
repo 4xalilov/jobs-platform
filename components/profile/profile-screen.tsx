@@ -96,10 +96,10 @@ export function ProfileScreen({
             <Avatar name={card?.name || "?"} size={64} />
           </span>
           <div className="min-w-0 flex-1">
-            <h2 className="truncate text-[20px] leading-6 font-semibold text-text">
+            <h2 className="truncate text-[1.25rem] leading-6 font-semibold text-fg">
               {card?.name || t.screens.profile.notFilled}
             </h2>
-            <p className="mt-0.5 truncate text-body text-text-secondary">
+            <p className="mt-0.5 truncate text-body text-fg-secondary">
               {profession ? profession.name[locale] : t.screens.profile.notFilled}
             </p>
           </div>
@@ -152,26 +152,26 @@ export function ProfileScreen({
         )}
       </ListGroup>
       {openToWork && (
-        <p className="px-4 pt-2 text-caption text-text-tertiary">{t.trust.visibilityHint}</p>
+        <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.trust.visibilityHint}</p>
       )}
 
       <SectionHeader>{t.screens.profile.media}</SectionHeader>
       <ListGroup>
         <ListItem
-          leading={<IconCamera size={22} className="text-text-secondary" />}
+          leading={<IconCamera size={22} className="text-fg-secondary" />}
           title={<span className="text-body font-normal">{t.screens.profile.photo}</span>}
           insetSeparator={false}
           chevron
         />
         <ListItem
-          leading={<IconMic size={22} className="text-text-secondary" />}
+          leading={<IconMic size={22} className="text-fg-secondary" />}
           title={<span className="text-body font-normal">{t.screens.profile.voice}</span>}
           insetSeparator={false}
           chevron
           last
         />
       </ListGroup>
-      <p className="px-4 pt-2 text-caption text-text-tertiary">{t.screens.profile.mediaHint}</p>
+      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.screens.profile.mediaHint}</p>
 
       <ListGroup className="mt-5">
         <ListItem
@@ -179,12 +179,12 @@ export function ProfileScreen({
             <span className="text-body font-normal">{t.screens.profile.applicationsCount}</span>
           }
           insetSeparator={false}
-          trailing={<span className="text-body text-text-secondary">{applicationCount}</span>}
+          trailing={<span className="text-body text-fg-secondary">{applicationCount}</span>}
         />
         <ListItem
           title={<span className="text-body font-normal">{t.screens.profile.savedCount}</span>}
           insetSeparator={false}
-          trailing={<span className="text-body text-text-secondary">{savedCount}</span>}
+          trailing={<span className="text-body text-fg-secondary">{savedCount}</span>}
           last
         />
       </ListGroup>
@@ -192,15 +192,15 @@ export function ProfileScreen({
       <SectionHeader>{t.screens.profile.settings}</SectionHeader>
       <ListGroup>
         <ListItem
-          leading={<IconGlobe size={22} className="text-text-secondary" />}
+          leading={<IconGlobe size={22} className="text-fg-secondary" />}
           title={<span className="text-body font-normal">{t.language.label}</span>}
           insetSeparator={false}
-          trailing={<span className="text-body text-text-secondary">{localeLabels[locale]}</span>}
+          trailing={<span className="text-body text-fg-secondary">{localeLabels[locale]}</span>}
           onClick={() => languageSheet.open(true)}
         />
         <div className="bg-surface px-4 py-3">
           <div className="flex items-center gap-3">
-            <IconMoon size={22} className="shrink-0 text-text-secondary" />
+            <IconMoon size={22} className="shrink-0 text-fg-secondary" />
             <Segmented
               className="flex-1"
               label={t.theme.label}
@@ -246,7 +246,7 @@ export function ProfileScreen({
         <button
           type="button"
           onClick={() => router.push("/design")}
-          className="mt-6 text-caption text-text-tertiary underline"
+          className="mt-6 text-caption text-fg-tertiary underline"
         >
           {t.design.title}
         </button>
@@ -304,7 +304,7 @@ export function ProfileScreen({
             />
           ))}
         </ListGroup>
-        <p className="px-4 pt-3 text-caption text-text-tertiary">{t.trust.visibilityHint}</p>
+        <p className="px-4 pt-3 text-caption text-fg-tertiary">{t.trust.visibilityHint}</p>
         <div className="h-4" />
       </Sheet>
     </>

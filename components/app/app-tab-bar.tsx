@@ -29,7 +29,7 @@ export function AppTabBar({ unread = 0 }: { unread?: number }) {
   const live = useUnread(unread);
 
   return (
-    <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[440px] -translate-x-1/2">
+    <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[27.5rem] -translate-x-1/2">
       <TabBar
         active={activeTab(pathname)}
         tabs={TABS}

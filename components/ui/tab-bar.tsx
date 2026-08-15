@@ -72,8 +72,8 @@ export function TabBar({
             aria-current={isActive ? "page" : undefined}
             onClick={() => onChange(tab)}
             className={cn(
-              "tap relative flex h-[50px] flex-1 flex-col items-center justify-center gap-0.5",
-              isActive ? "text-accent" : "text-text-secondary",
+              "tap relative flex h-[3.125rem] flex-1 flex-col items-center justify-center gap-0.5",
+              isActive ? "text-accent" : "text-fg-secondary",
             )}
           >
             <span className="relative">
@@ -85,7 +85,7 @@ export function TabBar({
                 />
               )}
             </span>
-            <span className="text-[10px] leading-[12px] font-medium">{labels[tab]}</span>
+            <span className="text-[0.625rem] leading-[0.75rem] font-medium">{labels[tab]}</span>
           </button>
         );
       })}

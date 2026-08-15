@@ -52,11 +52,11 @@ export function EmployerProfileScreen({
         <div className="flex items-center gap-3">
           <Avatar name={company.name} size={64} online={company.fastReply} />
           <div className="min-w-0 flex-1">
-            <h2 className="truncate text-[20px] leading-6 font-semibold text-text">
+            <h2 className="truncate text-[1.25rem] leading-6 font-semibold text-fg">
               {company.name}
             </h2>
             {company.phone && (
-              <p className="mt-0.5 truncate text-body text-text-secondary">{company.phone}</p>
+              <p className="mt-0.5 truncate text-body text-fg-secondary">{company.phone}</p>
             )}
           </div>
         </div>
@@ -74,7 +74,7 @@ export function EmployerProfileScreen({
           )}
         </div>
 
-        {company.about && <p className="mt-3 text-body text-text">{company.about}</p>}
+        {company.about && <p className="mt-3 text-body text-fg">{company.about}</p>}
       </div>
 
       <ListGroup className="mt-5">
@@ -83,27 +83,25 @@ export function EmployerProfileScreen({
             <span className="text-body font-normal">{t.employer.company.activeVacancies}</span>
           }
           insetSeparator={false}
-          trailing={<span className="text-body text-text-secondary">{activeCount}</span>}
+          trailing={<span className="text-body text-fg-secondary">{activeCount}</span>}
         />
         <ListItem
           title={
             <span className="text-body font-normal">{t.employer.company.totalApplications}</span>
           }
           insetSeparator={false}
-          trailing={<span className="text-body text-text-secondary">{totalApplications}</span>}
+          trailing={<span className="text-body text-fg-secondary">{totalApplications}</span>}
           last
         />
       </ListGroup>
 
-      <p className="px-4 pt-2 text-caption text-text-tertiary">
-        {t.employer.company.fastReplyHint}
-      </p>
+      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.employer.company.fastReplyHint}</p>
 
       {/* Tariflar tab bardan chiqdi — o'rniga nomzod qidiruvi keldi.
           Sahifaning o'zi shu yerdan ochiladi. */}
       <ListGroup className="mt-5">
         <ListItem
-          leading={<IconCard size={22} className="text-text-secondary" />}
+          leading={<IconCard size={22} className="text-fg-secondary" />}
           title={<span className="text-body font-normal">{t.employer.tabs.plans}</span>}
           insetSeparator={false}
           chevron
@@ -115,15 +113,15 @@ export function EmployerProfileScreen({
       <SectionHeader>{t.screens.profile.settings}</SectionHeader>
       <ListGroup>
         <ListItem
-          leading={<IconGlobe size={22} className="text-text-secondary" />}
+          leading={<IconGlobe size={22} className="text-fg-secondary" />}
           title={<span className="text-body font-normal">{t.language.label}</span>}
           insetSeparator={false}
-          trailing={<span className="text-body text-text-secondary">{localeLabels[locale]}</span>}
+          trailing={<span className="text-body text-fg-secondary">{localeLabels[locale]}</span>}
           onClick={() => languageSheet.open(true)}
         />
         <div className="bg-surface px-4 py-3">
           <div className="flex items-center gap-3">
-            <IconMoon size={22} className="shrink-0 text-text-secondary" />
+            <IconMoon size={22} className="shrink-0 text-fg-secondary" />
             <Segmented
               className="flex-1"
               label={t.theme.label}

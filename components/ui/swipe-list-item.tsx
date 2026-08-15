@@ -120,7 +120,7 @@ export function SwipeListItem({
           style={{ width: ACTION_WIDTH }}
           className={cn(
             "flex flex-col items-center justify-center gap-1 text-white",
-            "text-[11px] leading-[13px] font-medium",
+            "text-[0.6875rem] leading-[0.8125rem] font-medium",
             action.className,
           )}
         >

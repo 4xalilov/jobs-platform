@@ -16,8 +16,8 @@ export const viewport: Viewport = {
   maximumScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f5f5f5" },
-    { media: "(prefers-color-scheme: dark)", color: "#0e1621" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f4f5" },
+    { media: "(prefers-color-scheme: dark)", color: "#181818" },
   ],
 };
 
@@ -32,6 +32,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <I18nProvider>{children}</I18nProvider>
         </ThemeProvider>
+        {/* Barcha menyu, sheet va modal shu ildizga render qilinadi */}
+        <div id="portals" />
       </body>
     </html>
   );

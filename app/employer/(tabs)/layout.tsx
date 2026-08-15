@@ -10,8 +10,8 @@ export default async function EmployerLayout({ children }: { children: React.Rea
   const unread = user.companyId ? await unreadTotalForCompany(user.companyId) : 0;
 
   return (
-    <div className="mx-auto min-h-dvh max-w-[440px] bg-bg">
-      <div className="pb-[calc(58px+env(safe-area-inset-bottom))]">{children}</div>
+    <div className="mx-auto min-h-dvh max-w-[27.5rem] bg-bg">
+      <div className="pb-[calc(3.625rem+env(safe-area-inset-bottom))]">{children}</div>
       <EmployerTabBar unread={unread} />
     </div>
   );

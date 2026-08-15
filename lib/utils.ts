@@ -88,23 +88,24 @@ export function formatAgo(
 }
 
 /** Avatar uchun turg'un rang — nomdan hisoblanadi */
-const AVATAR_COLORS = [
-  "#E17076",
-  "#7BC862",
-  "#E5CA77",
-  "#65AADD",
-  "#A695E7",
-  "#EE7AAE",
-  "#6EC9CB",
-  "#FAA774",
-];
+/**
+ * Peer ranglari — logo bo'lmaganda nom bosh harfi shu ranglardan biri bilan
+ * chiziladi. Qiymatlar themes.json da, bu yerda faqat CSS o'zgaruvchisi nomi:
+ * shunda rang kodda takrorlanmaydi.
+ */
+const PEER_COUNT = 7;
 
-export function avatarColor(seed: string): string {
+export function peerIndex(seed: string): number {
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {
     hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
   }
-  return AVATAR_COLORS[hash % AVATAR_COLORS.length];
+  return hash % PEER_COUNT;
+}
+
+/** Nomdan turg'un rang — har safar bir xil chiqadi */
+export function avatarColor(seed: string): string {
+  return `var(--color-peer-${peerIndex(seed)})`;
 }
 
 export function initials(name: string): string {

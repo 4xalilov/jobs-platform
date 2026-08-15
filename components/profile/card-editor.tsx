@@ -62,7 +62,7 @@ export function CardEditor({
   };
 
   return (
-    <div className="mx-auto min-h-dvh max-w-[440px] bg-bg pb-10">
+    <div className="mx-auto min-h-dvh max-w-[27.5rem] bg-bg pb-10">
       <NavBar
         className="sticky top-0 z-20 hairline"
         title={t.screens.card.title}
@@ -143,13 +143,13 @@ export function CardEditor({
       <SectionHeader>{t.screens.profile.media}</SectionHeader>
       <ListGroup>
         <ListItem
-          leading={<IconCamera size={22} className="text-text-secondary" />}
+          leading={<IconCamera size={22} className="text-fg-secondary" />}
           title={<span className="text-body font-normal">{t.screens.profile.photo}</span>}
           insetSeparator={false}
           chevron
         />
         <ListItem
-          leading={<IconMic size={22} className="text-text-secondary" />}
+          leading={<IconMic size={22} className="text-fg-secondary" />}
           title={<span className="text-body font-normal">{t.screens.profile.voice}</span>}
           insetSeparator={false}
           chevron
@@ -157,7 +157,7 @@ export function CardEditor({
         />
       </ListGroup>
 
-      <p className="px-4 pt-2 text-caption text-text-tertiary">{t.screens.card.hint}</p>
+      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.screens.card.hint}</p>
 
       <Sheet
         open={picker.isOpen}

@@ -1,0 +1,43 @@
+// O'lchamlar va animatsiya — dizayn tizimining yagona manbai.
+// Ranglar bu yerda emas: ular themes.json da (tema almashinuvi shunga bog'liq).
+//
+// Hamma narsa rem da. Ildiz 16px. Sabab: foydalanuvchi brauzer shriftini
+// kattalashtirsa butun interfeys proporsional o'sadi, sindirmaydi.
+
+// ——— O'lchamlar ———
+$border-radius-default: 0.75rem; // karta, sheet
+$border-radius-card: 0.9375rem; // 15px — Telegram xabar radiusi
+$border-radius-button: 0.625rem;
+$list-item-height: 4.75rem; // vakansiya elementi
+$settings-item-height: 2.75rem;
+$avatar-size: 3rem;
+$tab-bar-height: 3.125rem;
+$button-height: 3.125rem;
+$side-padding: 1rem;
+
+// Ajratuvchi avatar tugagan joydan boshlanadi
+$separator-inset: 4.75rem;
+
+// ——— Tipografika ———
+$font-large: 2.125rem;
+$font-large-line: 2.5625rem;
+$font-nav: 1.0625rem;
+$font-nav-line: 1.375rem;
+$font-title: 1.0625rem;
+$font-body: 0.9375rem;
+$font-body-line: 1.3125rem;
+$font-caption: 0.8125rem;
+$font-caption-line: 1.125rem;
+
+// ——— Animatsiya: Telegram ning haqiqiy egri chiziqlari ———
+$slide-transition: 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+$layer-transition: 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+$fast-transition: 0.15s ease-out;
+$tap-feedback: 0.1s;
+$tap-scale: 0.97;
+
+// ——— Responsive nuqtalari ———
+$bp-mobile: 600px;
+$bp-two-column: 601px;
+$bp-wide: 925px;
+$bp-three-column: 1275px;

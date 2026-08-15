@@ -7,7 +7,14 @@ import { Avatar } from "@/components/ui/avatar";
 import { Tag } from "@/components/ui/badge";
 import { Button, Fab } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
-import { IconBolt, IconBriefcase, IconEye, IconPlus, IconTrash, IconUsers } from "@/components/ui/icon";
+import {
+  IconBolt,
+  IconBriefcase,
+  IconEye,
+  IconPlus,
+  IconTrash,
+  IconUsers,
+} from "@/components/ui/icon";
 import { ListGroup, ListItem, SectionHeader } from "@/components/ui/list";
 import { NavBar } from "@/components/ui/nav-bar";
 import { Sheet } from "@/components/ui/sheet";
@@ -76,9 +83,7 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
           title={t.employer.vacancies.empty}
           hint={t.employer.vacancies.emptyHint}
           action={
-            <Button onClick={() => router.push("/employer/new")}>
-              {t.employer.vacancies.add}
-            </Button>
+            <Button onClick={() => router.push("/employer/new")}>{t.employer.vacancies.add}</Button>
           }
         />
       ) : (
@@ -103,7 +108,7 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
       )}
 
       {/* Asosiy harakat — vakansiya joylash */}
-      <div className="fixed bottom-[calc(70px+env(safe-area-inset-bottom))] left-1/2 z-30 w-full max-w-[440px] -translate-x-1/2">
+      <div className="fixed bottom-[calc(4.375rem+env(safe-area-inset-bottom))] left-1/2 z-30 w-full max-w-[27.5rem] -translate-x-1/2">
         <div className="flex justify-end pr-4">
           <Fab label={t.employer.vacancies.add} onClick={() => router.push("/employer/new")}>
             <IconPlus size={28} />
@@ -138,10 +143,10 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
       >
         {detail.value && (
           <div className="px-4 pb-4">
-            <h2 className="text-[20px] leading-6 font-semibold text-text">
+            <h2 className="text-[1.25rem] leading-6 font-semibold text-fg">
               {detail.value.professionName?.[locale] ?? detail.value.title}
             </h2>
-            <p className="mt-3 text-[20px] leading-6 font-semibold text-text">
+            <p className="mt-3 text-[1.25rem] leading-6 font-semibold text-fg">
               {formatSalary(
                 detail.value.salaryMin,
                 detail.value.salaryMax,
@@ -164,10 +169,10 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
             </div>
 
             {detail.value.description && (
-              <p className="mt-4 text-body text-text">{detail.value.description}</p>
+              <p className="mt-4 text-body text-fg">{detail.value.description}</p>
             )}
 
-            <div className="mt-4 flex gap-4 text-caption text-text-tertiary">
+            <div className="mt-4 flex gap-4 text-caption text-fg-tertiary">
               <span className="flex items-center gap-1">
                 <IconEye size={15} /> {detail.value.views} {t.employer.vacancies.views}
               </span>

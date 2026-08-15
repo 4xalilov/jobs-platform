@@ -15,7 +15,7 @@ export function LargeTitle({
 }) {
   return (
     <div className={cn("flex items-end justify-between gap-3 bg-bg px-4 pt-3 pb-2", className)}>
-      <h1 className="text-large text-text">{children}</h1>
+      <h1 className="text-large text-fg">{children}</h1>
       {action}
     </div>
   );

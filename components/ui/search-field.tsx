@@ -24,7 +24,7 @@ export function SearchField({
   return (
     <div className={cn("px-4 py-2", className)}>
       <div className={SHELL}>
-        <IconSearch size={18} className="absolute left-2.5 text-text-tertiary" />
+        <IconSearch size={18} className="absolute left-2.5 text-fg-tertiary" />
         <input
           type="search"
           value={value}
@@ -32,8 +32,8 @@ export function SearchField({
           onChange={(e) => onValueChange(e.target.value)}
           placeholder={placeholder}
           className={cn(
-            "h-full w-full bg-transparent pr-9 pl-9 text-body text-text",
-            "placeholder:text-text-tertiary focus:outline-none",
+            "h-full w-full bg-transparent pr-9 pl-9 text-body text-fg",
+            "placeholder:text-fg-tertiary focus:outline-none",
             "[&::-webkit-search-cancel-button]:hidden",
           )}
         />
@@ -42,7 +42,7 @@ export function SearchField({
             type="button"
             aria-label={clearLabel}
             onClick={() => onValueChange("")}
-            className="absolute right-2 flex size-6 items-center justify-center rounded-full text-text-tertiary active:bg-separator"
+            className="absolute right-2 flex size-6 items-center justify-center rounded-full text-fg-tertiary active:bg-separator"
           >
             <IconX size={16} />
           </button>
@@ -68,8 +68,8 @@ export function SearchFieldButton({
   return (
     <div className={cn("px-4 py-2", className)}>
       <button type="button" onClick={onClick} className={cn(SHELL, "w-full text-left")}>
-        <IconSearch size={18} className="absolute left-2.5 text-text-tertiary" />
-        <span className="pl-9 text-body text-text-tertiary">{placeholder}</span>
+        <IconSearch size={18} className="absolute left-2.5 text-fg-tertiary" />
+        <span className="pl-9 text-body text-fg-tertiary">{placeholder}</span>
       </button>
     </div>
   );

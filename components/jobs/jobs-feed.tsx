@@ -235,7 +235,7 @@ export function JobsFeed({
                   key: "hide",
                   label: t.screens.jobs.hide,
                   icon: <IconEyeOff size={20} />,
-                  className: "bg-text-secondary",
+                  className: "bg-fg-secondary",
                   onAction: () => hide(vacancy),
                 },
               ]}
@@ -258,9 +258,7 @@ export function JobsFeed({
       )}
 
       {!cursor && items.length > 0 && (
-        <p className="py-6 text-center text-caption text-text-tertiary">
-          {t.screens.jobs.endOfList}
-        </p>
+        <p className="py-6 text-center text-caption text-fg-tertiary">{t.screens.jobs.endOfList}</p>
       )}
 
       <VacancySheet

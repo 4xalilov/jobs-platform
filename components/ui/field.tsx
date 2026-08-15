@@ -27,8 +27,8 @@ export function TextField({
       inputMode={inputMode}
       autoFocus={autoFocus}
       className={cn(
-        "h-12 w-full bg-surface px-4 text-title text-text",
-        "placeholder:font-normal placeholder:text-text-tertiary focus:outline-none",
+        "h-12 w-full bg-surface px-4 text-title text-fg",
+        "placeholder:font-normal placeholder:text-fg-tertiary focus:outline-none",
         className,
       )}
     />
@@ -62,14 +62,14 @@ export function SelectField({
         className,
       )}
     >
-      <span className="text-body text-text">{label}</span>
+      <span className="text-body text-fg">{label}</span>
       <span className="flex min-w-0 items-center gap-1">
         <span
-          className={cn("truncate text-body", value ? "text-text-secondary" : "text-text-tertiary")}
+          className={cn("truncate text-body", value ? "text-fg-secondary" : "text-fg-tertiary")}
         >
           {value || placeholder}
         </span>
-        <IconChevronRight size={18} className="text-text-tertiary" />
+        <IconChevronRight size={18} className="text-fg-tertiary" />
       </span>
     </button>
   );
@@ -98,8 +98,8 @@ export function FieldRow({
       )}
     >
       <span className="min-w-0">
-        <span className="block text-body text-text">{label}</span>
-        {hint && <span className="mt-0.5 block text-caption text-text-tertiary">{hint}</span>}
+        <span className="block text-body text-fg">{label}</span>
+        {hint && <span className="mt-0.5 block text-caption text-fg-tertiary">{hint}</span>}
       </span>
       {control}
     </div>

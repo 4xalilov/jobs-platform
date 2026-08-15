@@ -49,14 +49,17 @@ export default function SearchPage() {
     debounce.current = window.setTimeout(() => void runSearch(value), 250);
   };
 
-  useEffect(() => () => {
-    if (debounce.current) window.clearTimeout(debounce.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (debounce.current) window.clearTimeout(debounce.current);
+    },
+    [],
+  );
 
   const trimmed = query.trim();
 
   return (
-    <div className="mx-auto min-h-dvh max-w-[440px] bg-bg">
+    <div className="mx-auto min-h-dvh max-w-[27.5rem] bg-bg">
       <div className="sticky top-0 z-20 flex items-center bg-surface pt-[env(safe-area-inset-top)] hairline">
         <SearchField
           value={query}
@@ -100,7 +103,7 @@ export default function SearchPage() {
               {queries.map((item, i) => (
                 <ListItem
                   key={item}
-                  leading={<IconClock size={20} className="text-text-tertiary" />}
+                  leading={<IconClock size={20} className="text-fg-tertiary" />}
                   title={<span className="text-body font-normal">{item}</span>}
                   insetSeparator={false}
                   last={i === queries.length - 1}
@@ -148,9 +151,7 @@ export default function SearchPage() {
         open={vacancySheet.isOpen}
         onClose={vacancySheet.close}
         onChange={(updated) => {
-          setResults((current) =>
-            current.map((item) => (item.id === updated.id ? updated : item)),
-          );
+          setResults((current) => current.map((item) => (item.id === updated.id ? updated : item)));
           vacancySheet.replace(updated);
         }}
       />
