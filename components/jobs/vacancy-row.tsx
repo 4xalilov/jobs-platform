@@ -2,11 +2,10 @@
 
 import { useI18n } from "@/components/providers/i18n-provider";
 import { Avatar } from "@/components/ui/avatar";
-import { Dot } from "@/components/ui/badge";
 import { IconBookmark, IconShieldCheck } from "@/components/ui/icon";
-import { ListItem } from "@/components/ui/list";
 import type { VacancyDTO } from "@/lib/db/types";
-import { formatAgo, formatSalary } from "@/lib/utils";
+import { cx, formatAgo, formatSalaryShort } from "@/lib/utils";
+import styles from "./vacancy-row.module.scss";
 
 /** Vakansiya joylashuvi: "Toshkent, Chilonzor" */
 export function vacancyLocation(vacancy: VacancyDTO, locale: "uz" | "uz-cyrl" | "ru"): string {
@@ -15,14 +14,19 @@ export function vacancyLocation(vacancy: VacancyDTO, locale: "uz" | "uz-cyrl" | 
   return district ? `${city}, ${district}` : city;
 }
 
+/** 24 soat ichida joylashtirilgan bo'lsa "Yangi" belgisi chiqadi */
+const NEW_MINUTES = 24 * 60;
+
 /**
- * Vakansiya qatori — v3 ning 3-bo'limidagi tuzilma:
+ * Vakansiya qatori — v4 ning 4.1-bo'limidagi to'rt qatorli tuzilma:
  *
- *   [avatar 3rem]  Lavozim                    [vaqt]
- *                  Kompaniya · Hudud · Maosh  [belgi]
+ *   [avatar 3rem]  Oshpaz                        ● Yangi
+ *                  Chaykhana Navruz · Yunusobod  2 soat
+ *                  5–7 mln so'm  [To'liq kun]
+ *                  ● 80% javob beradi · 4 ariza
  *
- * Ikki qator: shunda balandlik aynan 4.75rem chiqadi. Avval uch qator edi
- * va qator 93px gacha cho'zilardi.
+ * Balandlik 6rem. Rang bezak emas, ma'lumot tashiydi: maosh yashil,
+ * javob ko'rsatkichi nuqtasi darajaga qarab yashil/sariq/kulrang.
  */
 export function VacancyRow({
   vacancy,
@@ -42,36 +46,83 @@ export function VacancyRow({
       ? `${vacancy.distanceKm} ${t.job.km}`
       : vacancyLocation(vacancy, locale);
 
-  /*
-   * v3 bu qatorni "Kompaniya · Hudud · Maosh" deb yozgan, lekin telefonda
-   * uchchalasi sig'maydi va oxiri kesiladi. Maosh bilan hudud — qaror
-   * qabul qilinadigan ikki fakt, shuning uchun ular oldinda; kesilsa
-   * kompaniya nomi kesiladi.
-   */
-  const subtitle = [
-    formatSalary(vacancy.salaryMin, vacancy.salaryMax, t.job.currency, t.job.negotiable),
-    place,
-    vacancy.company,
-  ]
-    .filter(Boolean)
-    .join(" · ");
+  const isNew = vacancy.postedMinutesAgo < NEW_MINUTES;
+  const negotiable = !vacancy.salaryMin && !vacancy.salaryMax;
+  const rate = vacancy.responseStats.rate;
+
+  // Ish beruvchi haqida bitta qator: javob ko'rsatkichi va raqobat
+  const stats = [
+    rate === null ? null : t.channels.replyRate.replace("{rate}", String(rate)),
+    vacancy.applications > 0
+      ? t.channels.applicationCount.replace("{count}", String(vacancy.applications))
+      : null,
+  ].filter(Boolean);
 
   return (
-    <ListItem
-      leading={<Avatar name={vacancy.company} online={vacancy.fastReply} />}
-      title={vacancy.professionName?.[locale] ?? vacancy.title}
-      titleAdornment={
-        <span className="flex items-center gap-1">
-          {vacancy.verified && <IconShieldCheck size={15} className="text-accent" />}
-          {vacancy.saved && <IconBookmark size={14} className="text-accent" />}
-        </span>
-      }
-      subtitle={subtitle}
-      strongTitle
-      meta={formatAgo(vacancy.postedMinutesAgo, t.time)}
-      trailing={vacancy.fastReply ? <Dot className="bg-success" /> : undefined}
-      last={last}
+    <button
+      type="button"
       onClick={() => onOpen(vacancy)}
-    />
+      className={cx(styles.row, !last && "hairline hairline-inset")}
+    >
+      <Avatar name={vacancy.company} online={vacancy.fastReply} />
+
+      <span className={styles.main}>
+        <span className={styles.titleLine}>
+          <span className={styles.title}>{vacancy.professionName?.[locale] ?? vacancy.title}</span>
+          {vacancy.verified && (
+            <span className={styles.verified}>
+              <IconShieldCheck size={15} />
+            </span>
+          )}
+          {isNew && (
+            <span className={styles.new}>
+              <i className={styles.newDot} />
+              {t.channels.isNew}
+            </span>
+          )}
+        </span>
+
+        <span className={styles.metaLine}>
+          <span className={styles.where}>
+            {[vacancy.company, place].filter(Boolean).join(" · ")}
+          </span>
+          <span className={styles.time}>{formatAgo(vacancy.postedMinutesAgo, t.time)}</span>
+        </span>
+
+        <span className={styles.salaryLine}>
+          <span className={cx(styles.salary, negotiable && styles.negotiable)}>
+            {formatSalaryShort(
+              vacancy.salaryMin,
+              vacancy.salaryMax,
+              t.job.millionShort,
+              t.job.currency,
+              t.job.negotiable,
+            )}
+          </span>
+          <span className={styles.employment}>{t.job.employment[vacancy.employment]}</span>
+          {vacancy.urgent && (
+            <span className={cx(styles.employment, styles.urgent)}>{t.channels.urgent}</span>
+          )}
+          {vacancy.saved && (
+            <span className={styles.saved}>
+              <IconBookmark size={14} />
+            </span>
+          )}
+        </span>
+
+        {stats.length > 0 && (
+          <span className={styles.statsLine}>
+            <i
+              className={cx(
+                styles.rateDot,
+                rate !== null && rate >= 80 && styles.rateGood,
+                rate !== null && rate >= 40 && rate < 80 && styles.rateMid,
+              )}
+            />
+            <span className={styles.statsText}>{stats.join(" · ")}</span>
+          </span>
+        )}
+      </span>
+    </button>
   );
 }

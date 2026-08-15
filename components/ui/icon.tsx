@@ -220,6 +220,24 @@ export const IconBolt = (p: IconProps) => (
   </Icon>
 );
 
+/** Kanalni tepaga qadash */
+export const IconPin = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M9 3h6l-.7 5.2 3 2.6V13H6.7v-2.2l3-2.6L9 3Z" />
+    <path d="M12 13v8" />
+  </Icon>
+);
+
+/** Ovozsiz kanal */
+export const IconBellOff = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M8.4 4.6A6 6 0 0 1 18 9.4c0 3 .8 4.6 1.6 5.6H9" />
+    <path d="M6.2 8.2A6 6 0 0 0 6 9.4c0 3-.8 4.6-1.6 5.6h9.4" />
+    <path d="M10.2 19a2 2 0 0 0 3.6 0" />
+    <path d="M3 3l18 18" />
+  </Icon>
+);
+
 export const IconShieldCheck = (p: IconProps) => (
   <Icon {...p}>
     <path d="M12 21.5s7.5-3.6 7.5-9.3V5.4L12 2.5 4.5 5.4v6.8c0 5.7 7.5 9.3 7.5 9.3Z" />

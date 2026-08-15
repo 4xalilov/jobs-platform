@@ -134,10 +134,13 @@ export async function listSubscribedChannels(userId: string): Promise<ChannelLis
  * mahsulot taassurotini beradi.
  */
 export async function listChannelCatalog(userId: string | null): Promise<ChannelGroupDTO[]> {
+  // Guruhlar alifbo bo'yicha emas: birinchi kasbining tartibi bo'yicha.
+  // Alifboda "Ishlab chiqarish" va "IT" tepaga chiqib qolardi, holbuki
+  // eng ko'p ish savdo va ovqatlanishda.
   const rows = await query<ChannelRow>(
     `${CHANNEL_SELECT}
      where coalesce(stat.jami, 0) >= ${MIN_CHANNEL_VACANCIES}
-     order by ch.guruh, ch.tartib`,
+     order by min(ch.tartib) over (partition by ch.guruh), ch.tartib`,
     [userId],
   );
 

@@ -74,6 +74,31 @@ export function formatSalary(
 }
 
 /**
+ * Qisqa maosh — "5–7 mln so'm".
+ *
+ * Vakansiya qatorining uchinchi qatorida maosh eng ko'zga tashlanadigan
+ * element bo'lishi kerak (v4, §4.1). To'liq shakl ("5 000 000 – 7 000 000
+ * so'm") telefonda bandlik chipi bilan bir qatorga sig'maydi, shuning
+ * uchun ro'yxatda qisqasi, sheet ichida to'lig'i ishlatiladi.
+ */
+export function formatSalaryShort(
+  min: number | null,
+  max: number | null,
+  million: string,
+  currency: string,
+  negotiable: string,
+): string {
+  if (!min && !max) return negotiable;
+  const toMln = (value: number) => {
+    const mln = value / 1_000_000;
+    // 4.5 mln — kasr faqat kerak bo'lganda
+    return Number.isInteger(mln) ? String(mln) : mln.toFixed(1).replace(".", ",");
+  };
+  if (min && max) return `${toMln(min)}–${toMln(max)} ${million} ${currency}`;
+  return `${toMln((min ?? max) as number)} ${million} ${currency}`;
+}
+
+/**
  * "Necha vaqt oldin" — turg'un qiymatdan hisoblanadi, shuning uchun
  * server va mijozda bir xil chiqadi.
  */

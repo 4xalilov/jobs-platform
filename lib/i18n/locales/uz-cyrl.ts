@@ -55,6 +55,7 @@ export const uzCyrl: Dictionary = {
     views: "кўриш",
     applications: "ариза",
     km: "км",
+    millionShort: "млн",
     experience: {
       none: "Тажрибасиз",
       upToOne: "1 йилгача",
@@ -252,6 +253,7 @@ export const uzCyrl: Dictionary = {
   channels: {
     browse: "Каналларни кўриш",
     catalog: "Каналлар",
+    catalogFooter: "Барча каналларда {count} та вакансия",
     subscribe: "Обуна бўлиш",
     subscribed: "Обуна бўлинган",
     unsubscribe: "Обунани бекор қилиш",

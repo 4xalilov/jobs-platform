@@ -1,23 +1,12 @@
-import { JobsFeed } from "@/components/jobs/jobs-feed";
-import { listProfessions, listVacancies } from "@/lib/db/queries";
-import { currentUserId } from "@/lib/db/session";
+import { ChannelList } from "@/components/channels/channel-list";
+import { listSubscribedChannels } from "@/lib/db/channels";
+import { requireUser } from "@/lib/db/session";
 
 // Ro'yxat har safar bazadan olinadi
 export const dynamic = "force-dynamic";
 
-export default async function JobsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ saqlangan?: string }>;
-}) {
-  const { saqlangan } = await searchParams;
-  const savedOnly = saqlangan === "1";
-
-  const userId = await currentUserId();
-  const [page, professions] = await Promise.all([
-    listVacancies({ userId, limit: 12, savedOnly }),
-    listProfessions(),
-  ]);
-
-  return <JobsFeed initial={page} professions={professions} initialSavedOnly={savedOnly} />;
+/** v4: "Ishlar" tabi endi vakansiyalar emas, kanallar ro'yxati */
+export default async function JobsPage() {
+  const user = await requireUser();
+  return <ChannelList initial={await listSubscribedChannels(user.id)} />;
 }

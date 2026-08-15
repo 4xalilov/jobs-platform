@@ -1,0 +1,178 @@
+@use "../../styles/variables" as *;
+
+/*
+ * Kanal qatori — Telegram chat list'ining aynan o'zi (v4, §1.2).
+ * Balandlik $list-item-height (4.75rem): kanal qatori ikki qatorli,
+ * vakansiya qatoridan (6rem) past.
+ */
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: $list-item-height;
+  padding: 0.75rem $side-padding;
+  text-align: left;
+  background: var(--color-background);
+  transition: background-color $tap-feedback ease-out;
+  touch-action: manipulation;
+
+  &:active {
+    background: var(--color-background-pressed);
+  }
+}
+
+@media (hover: hover) {
+  .row:hover {
+    background: var(--color-background-pressed);
+  }
+}
+
+/* Bosiladigan maydon: avatar va matn. Obuna tugmasi undan tashqarida
+   qoladi, aks holda tugma ichida tugma bo'lardi. */
+.hit {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: left;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
+.titleLine {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.title {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $font-title;
+  line-height: $font-nav-line;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.muted {
+  flex-shrink: 0;
+  display: flex;
+  color: var(--color-text-tertiary);
+}
+
+.pinned {
+  flex-shrink: 0;
+  display: flex;
+  color: var(--color-text-tertiary);
+}
+
+.time {
+  flex-shrink: 0;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Izoh qatori: kanaldagi eng oxirgi vakansiya */
+.preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.125rem;
+  min-width: 0;
+}
+
+.previewText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text-secondary);
+}
+
+.salary {
+  flex-shrink: 0;
+  font-weight: 600;
+  color: var(--color-green);
+  font-variant-numeric: tabular-nums;
+}
+
+.badge {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.375rem;
+  height: 1.375rem;
+  padding: 0 0.4375rem;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: $font-caption;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ovozsiz kanalda belgi kulrang — e'tibor tortmaydi */
+.badgeMuted {
+  background: var(--color-text-tertiary);
+}
+
+/* ——— Katalog ko'rinishi: o'ngda obuna tugmasi ——— */
+.subscribe {
+  flex-shrink: 0;
+  height: 1.875rem;
+  padding: 0 0.875rem;
+  border-radius: $border-radius-button;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: $font-caption;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: transform $tap-feedback ease-out;
+
+  &:active {
+    transform: scale($tap-scale);
+  }
+}
+
+.subscribed {
+  background: var(--color-fill);
+  color: var(--color-text-secondary);
+}
+
+.counts {
+  display: block;
+  margin-top: 0.125rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-tertiary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row,
+  .subscribe {
+    transition: none;
+  }
+
+  .subscribe:active {
+    transform: none;
+  }
+}

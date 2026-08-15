@@ -55,6 +55,7 @@ export const ru: Dictionary = {
     views: "просмотр",
     applications: "отклик",
     km: "км",
+    millionShort: "млн",
     experience: {
       none: "Без опыта",
       upToOne: "До 1 года",
@@ -253,6 +254,7 @@ export const ru: Dictionary = {
   channels: {
     browse: "Смотреть каналы",
     catalog: "Каналы",
+    catalogFooter: "Всего {count} вакансий во всех каналах",
     subscribe: "Подписаться",
     subscribed: "Вы подписаны",
     unsubscribe: "Отписаться",

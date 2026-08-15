@@ -56,6 +56,7 @@ export const uz = {
     views: "ko'rish",
     applications: "ariza",
     km: "km",
+    millionShort: "mln",
     experience: {
       none: "Tajribasiz",
       upToOne: "1 yilgacha",
@@ -267,6 +268,7 @@ export const uz = {
   channels: {
     browse: "Kanallarni ko'rish",
     catalog: "Kanallar",
+    catalogFooter: "Barcha kanallarda {count} ta vakansiya",
     subscribe: "Obuna bo'lish",
     subscribed: "Obuna bo'lingan",
     unsubscribe: "Obunani bekor qilish",
