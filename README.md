@@ -62,6 +62,39 @@ Generator turg'un urug'dan foydalanadi — har safar bir xil ma'lumot chiqadi.
 
 Boshqa bazaga ulanish uchun `.env.local` dagi `DATABASE_URL` ni o'zgartiring.
 
+### Onlayn joylashtirish (telefonda sinash uchun)
+
+Telefonda sinash uchun ikkita narsa kerak: baza va host. Ikkalasining ham
+bepul rejasi yetadi.
+
+**1. Baza — [Neon](https://neon.tech) yoki [Supabase](https://supabase.com).**
+Yangi loyiha yarating va ulanish satrini oling. Keyin mahalliy kompyuterdan
+migratsiya va namunaviy ma'lumotni yozing:
+
+```bash
+DATABASE_URL="postgres://...neon.tech/ishtop?sslmode=require" npm run db:setup
+```
+
+SSL o'z-o'zidan yoqiladi: manzil `localhost` bo'lmasa kod uni boshqaruvli
+baza deb biladi. Kerak bo'lsa `DATABASE_SSL=on|off|no-verify` bilan bekor
+qilinadi.
+
+**2. Host — [Vercel](https://vercel.com).** Repozitoriyni import qiling va
+uchta o'zgaruvchini qo'shing:
+
+| O'zgaruvchi       | Qiymat                                                   |
+| ----------------- | -------------------------------------------------------- |
+| `DATABASE_URL`    | Neon/Supabase ulanish satri (iloji bo'lsa _pooled_)      |
+| `SESSION_SECRET`  | `openssl rand -base64 32`                                |
+| `ALLOW_DEV_LOGIN` | `1` — faqat demo uchun, namunaviy kirish tugmasi chiqadi |
+
+Serverless muhitda pool `max: 1` ga tushadi (`lib/db/client.ts`) — har bir
+instansiya o'z ulanishini ochgani uchun. Neon'da "pooled" satrni tanlang.
+
+Telegram bot ulanmagunicha `ALLOW_DEV_LOGIN=1` qoldiring, aks holda kirish
+ekranida hech qanday tugma bo'lmaydi. Haqiqiy foydalanuvchilar chiqqach
+uni o'chiring.
+
 ### Telegram botni ulash
 
 Parol ham, elektron pochta ham yo'q — kirish faqat Telegram orqali.

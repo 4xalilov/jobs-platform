@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import pg from "pg";
 import { failWith } from "./explain-error.mjs";
+import { sslFor } from "./ssl.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -240,7 +241,7 @@ async function main() {
     process.exit(1);
   }
 
-  const client = new pg.Client({ connectionString });
+  const client = new pg.Client({ connectionString, ssl: sslFor(connectionString) });
   await client.connect();
 
   try {
