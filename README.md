@@ -30,10 +30,23 @@ kanallar ichida oqadi.
 Kerak: **Node 20.9+**. Ilova PostgreSQL'siz ishlamaydi — barcha ekranlar
 bazadan o'qiydi; baza Docker orqali o'zi ko'tariladi.
 
+Loyihani birinchi marta yuklab olayotgan bo'lsangiz:
+
+```bash
+git clone https://github.com/4xalilov/jobs-platform.git
+cd jobs-platform
+```
+
+Keyin:
+
 ```bash
 npm run setup    # .env.local, paketlar, Postgres, jadvallar, namunaviy ma'lumot
 npm run dev      # http://localhost:3000
 ```
+
+Ikkala buyruq ham **loyiha papkasi ichida** berilishi kerak. `npm error
+enoent ... package.json` chiqsa — siz boshqa papkadasiz, `cd jobs-platform`
+qiling.
 
 `setup` besh qadamni bajaradi va har birini nomlab boradi. Yiqilsa
 sababi va yechimi o'zbekcha chiqadi — Node ning stack trace i emas.

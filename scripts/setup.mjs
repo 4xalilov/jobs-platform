@@ -37,8 +37,21 @@ function stop(sabab, yechim) {
   process.exit(1);
 }
 
+/*
+ * Windows'da `npm` — bu .cmd shim, .exe emas. Node 20.12 dan keyin
+ * shim ni to'g'ridan-to'g'ri chaqirib bo'lmaydi (xavfsizlik tuzatishi)
+ * va ENOENT chiqadi. `node` va `docker` haqiqiy .exe, ularga tegmaydi.
+ */
+const isWindows = process.platform === "win32";
+const exe = (command) => (isWindows && command === "npm" ? "npm.cmd" : command);
+
 function run(command, args, options = {}) {
-  return spawnSync(command, args, { cwd: root, stdio: "inherit", ...options });
+  return spawnSync(exe(command), args, {
+    cwd: root,
+    stdio: "inherit",
+    shell: isWindows,
+    ...options,
+  });
 }
 
 // ——— 1. Node ———
