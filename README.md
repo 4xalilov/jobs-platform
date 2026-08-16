@@ -25,41 +25,60 @@ kanallar ichida oqadi.
 
 ## Ishga tushirish
 
-### Bazani ko'tarish
+### Ikki buyruq
 
-Kerak: **Node 20.9+** va **Docker**. Ilova PostgreSQL'siz ishlamaydi —
-barcha ekranlar bazadan o'qiydi.
+Kerak: **Node 20.9+**. Ilova PostgreSQL'siz ishlamaydi — barcha ekranlar
+bazadan o'qiydi; baza Docker orqali o'zi ko'tariladi.
 
 ```bash
-cp .env.example .env.local
-docker compose up -d --wait   # postgres:16 — baza tayyor bo'lguncha kutadi
-npm install
-npm run db:setup              # migratsiya + namunaviy ma'lumotlar
-npm run dev                   # http://localhost:3000 → /jobs
+npm run setup    # .env.local, paketlar, Postgres, jadvallar, namunaviy ma'lumot
+npm run dev      # http://localhost:3000
 ```
+
+`setup` besh qadamni bajaradi va har birini nomlab boradi. Yiqilsa
+sababi va yechimi o'zbekcha chiqadi — Node ning stack trace i emas.
+Qayta ishlatish xavfsiz: bori qayta yaratilmaydi.
+
+| Qadam        | Nima qiladi                                                        |
+| ------------ | ------------------------------------------------------------------ |
+| Node         | 20.9 dan past bo'lsa to'xtaydi                                     |
+| `.env.local` | yo'q bo'lsa `.env.example` dan yaratadi, `SESSION_SECRET` yozadi   |
+| Paketlar     | `node_modules` bo'sh bo'lsa `npm install`                          |
+| Baza         | port javob bersa tegmaydi, aks holda `docker compose up -d --wait` |
+| Jadvallar    | migratsiya + namunaviy ma'lumot                                    |
+
+Baza avval **ulanib ko'riladi**, keyingina Docker ga qo'l uriladi:
+Postgres ni o'zi o'rnatgan odamga Docker umuman kerak emas.
 
 `--wait` muhim: usiz `docker compose up -d` konteyner yaratilishi bilanoq
 qaytadi, Postgres esa yana bir necha sekund ishga tushadi — shu orada
-`db:setup` ulanolmay xato beradi.
+migratsiya ulanolmay xato berardi. Foydalanuvchi buni "umuman ishga
+tushmadi" deb ko'rardi.
+
+Ochilgach kirish ekranida **«Namunaviy foydalanuvchi»** tugmasi chiqadi.
+U ham nomzod, ham Chorsu Market egasi — bitta kirish bilan ikkala tomonni
+ham ko'rish mumkin.
 
 ### Ishga tushmasa
 
 | Xato                                     | Sabab va yechim                                                                                                                                      |
 | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Baza javob bermayapti`                  | Postgres ko'tarilmagan. `docker compose ps` — holat `healthy` bo'lsin. Docker Desktop ochiqmi?                                                       |
+| `Postgres ko'tarilmadi`                  | Docker Desktop ochiqmi? `docker ps` bilan tekshiring.                                                                                                |
 | `Ports are not available: 5432`          | Kompyuterda boshqa Postgres ishlayapti. Uni to'xtating yoki `docker-compose.yml` da portni `5433:5432` qiling va `.env.local` ni ham shunga moslang. |
 | `Foydalanuvchi nomi yoki paroli...`      | `.env.local` dagi `DATABASE_URL` `docker-compose.yml` bilan mos emas.                                                                                |
-| `Bunday baza yo'q`                       | `docker compose down -v && docker compose up -d --wait`                                                                                              |
+| `Bunday baza yo'q`                       | `docker compose down -v && npm run setup`                                                                                                            |
 | `EBADENGINE` yoki `next` ishga tushmaydi | Node eskirgan. `node --version` → 20.9 dan katta bo'lsin.                                                                                            |
 
-`db:migrate` va `db:seed` ulanish xatolarini o'zbekcha, yechimi bilan
+`db:migrate` va `db:seed` ulanish xatolarini ham o'zbekcha, yechimi bilan
 chiqaradi — stack trace o'rniga nima qilish kerakligini yozadi.
 
-`npm run db:setup` = `db:migrate` + `db:seed`. Seed jadvallarni tozalab,
-23 ta kanal, 34 ta kompaniya, 180 ta vakansiya, demo nomzod va uning
-chatlarini yozadi. Har kanalda kamida 6 ta vakansiya bo'lishi
-kafolatlanadi — 5 tadan kam bo'lsa kanal katalogda ko'rsatilmaydi.
-Generator turg'un urug'dan foydalanadi — har safar bir xil ma'lumot chiqadi.
+Qadamlarni alohida ishlatish ham mumkin: `npm run db:migrate`,
+`npm run db:seed`, yoki ikkalasi birga — `npm run db:setup`. Seed
+jadvallarni tozalab, 23 ta kanal, 34 ta kompaniya, 180 ta vakansiya,
+demo nomzod va uning chatlarini yozadi. Har kanalda kamida 6 ta
+vakansiya bo'lishi kafolatlanadi — 5 tadan kam bo'lsa kanal katalogda
+ko'rsatilmaydi. Generator turg'un urug'dan foydalanadi — har safar bir
+xil ma'lumot chiqadi.
 
 Boshqa bazaga ulanish uchun `.env.local` dagi `DATABASE_URL` ni o'zgartiring.
 
