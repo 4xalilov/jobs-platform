@@ -10,6 +10,7 @@ import { ListGroup, ListItem } from "@/components/ui/list";
 import { NavBar } from "@/components/ui/nav-bar";
 import { apiPost } from "@/lib/api";
 import type { CityDTO, ProfessionDTO } from "@/lib/db/types";
+import styles from "./auth.module.scss";
 
 type Role = "nomzod" | "ish_beruvchi";
 type Step = "role" | "profession" | "city" | "company" | "phone";
@@ -40,7 +41,10 @@ export function OnboardingFlow({
 
   const finish = async (payload: Record<string, unknown>) => {
     setSaving(true);
-    const { next } = await apiPost<{ next: string }>("/onboarding", { role, ...payload });
+    const { next } = await apiPost<{ next: string }>("/onboarding", {
+      role,
+      ...payload,
+    });
     router.replace(next);
     router.refresh();
   };
@@ -52,24 +56,24 @@ export function OnboardingFlow({
   };
 
   const heading = (title: string, hint: string) => (
-    <div className="px-4 pt-6 pb-4">
-      <h1 className="text-[1.5rem] leading-7 font-semibold text-fg">{title}</h1>
-      <p className="mt-1 text-body text-fg-secondary">{hint}</p>
+    <div className={styles.heading}>
+      <h1 className={styles.headingTitle}>{title}</h1>
+      <p className={styles.headingHint}>{hint}</p>
     </div>
   );
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-[27.5rem] flex-col bg-bg">
+    <div className={styles.onboarding}>
       <NavBar
         title=""
-        className="sticky top-0 z-20"
+        className={styles.onboardingBar}
         leading={
           step === "role" ? undefined : (
             <button
               type="button"
               aria-label={t.common.back}
               onClick={back}
-              className="p-2 text-accent"
+              className={styles.backButton}
             >
               <IconArrowLeft size={24} />
             </button>
@@ -79,15 +83,15 @@ export function OnboardingFlow({
 
       {step === "role" && (
         <>
-          <div className="px-4 pt-2">
-            <p className="text-body text-fg-secondary">
+          <div className={styles.greeting}>
+            <p className={styles.greetingText}>
               {t.auth.title} — {name}
             </p>
           </div>
           {heading(t.onboarding.roleTitle, t.onboarding.roleHint)}
           <ListGroup>
             <ListItem
-              leading={<IconUser size={24} className="text-accent" />}
+              leading={<IconUser size={24} className={styles.roleIcon} />}
               title={t.onboarding.seeker}
               subtitle={t.onboarding.seekerHint}
               wrapSubtitle
@@ -97,10 +101,9 @@ export function OnboardingFlow({
                 setRole("nomzod");
                 setStep("profession");
               }}
-              className="py-3.5"
             />
             <ListItem
-              leading={<IconBriefcase size={24} className="text-accent" />}
+              leading={<IconBriefcase size={24} className={styles.roleIcon} />}
               title={t.onboarding.employer}
               subtitle={t.onboarding.employerHint}
               wrapSubtitle
@@ -111,7 +114,6 @@ export function OnboardingFlow({
                 setRole("ish_beruvchi");
                 setStep("company");
               }}
-              className="py-3.5"
             />
           </ListGroup>
         </>
@@ -124,19 +126,18 @@ export function OnboardingFlow({
             {professions.map((option, i) => (
               <ListItem
                 key={option.id}
-                title={<span className="text-body font-normal">{option.name[locale]}</span>}
+                title={<span className={styles.optionTitle}>{option.name[locale]}</span>}
                 insetSeparator={false}
                 last={i === professions.length - 1}
                 trailing={
                   professionId === option.id ? (
-                    <IconCheck size={20} className="text-accent" />
+                    <IconCheck size={20} className={styles.roleIcon} />
                   ) : undefined
                 }
                 onClick={() => {
                   setProfessionId(option.id);
                   setStep("city");
                 }}
-                className="py-3"
               />
             ))}
           </ListGroup>
@@ -150,11 +151,10 @@ export function OnboardingFlow({
             {cities.map((option, i) => (
               <ListItem
                 key={option.id}
-                title={<span className="text-body font-normal">{option.name[locale]}</span>}
+                title={<span className={styles.optionTitle}>{option.name[locale]}</span>}
                 insetSeparator={false}
                 last={i === cities.length - 1}
                 onClick={() => void finish({ professionId, cityId: option.id })}
-                className="py-3"
               />
             ))}
           </ListGroup>
@@ -172,7 +172,7 @@ export function OnboardingFlow({
               autoFocus
             />
           </ListGroup>
-          <div className="mt-auto px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-6">
+          <div className={styles.footer}>
             <Button block size="lg" disabled={!companyName.trim()} onClick={() => setStep("phone")}>
               {t.employer.post.next}
             </Button>
@@ -192,7 +192,7 @@ export function OnboardingFlow({
               autoFocus
             />
           </ListGroup>
-          <div className="mt-auto space-y-2 px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-6">
+          <div className={styles.footer}>
             <Button
               block
               size="lg"

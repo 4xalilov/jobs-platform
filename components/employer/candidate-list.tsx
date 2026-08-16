@@ -17,7 +17,9 @@ import { apiGet, apiPost } from "@/lib/api";
 import type { CandidateDTO } from "@/lib/db/types";
 import { usePolling } from "@/lib/use-polling";
 import { useSheet } from "@/lib/use-sheet";
-import { formatSalary } from "@/lib/utils";
+import { cx, formatSalary } from "@/lib/utils";
+import shared from "@/styles/shared.module.scss";
+import styles from "./employer.module.scss";
 
 /** Nomzodlar — arizalar chat ro'yxati sifatida */
 export function CandidateList({ candidates: initial }: { candidates: CandidateDTO[] }) {
@@ -36,7 +38,9 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
   /** Qaror darhol ko'rinadi, so'rov fonda ketadi */
   const decide = (candidate: CandidateDTO, decision: "rad_etildi" | "qabul_qilindi") => {
     setCandidates((prev) => prev.filter((item) => item.applicationId !== candidate.applicationId));
-    void apiPost(`/employer/applications/${candidate.applicationId}`, { decision });
+    void apiPost(`/employer/applications/${candidate.applicationId}`, {
+      decision,
+    });
   };
 
   const location = (candidate: CandidateDTO) => {
@@ -114,26 +118,24 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
         }
       >
         {card.value && (
-          <div className="px-4 pb-4">
-            <div className="flex items-center gap-3">
+          <div className={shared.sheetBody}>
+            <div className={styles.candidateHead}>
               <Avatar name={card.value.name} size={56} />
-              <div className="min-w-0 flex-1">
-                <h2 className="truncate text-[1.25rem] leading-6 font-semibold text-fg">
-                  {card.value.name}
-                </h2>
-                <p className="mt-0.5 truncate text-body text-fg-secondary">
-                  {card.value.professionName?.[locale] ?? ""}
-                </p>
+              <div className={styles.candidateHeadText}>
+                <h2 className={shared.sheetTitle}>{card.value.name}</h2>
+                <p className={styles.candidateRole}>{card.value.professionName?.[locale] ?? ""}</p>
               </div>
             </div>
 
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className={shared.tagRow}>
               <Tag>{location(card.value)}</Tag>
               <Tag>{t.job.experience[card.value.experience]}</Tag>
             </div>
 
-            <p className="mt-4 text-caption text-fg-secondary">{t.employer.candidates.expects}</p>
-            <p className="text-nav text-fg">
+            <p className={cx(shared.caption, shared.spaceTopLarge)}>
+              {t.employer.candidates.expects}
+            </p>
+            <p className={styles.fieldValue}>
               {formatSalary(
                 card.value.salaryMin,
                 card.value.salaryMax,
@@ -142,8 +144,8 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
               )}
             </p>
 
-            <p className="mt-3 text-caption text-fg-secondary">{t.employer.candidates.appliedTo}</p>
-            <p className="text-body text-fg">{card.value.vacancyTitle}</p>
+            <p className={cx(shared.caption, shared.spaceTop)}>{t.employer.candidates.appliedTo}</p>
+            <p className={shared.body}>{card.value.vacancyTitle}</p>
           </div>
         )}
       </Sheet>

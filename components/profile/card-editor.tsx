@@ -18,6 +18,9 @@ import type {
   ProfessionDTO,
 } from "@/lib/db/types";
 import { useSheet } from "@/lib/use-sheet";
+import { cx } from "@/lib/utils";
+import shared from "@/styles/shared.module.scss";
+import styles from "./profile.module.scss";
 
 type Picker = "profession" | "city" | "district" | "employment";
 
@@ -62,16 +65,16 @@ export function CardEditor({
   };
 
   return (
-    <div className="mx-auto min-h-dvh max-w-[27.5rem] bg-bg pb-10">
+    <div className={styles.editor}>
       <NavBar
-        className="sticky top-0 z-20 hairline"
+        className={cx(styles.editorBar, "hairline")}
         title={t.screens.card.title}
         leading={
           <button
             type="button"
             aria-label={t.common.back}
             onClick={() => router.back()}
-            className="p-2 text-accent"
+            className={styles.backButton}
           >
             <IconArrowLeft size={24} />
           </button>
@@ -81,15 +84,15 @@ export function CardEditor({
             type="button"
             onClick={commit}
             disabled={saving || !draft.name.trim()}
-            className="px-2 text-body font-medium text-accent disabled:opacity-40"
+            className={styles.saveButton}
           >
             {t.common.save}
           </button>
         }
       />
 
-      <ListGroup className="mt-3">
-        <div className="relative hairline hairline-inset-sm">
+      <ListGroup className={shared.groupGapSmall}>
+        <div className={cx(styles.nameField, "hairline", "hairline-inset-sm")}>
           <TextField
             value={draft.name}
             onValueChange={(name) => patch({ name })}
@@ -131,7 +134,7 @@ export function CardEditor({
       </ListGroup>
 
       <SectionHeader>{t.screens.card.experience}</SectionHeader>
-      <div className="bg-surface px-4 py-3">
+      <div className={styles.segmentRow}>
         <Segmented
           label={t.screens.card.experience}
           options={experienceOptions}
@@ -143,21 +146,21 @@ export function CardEditor({
       <SectionHeader>{t.screens.profile.media}</SectionHeader>
       <ListGroup>
         <ListItem
-          leading={<IconCamera size={22} className="text-fg-secondary" />}
-          title={<span className="text-body font-normal">{t.screens.profile.photo}</span>}
+          leading={<IconCamera size={22} className={shared.rowIcon} />}
+          title={<span className={shared.rowTitle}>{t.screens.profile.photo}</span>}
           insetSeparator={false}
           chevron
         />
         <ListItem
-          leading={<IconMic size={22} className="text-fg-secondary" />}
-          title={<span className="text-body font-normal">{t.screens.profile.voice}</span>}
+          leading={<IconMic size={22} className={shared.rowIcon} />}
+          title={<span className={shared.rowTitle}>{t.screens.profile.voice}</span>}
           insetSeparator={false}
           chevron
           last
         />
       </ListGroup>
 
-      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.screens.card.hint}</p>
+      <p className={shared.hint}>{t.screens.card.hint}</p>
 
       <Sheet
         open={picker.isOpen}
@@ -233,7 +236,7 @@ export function CardEditor({
               />
             ))}
         </ListGroup>
-        <div className="h-4" />
+        <div className={styles.sheetTail} />
       </Sheet>
     </div>
   );
@@ -252,12 +255,11 @@ function PickerRow({
 }) {
   return (
     <ListItem
-      title={<span className="text-body font-normal">{label}</span>}
+      title={<span className={shared.rowTitle}>{label}</span>}
       insetSeparator={false}
       last={last}
-      trailing={selected ? <IconCheck size={20} className="text-accent" /> : undefined}
+      trailing={selected ? <IconCheck size={20} className={shared.accentIcon} /> : undefined}
       onClick={onSelect}
-      className="py-3"
     />
   );
 }

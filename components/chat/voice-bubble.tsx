@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { IconPause, IconPlay } from "@/components/ui/icon";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
+import styles from "./chat.module.scss";
 
 export function formatDuration(ms: number): string {
   const total = Math.max(0, Math.round(ms / 1000));
@@ -54,7 +55,7 @@ export function VoiceBubble({
   const progress = total > 0 ? Math.min(100, (positionMs / total) * 100) : 0;
 
   return (
-    <div className="flex items-center gap-2.5">
+    <div className={styles.voice}>
       <button
         type="button"
         aria-label={label}
@@ -64,27 +65,19 @@ export function VoiceBubble({
           if (element.paused) void element.play();
           else element.pause();
         }}
-        className={cn(
-          "flex size-9 shrink-0 items-center justify-center rounded-full",
-          mine ? "bg-on-accent/20 text-on-accent" : "bg-accent text-on-accent",
-        )}
+        className={cx(styles.play, mine && styles.playMine)}
       >
         {playing ? <IconPause size={18} /> : <IconPlay size={18} />}
       </button>
 
-      <div className="min-w-[6.5rem] flex-1">
-        <div className={cn("h-1 rounded-full", mine ? "bg-on-accent/30" : "bg-fill")}>
+      <div className={styles.voiceBody}>
+        <div className={cx(styles.trackBase, mine && styles.trackBaseMine)}>
           <div
-            className={cn("h-1 rounded-full", mine ? "bg-on-accent" : "bg-accent")}
+            className={cx(styles.trackFill, mine && styles.trackFillMine)}
             style={{ width: `${progress}%` }}
           />
         </div>
-        <span
-          className={cn(
-            "mt-1 block text-[0.6875rem] leading-[0.8125rem]",
-            mine ? "text-on-accent/70" : "text-fg-tertiary",
-          )}
-        >
+        <span className={cx(styles.voiceTime, mine && styles.voiceTimeMine)}>
           {formatDuration(playing || positionMs > 0 ? total - positionMs : total)}
         </span>
       </div>

@@ -9,7 +9,9 @@ import { ListGroup } from "@/components/ui/list";
 import { Sheet } from "@/components/ui/sheet";
 import { plans, type Plan } from "@/lib/plans";
 import { useSheet } from "@/lib/use-sheet";
-import { cn, formatNumber } from "@/lib/utils";
+import { cx, formatNumber } from "@/lib/utils";
+import shared from "@/styles/shared.module.scss";
+import styles from "@/components/employer/employer.module.scss";
 
 /** Tariflar — ish qidiruvchi uchun bepul, ish beruvchi to'laydi */
 export default function PlansPage() {
@@ -35,7 +37,7 @@ export default function PlansPage() {
 
   return (
     <Screen title={t.employer.plans.title}>
-      <ListGroup className="mt-3">
+      <ListGroup className={shared.groupGapSmall}>
         {plans.map((plan, i) => {
           const current = plan.id === "free";
           return (
@@ -44,33 +46,25 @@ export default function PlansPage() {
               type="button"
               disabled={current}
               onClick={() => payment.open(plan)}
-              className={cn(
-                "relative flex w-full items-start gap-3 bg-surface px-4 py-3.5 text-left",
-                "transition-colors duration-100 active:bg-surface-pressed",
-                i !== plans.length - 1 && "hairline hairline-inset-sm",
-              )}
+              className={cx(styles.planRow, i !== plans.length - 1 && "hairline hairline-inset-sm")}
             >
-              <span className="min-w-0 flex-1">
-                <span className="flex items-center gap-2">
-                  <span className="text-nav text-fg">{label(plan)}</span>
+              <span className={styles.planMain}>
+                <span className={styles.planHead}>
+                  <span className={styles.planName}>{label(plan)}</span>
                   {current && <Tag tone="accent">{t.employer.plans.current}</Tag>}
                 </span>
-                <span className="mt-1 block text-body text-fg-secondary">{description(plan)}</span>
+                <span className={styles.planDesc}>{description(plan)}</span>
               </span>
-              <span className="shrink-0 pt-0.5 text-right">
-                <span className="block text-nav whitespace-nowrap text-fg">{price(plan)}</span>
-                {!current && (
-                  <span className="mt-0.5 block text-caption font-medium text-accent">
-                    {t.employer.plans.choose}
-                  </span>
-                )}
+              <span className={styles.planSide}>
+                <span className={styles.planPrice}>{price(plan)}</span>
+                {!current && <span className={styles.planChoose}>{t.employer.plans.choose}</span>}
               </span>
             </button>
           );
         })}
       </ListGroup>
 
-      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.employer.plans.payHint}</p>
+      <p className={shared.hint}>{t.employer.plans.payHint}</p>
 
       <Sheet
         open={payment.isOpen}
@@ -78,18 +72,18 @@ export default function PlansPage() {
         closeLabel={t.common.close}
         title={t.employer.plans.payTitle}
       >
-        <div className="px-4 pb-4">
+        <div className={shared.sheetBody}>
           {payment.value && (
             <>
-              <p className="text-body text-fg-secondary">{label(payment.value)}</p>
-              <p className="text-[1.5rem] leading-7 font-semibold text-fg">
-                {price(payment.value)}
+              <p className={shared.bodyMuted}>{label(payment.value)}</p>
+              <p className={styles.payPrice}>{price(payment.value)}</p>
+              <p className={cx(shared.bodyMuted, shared.spaceTopSmall)}>
+                {description(payment.value)}
               </p>
-              <p className="mt-1 text-body text-fg-secondary">{description(payment.value)}</p>
             </>
           )}
 
-          <div className="mt-5 space-y-2">
+          <div className={styles.payButtons}>
             <Button block size="lg" leading={<IconCard size={20} />} disabled>
               Payme
             </Button>
@@ -98,11 +92,11 @@ export default function PlansPage() {
             </Button>
           </div>
 
-          <p className="mt-3 flex items-start gap-1.5 text-caption text-fg-tertiary">
-            <IconCheck size={15} className="mt-px shrink-0" />
+          <p className={styles.payNote}>
+            <IconCheck size={15} className={styles.payNoteIcon} />
             {t.employer.plans.payHint}
           </p>
-          <p className="mt-2 text-caption text-fg-tertiary">{t.employer.plans.stageNote}</p>
+          <p className={cx(shared.captionMuted, shared.spaceTop)}>{t.employer.plans.stageNote}</p>
         </div>
       </Sheet>
     </Screen>

@@ -10,6 +10,9 @@ import { IconUsers } from "@/components/ui/icon";
 import { ListGroup, ListItem } from "@/components/ui/list";
 import type { OpenCandidateDTO } from "@/lib/db/queries";
 import type { ProfessionDTO } from "@/lib/db/types";
+import { cx } from "@/lib/utils";
+import shared from "@/styles/shared.module.scss";
+import styles from "./employer.module.scss";
 
 /**
  * "Ish qidiryapman" belgisini yoqqan nomzodlar.
@@ -36,7 +39,7 @@ export function OpenCandidateList({
 
   return (
     <Screen title={t.trust.candidatesTitle}>
-      <div className="sticky top-11 z-20 bg-surface hairline">
+      <div className={cx(styles.filterBar, "hairline")}>
         <ChipRow>
           <Chip selected={profession === null} onClick={() => setProfession(null)}>
             {t.common.all}
@@ -60,7 +63,7 @@ export function OpenCandidateList({
           hint={t.trust.candidatesHint}
         />
       ) : (
-        <ListGroup className="mt-2">
+        <ListGroup className={shared.groupGapSmall}>
           {shown.map((candidate, i) => (
             <ListItem
               key={candidate.id}

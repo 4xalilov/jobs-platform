@@ -5,7 +5,7 @@ import { formatDuration } from "@/components/chat/voice-bubble";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { IconMic, IconSend, IconSquare, IconX } from "@/components/ui/icon";
 import { useRecorder } from "@/lib/use-recorder";
-import { cn } from "@/lib/utils";
+import styles from "./chat.module.scss";
 
 /** Yozish paneli — matn yoki ovoz */
 export function MessageComposer({
@@ -37,48 +37,42 @@ export function MessageComposer({
         : null;
 
   return (
-    <div className="sticky bottom-0 z-10 border-t border-separator bg-surface px-3 py-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
+    <div className={styles.composer}>
       {notice && (
-        <button
-          type="button"
-          onClick={recorder.dismiss}
-          className="mb-2 flex w-full items-center justify-between gap-2 rounded-tg-sm bg-fill px-3 py-2 text-left"
-        >
-          <span className="text-caption text-fg-secondary">{notice}</span>
-          <IconX size={16} className="text-fg-tertiary" />
+        <button type="button" onClick={recorder.dismiss} className={styles.notice}>
+          <span className={styles.noticeText}>{notice}</span>
+          <IconX size={16} className={styles.noticeClose} />
         </button>
       )}
 
       {recorder.state === "recording" ? (
-        <div className="flex items-center gap-2">
+        <div className={styles.recordingRow}>
           <button
             type="button"
             aria-label={t.screens.chat.cancelRecording}
             onClick={recorder.cancel}
-            className="p-2 text-fg-secondary"
+            className={styles.iconButton}
           >
             <IconX size={22} />
           </button>
 
-          <div className="flex h-9 flex-1 items-center gap-2 rounded-tg-sm bg-fill px-3">
-            <span className="size-2 animate-pulse rounded-full bg-danger" />
-            <span className="text-body text-fg">{t.screens.chat.recording}</span>
-            <span className="ml-auto text-body tabular-nums text-fg-secondary">
-              {formatDuration(recorder.elapsedMs)}
-            </span>
+          <div className={styles.recordingBar}>
+            <span className={styles.recordingDot} />
+            <span className={styles.recordingLabel}>{t.screens.chat.recording}</span>
+            <span className={styles.recordingTime}>{formatDuration(recorder.elapsedMs)}</span>
           </div>
 
           <button
             type="button"
             aria-label={t.common.send}
             onClick={recorder.stop}
-            className="p-2 text-accent"
+            className={styles.iconButtonAccent}
           >
             <IconSquare size={24} />
           </button>
         </div>
       ) : (
-        <div className="flex items-end gap-2">
+        <div className={styles.composerRow}>
           <textarea
             ref={field}
             rows={1}
@@ -98,10 +92,7 @@ export function MessageComposer({
             }}
             placeholder={t.screens.chat.placeholder}
             aria-label={t.screens.chat.placeholder}
-            className={cn(
-              "max-h-[7.5rem] min-h-9 flex-1 resize-none rounded-tg-sm bg-fill px-3 py-1.5",
-              "text-body text-fg placeholder:text-fg-tertiary focus:outline-none",
-            )}
+            className={styles.field}
           />
 
           {hasText ? (
@@ -109,7 +100,7 @@ export function MessageComposer({
               type="button"
               aria-label={t.common.send}
               onClick={submit}
-              className="p-2 text-accent"
+              className={styles.iconButtonAccent}
             >
               <IconSend size={24} />
             </button>
@@ -118,7 +109,7 @@ export function MessageComposer({
               type="button"
               aria-label={t.screens.chat.voiceMessage}
               onClick={() => void recorder.start()}
-              className="p-2 text-fg-secondary"
+              className={styles.iconButton}
             >
               <IconMic size={24} />
             </button>

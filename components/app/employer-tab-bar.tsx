@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
+import shell from "@/components/app/shell.module.scss";
 import { CountBadge } from "@/components/ui/badge";
 import {
   IconBriefcase,
@@ -15,7 +16,7 @@ import {
   type IconProps,
 } from "@/components/ui/icon";
 import { useUnread } from "@/lib/use-unread";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
 
 type EmployerTab = "vacancies" | "candidates" | "search" | "profile";
 
@@ -57,8 +58,8 @@ export function EmployerTabBar({ unread = 0 }: { unread?: number }) {
   const tabs: EmployerTab[] = ["vacancies", "candidates", "search", "profile"];
 
   return (
-    <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[27.5rem] -translate-x-1/2">
-      <nav className="hairline-top relative flex bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">
+    <div className={shell.tabBarSlot}>
+      <nav className={cx(shell.employerTabBar, "hairline-top")}>
         {tabs.map((tab) => {
           const isActive = tab === active;
           const TabIcon = isActive ? ICONS[tab].solid : ICONS[tab].line;
@@ -68,23 +69,15 @@ export function EmployerTabBar({ unread = 0 }: { unread?: number }) {
               type="button"
               aria-current={isActive ? "page" : undefined}
               onClick={() => router.push(ROUTES[tab])}
-              className={cn(
-                "tap relative flex h-[3.125rem] flex-1 flex-col items-center justify-center gap-0.5",
-                isActive ? "text-accent" : "text-fg-secondary",
-              )}
+              className={cx("tap", shell.employerTab, isActive && shell.employerTabActive)}
             >
-              <span className="relative">
+              <span className={shell.employerTabIcon}>
                 <TabIcon size={26} />
                 {tab === "candidates" && live > 0 && (
-                  <CountBadge
-                    count={live}
-                    className="absolute -top-1 -right-2.5 border-2 border-surface"
-                  />
+                  <CountBadge count={live} className={shell.employerTabBadge} />
                 )}
               </span>
-              <span className="text-[0.625rem] leading-[0.75rem] font-medium">
-                {t.employer.tabs[tab]}
-              </span>
+              <span className={shell.employerTabLabel}>{t.employer.tabs[tab]}</span>
             </button>
           );
         })}

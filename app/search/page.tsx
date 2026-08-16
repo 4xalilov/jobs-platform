@@ -14,6 +14,8 @@ import { apiGet } from "@/lib/api";
 import type { Page, VacancyDTO } from "@/lib/db/types";
 import { useRecentQueries } from "@/lib/stores";
 import { useSheet } from "@/lib/use-sheet";
+import shared from "@/styles/shared.module.scss";
+import shell from "@/components/app/shell.module.scss";
 
 /** Qidiruv — bitta maydon va so'nggi qidiruvlar */
 export default function SearchPage() {
@@ -59,15 +61,15 @@ export default function SearchPage() {
   const trimmed = query.trim();
 
   return (
-    <div className="mx-auto min-h-dvh max-w-[27.5rem] bg-bg">
-      <div className="sticky top-0 z-20 flex items-center bg-surface pt-[env(safe-area-inset-top)] hairline">
+    <div className={shell.search}>
+      <div className={`${shell.searchBar} hairline`}>
         <SearchField
           value={query}
           onValueChange={onChange}
           placeholder={t.screens.search.placeholder}
           clearLabel={t.common.close}
           autoFocus
-          className="flex-1 pr-0"
+          className={shell.searchField}
         />
         <button
           type="button"
@@ -75,7 +77,7 @@ export default function SearchPage() {
             remember(query);
             router.back();
           }}
-          className="px-4 text-body font-medium text-accent"
+          className={shell.searchCancel}
         >
           {t.common.cancel}
         </button>
@@ -86,11 +88,7 @@ export default function SearchPage() {
           <SectionHeader
             action={
               queries.length > 0 ? (
-                <button
-                  type="button"
-                  onClick={clear}
-                  className="text-caption font-medium text-accent"
-                >
+                <button type="button" onClick={clear} className={shell.searchClear}>
                   {t.screens.search.clearAll}
                 </button>
               ) : undefined
@@ -103,22 +101,21 @@ export default function SearchPage() {
               {queries.map((item, i) => (
                 <ListItem
                   key={item}
-                  leading={<IconClock size={20} className="text-fg-tertiary" />}
-                  title={<span className="text-body font-normal">{item}</span>}
+                  leading={<IconClock size={20} className={shell.searchRecentIcon} />}
+                  title={<span className={shared.rowTitle}>{item}</span>}
                   insetSeparator={false}
                   last={i === queries.length - 1}
                   onClick={() => {
                     setQuery(item);
                     void runSearch(item);
                   }}
-                  className="py-2.5"
                 />
               ))}
             </ListGroup>
           )}
         </>
       ) : loading ? (
-        <ListGroup className="mt-2">
+        <ListGroup className={shared.groupGapSmall}>
           <ListSkeleton rows={4} />
         </ListGroup>
       ) : results.length === 0 ? (

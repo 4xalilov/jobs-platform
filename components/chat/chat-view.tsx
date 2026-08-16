@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { MessageComposer } from "@/components/chat/message-composer";
 import { VoiceBubble } from "@/components/chat/voice-bubble";
@@ -10,7 +10,8 @@ import { IconArrowLeft, IconCheck, IconCheckDouble, IconClock } from "@/componen
 import { NavBar } from "@/components/ui/nav-bar";
 import { useChat, type ChatMessage } from "@/lib/use-chat";
 import type { ChatDTO, ChatSide } from "@/lib/db/types";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
+import styles from "./chat.module.scss";
 
 /** Kun ajratgichi: bugungi va kechagi kun nomlanadi, qolgani sana */
 function useDayLabel() {
@@ -71,60 +72,50 @@ export function ChatView({
       : raw;
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-[27.5rem] flex-col bg-bg">
+    <div className={styles.chat}>
       <NavBar
-        className="sticky top-0 z-20 hairline"
+        className={cx(styles.navBar, "hairline")}
         leading={
           <button
             type="button"
             aria-label={t.common.back}
             onClick={() => router.back()}
-            className="p-2 text-accent"
+            className={styles.backButton}
           >
             <IconArrowLeft size={24} />
           </button>
         }
         title={
-          <span className="flex items-center justify-center gap-2">
+          <span className={styles.peer}>
             <Avatar name={chat.title} size={28} />
-            <span className="min-w-0">
-              <span className="block truncate text-nav leading-tight">{chat.title}</span>
-              {status && (
-                <span className="block truncate text-[0.6875rem] leading-tight font-normal text-fg-secondary">
-                  {status}
-                </span>
-              )}
+            <span className={styles.peerText}>
+              <span className={styles.peerName}>{chat.title}</span>
+              {status && <span className={styles.peerStatus}>{status}</span>}
             </span>
           </span>
         }
       />
 
       {context && (
-        <div className="bg-surface px-4 py-2 hairline">
-          <p className="truncate text-caption text-fg-secondary">{context}</p>
+        <div className={cx(styles.context, "hairline")}>
+          <p className={styles.contextText}>{context}</p>
         </div>
       )}
 
       {/* Suhbat qisqa bo'lsa xabarlar pastda turadi — Telegramdagidek */}
-      <div className="flex flex-1 flex-col justify-end gap-1.5 px-3 py-4">
+      <div className={styles.thread}>
         {messages.map((message, index) => {
           const newDay = index === 0 || dayKey(message.at) !== dayKey(messages[index - 1].at);
 
           return (
-            <div key={message.id} className="contents">
-              {newDay && (
-                <p className="py-1 text-center text-caption text-fg-tertiary">
-                  {dayLabel(message.at)}
-                </p>
-              )}
+            <Fragment key={message.id}>
+              {newDay && <p className={styles.divider}>{dayLabel(message.at)}</p>}
               {message.from === "tizim" ? (
-                <p className="py-1 text-center text-caption text-fg-tertiary">
-                  {systemText(message.text)}
-                </p>
+                <p className={styles.divider}>{systemText(message.text)}</p>
               ) : (
                 <Bubble message={message} me={me} onRetry={() => retry(message.id)} />
               )}
-            </div>
+            </Fragment>
           );
         })}
         <div ref={bottom} />
@@ -148,12 +139,12 @@ function Bubble({
   const mine = message.from === me;
 
   return (
-    <div className={cn("flex", mine ? "justify-end" : "justify-start")}>
+    <div className={cx(styles.row, mine && styles.rowMine)}>
       <div
-        className={cn(
-          "max-w-[78%] rounded-tg px-3 py-2",
-          mine ? "bg-accent text-on-accent" : "bg-surface text-fg",
-          message.failed && "opacity-60",
+        className={cx(
+          styles.bubble,
+          mine && styles.bubbleMine,
+          message.failed && styles.bubbleFailed,
         )}
       >
         {message.audioUrl ? (
@@ -164,17 +155,12 @@ function Bubble({
             label={t.screens.chat.voiceMessage}
           />
         ) : (
-          <p className="text-body break-words whitespace-pre-wrap">{message.text}</p>
+          <p className={styles.text}>{message.text}</p>
         )}
 
-        <span
-          className={cn(
-            "mt-0.5 flex items-center justify-end gap-1 text-[0.6875rem] leading-[0.8125rem]",
-            mine ? "text-on-accent/70" : "text-fg-tertiary",
-          )}
-        >
+        <span className={cx(styles.meta, mine && styles.metaMine)}>
           {message.failed ? (
-            <button type="button" onClick={onRetry} className="underline">
+            <button type="button" onClick={onRetry} className={styles.retry}>
               {t.screens.chat.notSent} · {t.common.retry}
             </button>
           ) : (

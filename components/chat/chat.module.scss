@@ -1,0 +1,348 @@
+@use "../../styles/variables" as *;
+
+/* ——————————————————————————————————————————————
+   Suhbat ekrani
+   —————————————————————————————————————————————— */
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  min-height: 100dvh;
+  max-width: 27.5rem;
+  background: var(--color-background-secondary);
+}
+
+.navBar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.backButton {
+  padding: 0.5rem;
+  color: var(--color-primary);
+}
+
+/* Sarlavha: avatar + nom, ostida holat */
+.peer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.peerText {
+  min-width: 0;
+}
+
+.peerName {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $font-nav;
+  line-height: 1.25;
+}
+
+.peerStatus {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.6875rem;
+  line-height: 1.25;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+/* Qaysi vakansiya haqida gaplashilayotgani — chatdan chiqmay ko'rinadi */
+.context {
+  position: relative;
+  padding: 0.5rem $side-padding;
+  background: var(--color-background);
+}
+
+.contextText {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-secondary);
+}
+
+/*
+ * Suhbat qisqa bo'lsa xabarlar pastda turadi — Telegramdagidek,
+ * yuqoridan emas, pastdan to'ladi.
+ */
+.thread {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.375rem;
+  padding: 1rem 0.75rem;
+}
+
+/* Kun ajratgichi va tizim xabari bir xil ko'rinadi */
+.divider {
+  margin: 0;
+  padding: 0.25rem 0;
+  text-align: center;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-tertiary);
+}
+
+/* ——— Xabar pufagi ——— */
+.row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.rowMine {
+  justify-content: flex-end;
+}
+
+.bubble {
+  max-width: 78%;
+  padding: 0.5rem 0.75rem;
+  border-radius: $border-radius-default;
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+.bubbleMine {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.bubbleFailed {
+  opacity: 0.6;
+}
+
+.text {
+  margin: 0;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+/* Vaqt va o'qilgan belgisi — pufak ichida, o'ngda */
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.25rem;
+  margin-top: 0.125rem;
+  font-size: 0.6875rem;
+  line-height: 0.8125rem;
+  color: var(--color-text-tertiary);
+}
+
+.metaMine {
+  color: color-mix(in srgb, var(--color-on-primary) 70%, transparent);
+}
+
+.retry {
+  text-decoration: underline;
+}
+
+/* ——————————————————————————————————————————————
+   Yozish paneli
+   —————————————————————————————————————————————— */
+
+.composer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  border-top: 1px solid var(--color-borders);
+  padding: 0.5rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom));
+  background: var(--color-background);
+}
+
+/* Mikrofon rad etilgan bo'lsa — sababi va yopish tugmasi */
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: $border-radius-button;
+  background: var(--color-fill);
+  text-align: left;
+}
+
+.noticeText {
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-secondary);
+}
+
+.noticeClose {
+  color: var(--color-text-tertiary);
+}
+
+.composerRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.recordingRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.recordingBar {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.25rem;
+  padding: 0 0.75rem;
+  border-radius: $border-radius-button;
+  background: var(--color-fill);
+}
+
+.recordingDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-error);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.recordingLabel {
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text);
+}
+
+/* Raqamlar sakramasin — tabular-nums */
+.recordingTime {
+  margin-left: auto;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-secondary);
+}
+
+/*
+ * Maydon o'zi o'sadi (balandligi JS da), lekin 7.5rem dan oshmaydi —
+ * aks holda klaviatura bilan birga butun ekranni egallab ketardi.
+ */
+.field {
+  flex: 1;
+  min-height: 2.25rem;
+  max-height: 7.5rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: $border-radius-button;
+  background: var(--color-fill);
+  resize: none;
+  font-family: inherit;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text);
+
+  &::placeholder {
+    color: var(--color-text-tertiary);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.iconButton {
+  padding: 0.5rem;
+  color: var(--color-text-secondary);
+}
+
+.iconButtonAccent {
+  padding: 0.5rem;
+  color: var(--color-primary);
+}
+
+/* ——————————————————————————————————————————————
+   Ovozli xabar
+   —————————————————————————————————————————————— */
+
+.voice {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.play {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+/* O'z pufagimda fon allaqachon ko'k — tugma shaffof oq bo'ladi */
+.playMine {
+  background: color-mix(in srgb, var(--color-on-primary) 20%, transparent);
+  color: var(--color-on-primary);
+}
+
+.voiceBody {
+  flex: 1;
+  min-width: 6.5rem;
+}
+
+.trackBase {
+  height: 0.25rem;
+  border-radius: 62.4375rem;
+  background: var(--color-fill);
+}
+
+.trackBaseMine {
+  background: color-mix(in srgb, var(--color-on-primary) 30%, transparent);
+}
+
+.trackFill {
+  height: 0.25rem;
+  border-radius: 62.4375rem;
+  background: var(--color-primary);
+}
+
+.trackFillMine {
+  background: var(--color-on-primary);
+}
+
+.voiceTime {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.6875rem;
+  line-height: 0.8125rem;
+  color: var(--color-text-tertiary);
+}
+
+.voiceTimeMine {
+  color: color-mix(in srgb, var(--color-on-primary) 70%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recordingDot {
+    animation: none;
+  }
+}

@@ -22,6 +22,8 @@ import { apiDelete } from "@/lib/api";
 import type { EmployerVacancyDTO } from "@/lib/db/types";
 import { useSheet } from "@/lib/use-sheet";
 import { formatAgo, formatSalary } from "@/lib/utils";
+import shared from "@/styles/shared.module.scss";
+import styles from "./employer.module.scss";
 
 /** Mening vakansiyalarim — har birida ko'rishlar va arizalar soni */
 export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[] }) {
@@ -51,7 +53,7 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
       leading={<Avatar name={vacancy.professionName?.[locale] ?? vacancy.title} />}
       title={vacancy.professionName?.[locale] ?? vacancy.title}
       titleAdornment={
-        vacancy.plan !== "free" ? <IconBolt size={14} className="text-warning" /> : undefined
+        vacancy.plan !== "free" ? <IconBolt size={14} className={styles.planIcon} /> : undefined
       }
       subtitle={formatSalary(
         vacancy.salaryMin,
@@ -63,9 +65,7 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
       meta={formatAgo(vacancy.postedMinutesAgo, t.time)}
       trailing={
         vacancy.newApplications > 0 ? (
-          <span className="rounded-full bg-accent px-1.5 text-caption font-medium text-on-accent">
-            +{vacancy.newApplications}
-          </span>
+          <span className={styles.newCount}>+{vacancy.newApplications}</span>
         ) : undefined
       }
       last={last}
@@ -106,8 +106,8 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
       )}
 
       {/* Asosiy harakat — vakansiya joylash */}
-      <div className="fixed bottom-[calc(4.375rem+env(safe-area-inset-bottom))] left-1/2 z-30 w-full max-w-[27.5rem] -translate-x-1/2">
-        <div className="flex justify-end pr-4">
+      <div className={styles.fabLayer}>
+        <div className={styles.fabRow}>
           <Fab label={t.employer.vacancies.add} onClick={() => router.push("/employer/new")}>
             <IconPlus size={28} />
           </Fab>
@@ -119,9 +119,9 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
         onClose={detail.close}
         closeLabel={t.common.close}
         footer={
-          <div className="flex gap-2">
+          <div className={styles.sheetActions}>
             <Button
-              className="flex-1"
+              className={styles.sheetActionMain}
               size="lg"
               leading={<IconBolt size={20} />}
               onClick={() => router.push("/employer/plans")}
@@ -140,11 +140,11 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
         }
       >
         {detail.value && (
-          <div className="px-4 pb-4">
-            <h2 className="text-[1.25rem] leading-6 font-semibold text-fg">
+          <div className={shared.sheetBody}>
+            <h2 className={shared.sheetTitle}>
               {detail.value.professionName?.[locale] ?? detail.value.title}
             </h2>
-            <p className="mt-3 text-[1.25rem] leading-6 font-semibold text-fg">
+            <p className={styles.sheetSalary}>
               {formatSalary(
                 detail.value.salaryMin,
                 detail.value.salaryMax,
@@ -153,7 +153,7 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
               )}
             </p>
 
-            <div className="mt-3 flex flex-wrap gap-2">
+            <div className={shared.tagRow}>
               <Tag>{location(detail.value)}</Tag>
               <Tag>{t.job.employment[detail.value.employment]}</Tag>
               <Tag tone={detail.value.status === "faol" ? "success" : "neutral"}>
@@ -167,14 +167,14 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
             </div>
 
             {detail.value.description && (
-              <p className="mt-4 text-body text-fg">{detail.value.description}</p>
+              <p className={styles.sheetDescription}>{detail.value.description}</p>
             )}
 
-            <div className="mt-4 flex gap-4 text-caption text-fg-tertiary">
-              <span className="flex items-center gap-1">
+            <div className={styles.stats}>
+              <span className={styles.stat}>
                 <IconEye size={15} /> {detail.value.views} {t.employer.vacancies.views}
               </span>
-              <span className="flex items-center gap-1">
+              <span className={styles.stat}>
                 <IconUsers size={15} /> {detail.value.applications}{" "}
                 {t.employer.vacancies.applications}
               </span>

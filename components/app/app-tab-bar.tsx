@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
+import shell from "@/components/app/shell.module.scss";
 import { TabBar } from "@/components/ui/tab-bar";
 import { tabOf, type TabKey, useTabNavigation } from "@/lib/navigation";
 import { useUnread } from "@/lib/use-unread";
@@ -16,7 +17,7 @@ export function AppTabBar({ unread = 0 }: { unread?: number }) {
   const live = useUnread(unread);
 
   return (
-    <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[27.5rem] -translate-x-1/2">
+    <div className={shell.tabBarSlot}>
       <TabBar
         active={tabOf(pathname)}
         tabs={TABS}

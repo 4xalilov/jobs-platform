@@ -6,11 +6,7 @@ import { currentUserId } from "@/lib/db/session";
 
 export const dynamic = "force-dynamic";
 
-export default async function ChannelPage({
-  params,
-}: {
-  params: Promise<{ channelId: string }>;
-}) {
+export default async function ChannelPage({ params }: { params: Promise<{ channelId: string }> }) {
   const { channelId } = await params;
   const userId = await currentUserId();
 

@@ -1,91 +1,127 @@
-@import "tailwindcss";
 @import "./themes.generated.css";
-
-/*
-   Tungi rejim <html class="theme-dark"> orqali almashadi.
-   Ranglar bu faylda emas — styles/themes.json da, u yerdan
-   themes.generated.css chiqadi (scripts/build-themes.mjs).
-*/
-@custom-variant dark (&:where(.theme-dark, .theme-dark *));
 
 /* ==========================================================================
    DIZAYN TOKENLARI
-   Hamma o'lcham rem da: brauzer shrifti kattalashsa interfeys
-   proporsional o'sadi, sindirmaydi.
+
+   Ranglar bu faylda emas — styles/themes.json da, u yerdan
+   themes.generated.css chiqadi (scripts/build-themes.mjs).
+   O'lchamlar SCSS o'zgaruvchisi (styles/_variables.scss), chunki ular
+   ish vaqtida almashmaydi. Bu yerda faqat CSS ga kerak bo'lganlari.
    ========================================================================== */
 
-@theme inline {
-  /* Ranglar — themes.json dagi tokenlarga ulanadi */
-  --color-accent: var(--color-primary);
-  --color-accent-pressed: var(--color-primary-shade);
-  --color-accent-soft: var(--color-primary-soft);
-  --color-on-accent: var(--color-on-primary);
-
-  --color-bg: var(--color-background-secondary);
-  --color-surface: var(--color-background);
-  --color-surface-elevated: var(--color-background);
-  --color-surface-pressed: var(--color-background-pressed);
-  --color-fill: var(--color-fill);
-
-  --color-separator: var(--color-borders);
-
-  --color-fg: var(--color-text);
-  --color-fg-secondary: var(--color-text-secondary);
-  --color-fg-tertiary: var(--color-text-tertiary);
-
-  --color-danger: var(--color-error);
-  --color-success: var(--color-green);
-  --color-warning: var(--color-warning);
-
-  --color-skeleton: var(--color-skeleton);
-  --color-skeleton-shine: var(--color-skeleton-shine);
-
-  /* Burchaklar */
-  --radius-tg-sm: 0.625rem;
-  --radius-tg: 0.75rem;
-  --radius-card: 0.9375rem;
-  --radius-sheet: 0.75rem;
-
-  /* Shrift: Roboto yoki tizim shrifti. Maxsus shrift yuklanmaydi. */
+:root {
+  /* Maxsus shrift yuklanmaydi: Roboto Android da bor, iOS da tizim shrifti
+     chiroqli. Ikkalasi ham 0 kB va sekin internetda darhol chiziladi. */
   --font-sans:
     Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 
-  /* Shrift shkalasi */
-  --text-large: 2.125rem;
-  --text-large--line-height: 2.5625rem;
-  --text-large--font-weight: 700;
-  --text-large--letter-spacing: -0.025em;
-
-  --text-nav: 1.0625rem;
-  --text-nav--line-height: 1.375rem;
-  --text-nav--font-weight: 600;
-
-  --text-title: 1.0625rem;
-  --text-title--line-height: 1.375rem;
-  --text-title--font-weight: 400;
-
-  --text-body: 0.9375rem;
-  --text-body--line-height: 1.3125rem;
-
-  --text-caption: 0.8125rem;
-  --text-caption--line-height: 1.125rem;
-
-  --text-section: 0.8125rem;
-  --text-section--line-height: 1.125rem;
-  --text-section--letter-spacing: 0.03em;
-  --text-section--font-weight: 400;
-
-  /* O'lchamlar */
-  --spacing-side: 1rem;
-  --height-row: 4.75rem;
-  --height-row-compact: 2.75rem;
-  --height-avatar: 3rem;
-  --height-tab-bar: 3.125rem;
-  --height-button: 3.125rem;
-
-  /* Animatsiya — Telegram ning haqiqiy egri chiziqlari */
+  /* Telegram ning haqiqiy egri chiziqlari */
   --ease-slide: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-layer: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* ==========================================================================
+   RESET
+
+   @layer ichida — qatlamsiz qoidalar qatlamlilardan kuchli, ya'ni
+   SCSS Modules dagi har qanday qoida bu yerdagini yenga oladi.
+   Qatlamsiz yozilsa `.screen button { padding: 0 }` kabi qoida
+   komponent uslubidan kuchliroq chiqib ketardi.
+   ========================================================================== */
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+  }
+
+  html {
+    /* iOS Safari faqat prefiksli shaklni biladi — prefikssizi u yerda
+       umuman ishlamaydi, shuning uchun qoida ataylab o'chirilgan */
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+  }
+
+  /* Sarlavha o'lchami komponentda beriladi — bu yerda "h2 katta" degani yo'q */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  ol,
+  ul,
+  menu {
+    list-style: none;
+  }
+
+  /* Tugma va maydonlar shriftni o'zi tanlamasin */
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  /* Tugma fon va chegarasi yuqorida allaqachon olib tashlangan —
+     bu yerda faqat kursor qoladi */
+  button,
+  [type="button"],
+  [type="submit"] {
+    cursor: pointer;
+  }
+
+  :disabled {
+    cursor: default;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  ::placeholder {
+    opacity: 1;
+    color: var(--color-text-tertiary);
+  }
+
+  /* Rasm va ikonka qatorda emas, blok — pastda sabab bo'shliq qolmaydi */
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    vertical-align: middle;
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  table {
+    border-collapse: collapse;
+    text-indent: 0;
+  }
 }
 
 /* ==========================================================================
@@ -286,7 +322,7 @@ body {
 
 /* Belgi o'zgarishi */
 .badge-pop {
-  transition: transform var(--fast, 0.15s) ease-out;
+  transition: transform 0.15s ease-out;
 }
 
 /* Bosish javobi: 0.97 masshtab, 100ms, server javobini kutmaydi */

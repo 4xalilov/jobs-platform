@@ -29,7 +29,9 @@ import { signOut } from "@/lib/sign-out";
 import type { CardDTO, CityDTO, ProfessionDTO } from "@/lib/db/types";
 import { locales, type Locale } from "@/lib/i18n";
 import { useSheet } from "@/lib/use-sheet";
-import { cn } from "@/lib/utils";
+import { cx } from "@/lib/utils";
+import shared from "@/styles/shared.module.scss";
+import styles from "./profile.module.scss";
 
 export function ProfileScreen({
   card,
@@ -87,28 +89,20 @@ export function ProfileScreen({
   return (
     <Screen title={t.tabs.profile}>
       {/* Kartochka — rezyume o'rniga */}
-      <div className="bg-surface px-4 pt-4 pb-4">
-        <div className="flex items-center gap-3">
-          <span
-            className={cn(
-              "rounded-full",
-              // "Ish qidiryapman" yoqilgan bo'lsa avatarda yashil halqa
-              openToWork && "ring-[3px] ring-success ring-offset-2 ring-offset-surface",
-            )}
-          >
+      <div className={styles.card}>
+        <div className={styles.head}>
+          <span className={cx(styles.avatar, openToWork && styles.avatarOpen)}>
             <Avatar name={card?.name || "?"} size={64} />
           </span>
-          <div className="min-w-0 flex-1">
-            <h2 className="truncate text-[1.25rem] leading-6 font-semibold text-fg">
-              {card?.name || t.screens.profile.notFilled}
-            </h2>
-            <p className="mt-0.5 truncate text-body text-fg-secondary">
+          <div className={styles.headText}>
+            <h2 className={styles.name}>{card?.name || t.screens.profile.notFilled}</h2>
+            <p className={styles.role}>
               {profession ? profession.name[locale] : t.screens.profile.notFilled}
             </p>
           </div>
         </div>
 
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className={shared.tagRow}>
           <Tag>{location}</Tag>
           <Tag>{t.job.experience[card?.experience ?? "none"]}</Tag>
           <Tag>{t.job.employment[card?.employment ?? "full"]}</Tag>
@@ -117,7 +111,7 @@ export function ProfileScreen({
         <Button
           block
           variant="secondary"
-          className="mt-4"
+          className={styles.editButton}
           leading={<IconPencil size={18} />}
           onClick={() => router.push("/card")}
         >
@@ -130,7 +124,7 @@ export function ProfileScreen({
       <SectionHeader>{t.trust.openToWork}</SectionHeader>
       <ListGroup>
         <ListItem
-          title={<span className="text-body font-normal">{t.trust.openToWork}</span>}
+          title={<span className={shared.rowTitle}>{t.trust.openToWork}</span>}
           subtitle={openToWork ? t.trust.openToWorkOn : t.trust.openToWorkOff}
           wrapSubtitle
           insetSeparator={false}
@@ -145,7 +139,7 @@ export function ProfileScreen({
         />
         {openToWork && (
           <ListItem
-            title={<span className="text-body font-normal">{t.trust.visibility}</span>}
+            title={<span className={shared.rowTitle}>{t.trust.visibility}</span>}
             subtitle={visibility === "hamma" ? t.trust.visibilityAll : t.trust.visibilityEmployers}
             insetSeparator={false}
             chevron
@@ -154,36 +148,32 @@ export function ProfileScreen({
           />
         )}
       </ListGroup>
-      {openToWork && (
-        <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.trust.visibilityHint}</p>
-      )}
+      {openToWork && <p className={shared.hint}>{t.trust.visibilityHint}</p>}
 
       <SectionHeader>{t.screens.profile.media}</SectionHeader>
       <ListGroup>
         <ListItem
-          leading={<IconCamera size={22} className="text-fg-secondary" />}
-          title={<span className="text-body font-normal">{t.screens.profile.photo}</span>}
+          leading={<IconCamera size={22} className={shared.rowIcon} />}
+          title={<span className={shared.rowTitle}>{t.screens.profile.photo}</span>}
           insetSeparator={false}
           chevron
         />
         <ListItem
-          leading={<IconMic size={22} className="text-fg-secondary" />}
-          title={<span className="text-body font-normal">{t.screens.profile.voice}</span>}
+          leading={<IconMic size={22} className={shared.rowIcon} />}
+          title={<span className={shared.rowTitle}>{t.screens.profile.voice}</span>}
           insetSeparator={false}
           chevron
           last
         />
       </ListGroup>
-      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.screens.profile.mediaHint}</p>
+      <p className={shared.hint}>{t.screens.profile.mediaHint}</p>
 
-      <ListGroup className="mt-5">
+      <ListGroup className={shared.groupGap}>
         <ListItem
-          leading={<IconDocument size={22} className="text-fg-secondary" />}
-          title={
-            <span className="text-body font-normal">{t.screens.profile.applicationsCount}</span>
-          }
+          leading={<IconDocument size={22} className={shared.rowIcon} />}
+          title={<span className={shared.rowTitle}>{t.screens.profile.applicationsCount}</span>}
           insetSeparator={false}
-          trailing={<span className="text-body text-fg-secondary">{applicationCount}</span>}
+          trailing={<span className={shared.rowValue}>{applicationCount}</span>}
           onClick={() => go("/arizalarim")}
           chevron
         />
@@ -191,10 +181,10 @@ export function ProfileScreen({
             kanallar ro'yxati — u yerda filtrga joy yo'q, shuning
             uchun o'z ekrani Profil ichidan ochiladi. */}
         <ListItem
-          leading={<IconBookmark size={22} className="text-fg-secondary" />}
-          title={<span className="text-body font-normal">{t.tabs.saved}</span>}
+          leading={<IconBookmark size={22} className={shared.rowIcon} />}
+          title={<span className={shared.rowTitle}>{t.tabs.saved}</span>}
           insetSeparator={false}
-          trailing={<span className="text-body text-fg-secondary">{savedCount}</span>}
+          trailing={<span className={shared.rowValue}>{savedCount}</span>}
           onClick={() => go("/saved")}
           chevron
           last
@@ -204,31 +194,29 @@ export function ProfileScreen({
       <SectionHeader>{t.screens.profile.settings}</SectionHeader>
       <ListGroup>
         <ListItem
-          leading={<IconGlobe size={22} className="text-fg-secondary" />}
-          title={<span className="text-body font-normal">{t.language.label}</span>}
+          leading={<IconGlobe size={22} className={shared.rowIcon} />}
+          title={<span className={shared.rowTitle}>{t.language.label}</span>}
           insetSeparator={false}
-          trailing={<span className="text-body text-fg-secondary">{localeLabels[locale]}</span>}
+          trailing={<span className={shared.rowValue}>{localeLabels[locale]}</span>}
           onClick={() => languageSheet.open(true)}
         />
-        <div className="bg-surface px-4 py-3">
-          <div className="flex items-center gap-3">
-            <IconMoon size={22} className="shrink-0 text-fg-secondary" />
-            <Segmented
-              className="flex-1"
-              label={t.theme.label}
-              options={[
-                { value: "light" as const, label: t.theme.light },
-                { value: "dark" as const, label: t.theme.dark },
-                { value: "system" as const, label: t.theme.system },
-              ]}
-              value={mode}
-              onChange={setMode}
-            />
-          </div>
+        <div className={styles.themeRow}>
+          <IconMoon size={22} className={shared.rowIcon} />
+          <Segmented
+            className={styles.themeControl}
+            label={t.theme.label}
+            options={[
+              { value: "light" as const, label: t.theme.light },
+              { value: "dark" as const, label: t.theme.dark },
+              { value: "system" as const, label: t.theme.system },
+            ]}
+            value={mode}
+            onChange={setMode}
+          />
         </div>
       </ListGroup>
 
-      <div className="px-4 py-6">
+      <div className={styles.accountActions}>
         <Button
           block
           variant="secondary"
@@ -246,7 +234,6 @@ export function ProfileScreen({
         <Button
           block
           variant="danger"
-          className="mt-2"
           onClick={async () => {
             await signOut();
             router.replace("/kirish");
@@ -255,11 +242,7 @@ export function ProfileScreen({
         >
           {t.auth.logout}
         </Button>
-        <button
-          type="button"
-          onClick={() => router.push("/design")}
-          className="mt-6 text-caption text-fg-tertiary underline"
-        >
+        <button type="button" onClick={() => router.push("/design")} className={styles.designLink}>
           {t.design.title}
         </button>
       </div>
@@ -274,21 +257,20 @@ export function ProfileScreen({
           {locales.map((value, i) => (
             <ListItem
               key={value}
-              title={<span className="text-body font-normal">{localeLabels[value]}</span>}
+              title={<span className={shared.rowTitle}>{localeLabels[value]}</span>}
               insetSeparator={false}
               last={i === locales.length - 1}
               trailing={
-                locale === value ? <IconCheck size={20} className="text-accent" /> : undefined
+                locale === value ? <IconCheck size={20} className={shared.accentIcon} /> : undefined
               }
               onClick={() => {
                 setLocale(value);
                 languageSheet.close();
               }}
-              className="py-3"
             />
           ))}
         </ListGroup>
-        <div className="h-4" />
+        <div className={styles.sheetTail} />
       </Sheet>
 
       <Sheet
@@ -302,22 +284,23 @@ export function ProfileScreen({
             <ListItem
               key={value}
               title={
-                <span className="text-body font-normal">
+                <span className={shared.rowTitle}>
                   {value === "hamma" ? t.trust.visibilityAll : t.trust.visibilityEmployers}
                 </span>
               }
               insetSeparator={false}
               last={i === 1}
               trailing={
-                visibility === value ? <IconCheck size={20} className="text-accent" /> : undefined
+                visibility === value ? (
+                  <IconCheck size={20} className={shared.accentIcon} />
+                ) : undefined
               }
               onClick={() => chooseVisibility(value)}
-              className="py-3"
             />
           ))}
         </ListGroup>
-        <p className="px-4 pt-3 text-caption text-fg-tertiary">{t.trust.visibilityHint}</p>
-        <div className="h-4" />
+        <p className={styles.sheetHint}>{t.trust.visibilityHint}</p>
+        <div className={styles.sheetTail} />
       </Sheet>
     </Screen>
   );

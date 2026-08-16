@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import styles from "./auth.module.scss";
 
 /**
  * Telegram Login Widget.
@@ -31,5 +32,5 @@ export function TelegramLoginButton({ botUsername }: { botUsername: string }) {
     };
   }, [botUsername]);
 
-  return <div ref={container} className="flex justify-center" />;
+  return <div ref={container} className={styles.widget} />;
 }

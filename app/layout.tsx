@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { I18nProvider } from "@/components/providers/i18n-provider";
 import { ThemeProvider, themeInitScript } from "@/components/providers/theme-provider";
+import shell from "@/components/app/shell.module.scss";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -31,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Tungi rejimda oq chaqnash bo'lmasligi uchun — chizishdan oldin ishlaydi */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="min-h-dvh antialiased">
+      <body className={shell.body}>
         <ThemeProvider>
           <I18nProvider>{children}</I18nProvider>
         </ThemeProvider>

@@ -1,4 +1,5 @@
 import { EmployerTabBar } from "@/components/app/employer-tab-bar";
+import shell from "@/components/app/shell.module.scss";
 import { OfflineBanner } from "@/components/app/offline-banner";
 import { unreadTotalForCompany } from "@/lib/db/queries";
 import { requireUser } from "@/lib/db/session";
@@ -11,9 +12,9 @@ export default async function EmployerLayout({ children }: { children: React.Rea
   const unread = user.companyId ? await unreadTotalForCompany(user.companyId) : 0;
 
   return (
-    <div className="mx-auto min-h-dvh max-w-[27.5rem] bg-bg">
+    <div className={shell.shell}>
       <OfflineBanner />
-      <div className="pb-[calc(3.625rem+env(safe-area-inset-bottom))]">{children}</div>
+      <div className={shell.content}>{children}</div>
       <EmployerTabBar unread={unread} />
     </div>
   );

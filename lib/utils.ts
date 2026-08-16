@@ -1,56 +1,15 @@
 import { clsx, type ClassValue } from "clsx";
-import { extendTailwindMerge } from "tailwind-merge";
 
 /**
- * Bizda ham shrift o'lchami, ham rang `text-` bilan boshlanadi
- * (`text-body` va `text-on-accent`). Sozlanmagan tailwind-merge ularni
- * bitta guruh deb biladi va keyingisi oldingisini o'chirib yuboradi —
- * shu sababli ko'k tugmadagi oq matn yo'qolgan edi. Guruhlarni ochiq
- * ro'yxat bilan ajratamiz.
- */
-const FONT_SIZES = ["large", "nav", "title", "body", "caption", "section"];
-
-const COLORS = [
-  "accent",
-  "accent-pressed",
-  "accent-soft",
-  "on-accent",
-  "bg",
-  "surface",
-  "surface-elevated",
-  "surface-pressed",
-  "fill",
-  "separator",
-  "text",
-  "text-secondary",
-  "text-tertiary",
-  "danger",
-  "success",
-  "warning",
-  "skeleton",
-  "skeleton-shine",
-];
-
-const twMerge = extendTailwindMerge({
-  override: {
-    classGroups: {
-      "font-size": [{ text: FONT_SIZES }],
-      "text-color": [{ text: COLORS }],
-    },
-  },
-});
-
-/**
- * SCSS Modules ga ko'chgan komponentlar uchun — sinf nomlarini shunchaki
- * qo'shadi. tailwind-merge kerak emas: modul sinflari hashlangan va
- * ular orasida ziddiyat bo'lmaydi.
+ * Sinf nomlarini qo'shadi.
+ *
+ * Ilgari bu yerda tailwind-merge ham bor edi — u ziddiyatli utility
+ * sinflarni tozalardi. Uslublar SCSS Modules ga o'tgach kerak
+ * bo'lmay qoldi: modul sinflari hashlangan va bir-biri bilan
+ * to'qnashmaydi.
  */
 export function cx(...inputs: ClassValue[]): string {
   return clsx(inputs);
-}
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
 }
 
 /** 4200000 -> "4 200 000" */

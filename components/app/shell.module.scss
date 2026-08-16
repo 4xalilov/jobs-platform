@@ -1,0 +1,154 @@
+@use "../../styles/variables" as *;
+
+/*
+ * Ilova qobig'i — telefon kengligidagi ustun.
+ *
+ * 27.5rem: telefonda butun ekranni egallaydi, planshet va kompyuterda
+ * markazda qoladi. Ilova telefon uchun mo'ljallangan, keng ekranda
+ * uni cho'zish tarkibni suyultirib yuborardi.
+ */
+.shell {
+  margin: 0 auto;
+  min-height: 100dvh;
+  max-width: 27.5rem;
+  background: var(--color-background-secondary);
+}
+
+/* Tab bar tagida qolib ketmasin */
+.content {
+  padding-bottom: calc(3.625rem + env(safe-area-inset-bottom));
+}
+
+/* Tab bar ekran pastiga qadaladi va shu kenglikda markazlashadi */
+.tabBarSlot {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  width: 100%;
+  max-width: 27.5rem;
+}
+
+/* ——— Xato ekrani ——— */
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0 auto;
+  min-height: 100dvh;
+  max-width: 27.5rem;
+  padding: 0 2rem;
+  text-align: center;
+  background: var(--color-background-secondary);
+}
+
+.errorTitle {
+  margin: 0;
+  font-size: $font-nav;
+  line-height: $font-nav-line;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.errorHint {
+  margin: 0;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text-secondary);
+}
+
+/*
+ * Ish beruvchi paneli — hozircha o'zining tugmalari bilan.
+ * Nomzod tomonidagi TabBar komponenti bu yerda ishlatilmaydi, chunki
+ * bo'limlar soni va belgilash mantiqi boshqacha.
+ */
+.employerTabBar {
+  position: relative;
+  display: flex;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: color-mix(in srgb, var(--color-background) 95%, transparent);
+  backdrop-filter: blur(0.75rem);
+}
+
+.employerTab {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.125rem;
+  height: $tab-bar-height;
+  color: var(--color-text-secondary);
+}
+
+.employerTabActive {
+  color: var(--color-primary);
+}
+
+.employerTabIcon {
+  position: relative;
+}
+
+/* Belgi ikonka ustidan chiqadi, panel foni bilan halqalanadi */
+.employerTabBadge {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.625rem;
+  border: 2px solid var(--color-background);
+}
+
+.employerTabLabel {
+  font-size: 0.625rem;
+  line-height: 0.75rem;
+  font-weight: 500;
+}
+
+/* ——— Ilova ildizi ——— */
+.body {
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ——— Qidiruv ekrani ——— */
+.search {
+  margin: 0 auto;
+  min-height: 100dvh;
+  max-width: 27.5rem;
+  background: var(--color-background-secondary);
+}
+
+.searchBar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  padding-top: env(safe-area-inset-top);
+  background: var(--color-background);
+}
+
+.searchField {
+  flex: 1;
+  padding-right: 0;
+}
+
+.searchCancel {
+  padding: 0 $side-padding;
+  font-size: $font-body;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.searchClear {
+  font-size: $font-caption;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.searchRecentIcon {
+  color: var(--color-text-tertiary);
+}

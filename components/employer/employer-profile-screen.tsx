@@ -24,6 +24,8 @@ import { signOut } from "@/lib/sign-out";
 import type { CompanyDTO } from "@/lib/db/types";
 import { locales, type Locale } from "@/lib/i18n";
 import { useSheet } from "@/lib/use-sheet";
+import shared from "@/styles/shared.module.scss";
+import styles from "./employer.module.scss";
 
 export function EmployerProfileScreen({
   company,
@@ -47,20 +49,16 @@ export function EmployerProfileScreen({
 
   return (
     <Screen title={t.employer.tabs.profile}>
-      <div className="bg-surface px-4 pt-4 pb-4">
-        <div className="flex items-center gap-3">
+      <div className={styles.companyCard}>
+        <div className={styles.companyHead}>
           <Avatar name={company.name} size={64} online={company.fastReply} />
-          <div className="min-w-0 flex-1">
-            <h2 className="truncate text-[1.25rem] leading-6 font-semibold text-fg">
-              {company.name}
-            </h2>
-            {company.phone && (
-              <p className="mt-0.5 truncate text-body text-fg-secondary">{company.phone}</p>
-            )}
+          <div className={styles.companyHeadText}>
+            <h2 className={shared.sheetTitle}>{company.name}</h2>
+            {company.phone && <p className={styles.companyPhone}>{company.phone}</p>}
           </div>
         </div>
 
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className={shared.tagRow}>
           {company.verified && (
             <Tag tone="accent" icon={<IconShieldCheck size={13} />}>
               {t.employer.company.verified}
@@ -73,35 +71,31 @@ export function EmployerProfileScreen({
           )}
         </div>
 
-        {company.about && <p className="mt-3 text-body text-fg">{company.about}</p>}
+        {company.about && <p className={styles.companyAbout}>{company.about}</p>}
       </div>
 
-      <ListGroup className="mt-5">
+      <ListGroup className={shared.groupGap}>
         <ListItem
-          title={
-            <span className="text-body font-normal">{t.employer.company.activeVacancies}</span>
-          }
+          title={<span className={shared.rowTitle}>{t.employer.company.activeVacancies}</span>}
           insetSeparator={false}
-          trailing={<span className="text-body text-fg-secondary">{activeCount}</span>}
+          trailing={<span className={shared.rowValue}>{activeCount}</span>}
         />
         <ListItem
-          title={
-            <span className="text-body font-normal">{t.employer.company.totalApplications}</span>
-          }
+          title={<span className={shared.rowTitle}>{t.employer.company.totalApplications}</span>}
           insetSeparator={false}
-          trailing={<span className="text-body text-fg-secondary">{totalApplications}</span>}
+          trailing={<span className={shared.rowValue}>{totalApplications}</span>}
           last
         />
       </ListGroup>
 
-      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.employer.company.fastReplyHint}</p>
+      <p className={shared.hint}>{t.employer.company.fastReplyHint}</p>
 
       {/* Tariflar tab bardan chiqdi — o'rniga nomzod qidiruvi keldi.
           Sahifaning o'zi shu yerdan ochiladi. */}
-      <ListGroup className="mt-5">
+      <ListGroup className={shared.groupGap}>
         <ListItem
-          leading={<IconCard size={22} className="text-fg-secondary" />}
-          title={<span className="text-body font-normal">{t.employer.tabs.plans}</span>}
+          leading={<IconCard size={22} className={shared.rowIcon} />}
+          title={<span className={shared.rowTitle}>{t.employer.tabs.plans}</span>}
           insetSeparator={false}
           chevron
           last
@@ -112,37 +106,37 @@ export function EmployerProfileScreen({
       <SectionHeader>{t.screens.profile.settings}</SectionHeader>
       <ListGroup>
         <ListItem
-          leading={<IconGlobe size={22} className="text-fg-secondary" />}
-          title={<span className="text-body font-normal">{t.language.label}</span>}
+          leading={<IconGlobe size={22} className={shared.rowIcon} />}
+          title={<span className={shared.rowTitle}>{t.language.label}</span>}
           insetSeparator={false}
-          trailing={<span className="text-body text-fg-secondary">{localeLabels[locale]}</span>}
+          trailing={<span className={shared.rowValue}>{localeLabels[locale]}</span>}
           onClick={() => languageSheet.open(true)}
         />
-        <div className="bg-surface px-4 py-3">
-          <div className="flex items-center gap-3">
-            <IconMoon size={22} className="shrink-0 text-fg-secondary" />
-            <Segmented
-              className="flex-1"
-              label={t.theme.label}
-              options={[
-                { value: "light" as const, label: t.theme.light },
-                { value: "dark" as const, label: t.theme.dark },
-                { value: "system" as const, label: t.theme.system },
-              ]}
-              value={mode}
-              onChange={setMode}
-            />
-          </div>
+        <div className={styles.themeRow}>
+          <IconMoon size={22} className={shared.rowIcon} />
+          <Segmented
+            className={styles.themeControl}
+            label={t.theme.label}
+            options={[
+              { value: "light" as const, label: t.theme.light },
+              { value: "dark" as const, label: t.theme.dark },
+              { value: "system" as const, label: t.theme.system },
+            ]}
+            value={mode}
+            onChange={setMode}
+          />
         </div>
       </ListGroup>
 
-      <div className="px-4 py-6">
+      <div className={styles.accountActions}>
         <Button
           block
           variant="secondary"
           leading={<IconUser size={18} />}
           onClick={async () => {
-            const { next } = await apiPost<{ next: string }>("/auth/role", { role: "nomzod" });
+            const { next } = await apiPost<{ next: string }>("/auth/role", {
+              role: "nomzod",
+            });
             router.push(next);
             router.refresh();
           }}
@@ -152,7 +146,6 @@ export function EmployerProfileScreen({
         <Button
           block
           variant="danger"
-          className="mt-2"
           onClick={async () => {
             await signOut();
             router.replace("/kirish");
@@ -173,21 +166,20 @@ export function EmployerProfileScreen({
           {locales.map((value, i) => (
             <ListItem
               key={value}
-              title={<span className="text-body font-normal">{localeLabels[value]}</span>}
+              title={<span className={shared.rowTitle}>{localeLabels[value]}</span>}
               insetSeparator={false}
               last={i === locales.length - 1}
               trailing={
-                locale === value ? <IconCheck size={20} className="text-accent" /> : undefined
+                locale === value ? <IconCheck size={20} className={shared.accentIcon} /> : undefined
               }
               onClick={() => {
                 setLocale(value);
                 languageSheet.close();
               }}
-              className="py-3"
             />
           ))}
         </ListGroup>
-        <div className="h-4" />
+        <div className={styles.sheetTail} />
       </Sheet>
     </Screen>
   );

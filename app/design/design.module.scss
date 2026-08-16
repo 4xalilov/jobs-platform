@@ -1,0 +1,455 @@
+@use "../../styles/variables" as *;
+
+/*
+ * Dizayn tizimi sahifasi — faqat ishlab chiquvchi uchun.
+ * Ilovaning o'zi emas, uning lug'ati: har bir komponent shu yerda
+ * ikkala temada va uch tilda ko'rinadi.
+ */
+.page {
+  margin: 0 auto;
+  min-height: 100dvh;
+  max-width: 27.5rem;
+  padding-bottom: 4rem;
+  background: var(--color-background-secondary);
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 1.25rem $side-padding 0.75rem;
+  background: color-mix(in srgb, var(--color-background-secondary) 90%, transparent);
+  backdrop-filter: blur(0.75rem);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.subtitle {
+  margin: 0.25rem 0 0;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-secondary);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+/* ——— Bo'lim qutilari ——— */
+.panel {
+  padding: 0.75rem $side-padding;
+  background: var(--color-background);
+}
+
+/* Ichidagilar orasida bir xil bo'shliq */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.875rem $side-padding;
+  background: var(--color-background);
+}
+
+.surface {
+  background: var(--color-background);
+}
+
+.padTop {
+  padding-top: 0.25rem;
+}
+
+.padY {
+  padding: 0.25rem 0;
+}
+
+.note {
+  margin: 0;
+  padding: 0.5rem $side-padding 0;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-tertiary);
+}
+
+/* Quti ichidagi izoh — o'z yon bo'shlig'i yo'q */
+.noteInline {
+  margin: 0;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-tertiary);
+}
+
+.noteSpaced {
+  margin-top: 0.75rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.rowBetween {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.avatarRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.badgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toggle {
+  font-size: $font-caption;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+/* ——— Tipografika namunalari ——— */
+.sampleText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sampleSpec {
+  margin: 0.125rem 0 0;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-tertiary);
+}
+
+.large {
+  font-size: $font-large;
+  line-height: $font-large-line;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--color-text);
+}
+
+.nav {
+  font-size: $font-nav;
+  line-height: $font-nav-line;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.titleSample {
+  font-size: $font-title;
+  line-height: $font-nav-line;
+  color: var(--color-text);
+}
+
+.body {
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text);
+}
+
+.bodyMuted {
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text-secondary);
+}
+
+.caption {
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-secondary);
+}
+
+.section {
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+/* ——— Forma bo'limi ——— */
+.formsHead {
+  padding: 0.75rem $side-padding 0.25rem;
+}
+
+.progressTrack {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.progressStep {
+  flex: 1;
+  height: 3px;
+  border-radius: 62.4375rem;
+  background: var(--color-fill);
+}
+
+.progressStepDone {
+  background: var(--color-primary);
+}
+
+.nameField {
+  position: relative;
+}
+
+.segmentBlock {
+  padding: 0.75rem $side-padding;
+}
+
+.segmentLabel {
+  margin: 0 0 0.5rem;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+/* ——— Navigatsiya namunasi ——— */
+.navDemo {
+  overflow: hidden;
+  margin: 0 $side-padding;
+  border-radius: $border-radius-default;
+  background: var(--color-background);
+}
+
+.navBorder {
+  border-bottom: 1px solid var(--color-borders);
+}
+
+.navIcon {
+  padding: 0.5rem;
+  color: var(--color-primary);
+}
+
+/* FAB qayerda turishini ko'rsatuvchi bo'sh maydon */
+.fabStage {
+  position: relative;
+  height: 10rem;
+  background: var(--color-background-secondary);
+}
+
+.fabSpot {
+  position: absolute;
+  right: $side-padding;
+  bottom: $side-padding;
+}
+
+/* ——— Ikonkalar to'ri ——— */
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  row-gap: 1rem;
+  color: var(--color-text-secondary);
+}
+
+.iconCell {
+  display: flex;
+  justify-content: center;
+}
+
+/* ——— Animatsiya bo'limi ——— */
+.tapButton {
+  padding: 0.5rem $side-padding;
+  border-radius: $border-radius-button;
+  background: var(--color-primary);
+  font-size: $font-body;
+  font-weight: 600;
+  color: var(--color-on-primary);
+}
+
+.divider {
+  position: relative;
+}
+
+.motionStage {
+  overflow: hidden;
+  margin-top: 0.625rem;
+  border-radius: $border-radius-button;
+  background: var(--color-background-secondary);
+}
+
+.motionRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+}
+
+.motionAvatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+}
+
+.motionLine {
+  flex: 1;
+  height: 0.75rem;
+  border-radius: 62.4375rem;
+}
+
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0.25rem 0 0;
+  list-style: none;
+}
+
+/* ——— Qoidalar ——— */
+.principle {
+  position: relative;
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem $side-padding;
+  background: var(--color-background);
+}
+
+/* Raqamlar bir xil kenglikda — ro'yxat tekis turadi */
+.principleNumber {
+  font-size: $font-body;
+  line-height: $font-body-line;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-tertiary);
+}
+
+.principleText {
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text);
+}
+
+/* ——— Namuna sheet ——— */
+.sheetHead {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sheetHeadText {
+  min-width: 0;
+}
+
+.sheetTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.sheetCompany {
+  margin: 0.125rem 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text-secondary);
+}
+
+.sheetSalary {
+  margin: 0.75rem 0 0;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.sheetDescription {
+  margin: 1rem 0 0;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text);
+}
+
+.sheetStats {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-tertiary);
+}
+
+.sheetStat {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* ——— Ranglar to'ri ——— */
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.625rem 1rem;
+}
+
+.colorItem {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.swatch {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--color-borders);
+  border-radius: $border-radius-button;
+}
+
+.colorText {
+  min-width: 0;
+}
+
+.colorName {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text);
+}
+
+.colorValue {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.6875rem;
+  line-height: 0.8125rem;
+  color: var(--color-text-tertiary);
+}
+
+.successDot {
+  background: var(--color-green);
+}
+
+.accentIcon {
+  color: var(--color-primary);
+}
+
+.mutedIcon {
+  color: var(--color-text-tertiary);
+}

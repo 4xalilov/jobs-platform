@@ -1,0 +1,149 @@
+@use "../../styles/variables" as *;
+
+/* ——————————————————————————————————————————————
+   Profil
+   —————————————————————————————————————————————— */
+
+.card {
+  padding: 1rem $side-padding;
+  background: var(--color-background);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  border-radius: 50%;
+}
+
+/*
+ * "Ish qidiryapman" yoqilgan bo'lsa avatarda yashil halqa.
+ * box-shadow bilan chiziladi: layout ni qimirlatmaydi, shuning uchun
+ * tugma bosilganda qator sakramaydi.
+ */
+.avatarOpen {
+  box-shadow:
+    0 0 0 2px var(--color-background),
+    0 0 0 5px var(--color-green);
+}
+
+.headText {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.role {
+  margin: 0.125rem 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text-secondary);
+}
+
+.editButton {
+  margin-top: 1rem;
+}
+
+/* Tema tanlovi ro'yxat ichida — chapda ikonka, o'ngda segment */
+.themeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem $side-padding;
+  background: var(--color-background);
+}
+
+.themeControl {
+  flex: 1;
+}
+
+.accountActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.5rem $side-padding;
+}
+
+/* Dizayn tizimi — ishlab chiquvchi uchun, ko'zga tashlanmaydi */
+.designLink {
+  align-self: flex-start;
+  margin-top: 1rem;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-tertiary);
+  text-decoration: underline;
+}
+
+.sheetHint {
+  margin: 0;
+  padding: 0.75rem $side-padding 0;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-tertiary);
+}
+
+/* Sheet oxiridagi nafas — oxirgi qator chetga yopishmasin */
+.sheetTail {
+  height: 1rem;
+}
+
+/* ——————————————————————————————————————————————
+   Kartochka muharriri
+   —————————————————————————————————————————————— */
+
+.editor {
+  margin: 0 auto;
+  min-height: 100dvh;
+  max-width: 27.5rem;
+  padding-bottom: 2.5rem;
+  background: var(--color-background-secondary);
+}
+
+.editorBar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.backButton {
+  padding: 0.5rem;
+  color: var(--color-primary);
+}
+
+/* Nom bo'sh bo'lsa saqlash o'chadi, lekin joyida qoladi */
+.saveButton {
+  padding: 0 0.5rem;
+  font-size: $font-body;
+  font-weight: 500;
+  color: var(--color-primary);
+
+  &:disabled {
+    opacity: 0.4;
+  }
+}
+
+/* Nom maydoni SelectField emas — chizig'i qo'lda qo'yiladi */
+.nameField {
+  position: relative;
+}
+
+.segmentRow {
+  padding: 0.75rem $side-padding;
+  background: var(--color-background);
+}

@@ -1,0 +1,191 @@
+@use "../../styles/variables" as *;
+
+/* ——————————————————————————————————————————————
+   Kirish ekrani
+   —————————————————————————————————————————————— */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  min-height: 100dvh;
+  max-width: 27.5rem;
+  padding: 0 1.5rem;
+  background: var(--color-background-secondary);
+}
+
+/* Logo va sarlavha ekran o'rtasida turadi, tugma esa pastda */
+.hero {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 1rem;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.title {
+  margin: 1.25rem 0 0;
+  font-size: 1.75rem;
+  line-height: 2rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.subtitle {
+  margin: 0.5rem 0 0;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text-secondary);
+}
+
+/* Telegram xato qaytarganda — sababi va nima qilish kerakligi */
+.error {
+  width: 100%;
+  margin-top: 1.25rem;
+  padding: 0.75rem $side-padding;
+  border-radius: $border-radius-default;
+  background: color-mix(in srgb, var(--color-error) 10%, transparent);
+}
+
+.errorTitle {
+  margin: 0;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  font-weight: 500;
+  color: var(--color-error);
+}
+
+.errorHint {
+  margin: 0.125rem 0 0;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-secondary);
+}
+
+.actions {
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+}
+
+.note {
+  margin: 0.75rem 0 0;
+  text-align: center;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-tertiary);
+}
+
+.noteTight {
+  margin-top: 0.5rem;
+}
+
+/* Bot sozlanmagan bo'lsa — nima yetishmayotgani */
+.notConfigured {
+  padding: 0.75rem $side-padding;
+  border-radius: $border-radius-default;
+  background: var(--color-fill);
+  text-align: center;
+}
+
+.notConfiguredTitle {
+  margin: 0;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text);
+}
+
+.notConfiguredHint {
+  margin: 0.25rem 0 0;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--color-text-secondary);
+}
+
+/* Telegram vidjeti iframe'ni o'zi qo'yadi — biz faqat markazlaymiz */
+.widget {
+  display: flex;
+  justify-content: center;
+}
+
+/* ——————————————————————————————————————————————
+   Tanishtiruv
+   —————————————————————————————————————————————— */
+
+.onboarding {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  min-height: 100dvh;
+  max-width: 27.5rem;
+  background: var(--color-background-secondary);
+}
+
+.onboardingBar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.backButton {
+  padding: 0.5rem;
+  color: var(--color-primary);
+}
+
+.greeting {
+  padding: 0.5rem $side-padding 0;
+}
+
+.greetingText {
+  margin: 0;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text-secondary);
+}
+
+.heading {
+  padding: 1.5rem $side-padding 1rem;
+}
+
+.headingTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.headingHint {
+  margin: 0.25rem 0 0;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text-secondary);
+}
+
+.roleIcon {
+  color: var(--color-primary);
+}
+
+.optionTitle {
+  font-size: $font-body;
+  font-weight: 400;
+}
+
+/* Tugma ekran pastiga qadaladi — ro'yxat qisqa bo'lsa ham */
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding: 1.5rem $side-padding calc(1.5rem + env(safe-area-inset-bottom));
+}

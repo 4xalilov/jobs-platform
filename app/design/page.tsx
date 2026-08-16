@@ -56,7 +56,9 @@ import {
   sampleSearches,
   sampleVacancies,
 } from "@/lib/design-samples";
-import { cn, formatAgo, formatSalary } from "@/lib/utils";
+import { cx, formatAgo, formatSalary } from "@/lib/utils";
+import shared from "@/styles/shared.module.scss";
+import styles from "./design.module.scss";
 import themes from "@/styles/themes.json";
 
 /**
@@ -122,13 +124,13 @@ export default function DesignSystemPage() {
     setSaved((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   return (
-    <div className="mx-auto min-h-dvh max-w-[27.5rem] bg-bg pb-16">
+    <div className={styles.page}>
       {/* ——— Sarlavha va boshqaruvlar ——— */}
-      <div className="sticky top-0 z-30 bg-bg/90 px-4 pt-5 pb-3 backdrop-blur-md">
-        <h1 className="text-[1.5rem] leading-7 font-semibold text-fg">{t.design.title}</h1>
-        <p className="mt-1 text-caption text-fg-secondary">{t.design.subtitle}</p>
+      <div className={styles.header}>
+        <h1 className={styles.title}>{t.design.title}</h1>
+        <p className={styles.subtitle}>{t.design.subtitle}</p>
 
-        <div className="mt-3 space-y-2">
+        <div className={styles.controls}>
           <Segmented options={themeOptions} value={mode} onChange={setMode} label={t.theme.label} />
           <Segmented
             options={locales.map((l) => ({ value: l, label: localeLabels[l] }))}
@@ -141,43 +143,39 @@ export default function DesignSystemPage() {
 
       {/* ——— 1. Ranglar ——— */}
       <SectionHeader>{t.design.sections.colors}</SectionHeader>
-      <div className="bg-surface px-4 py-3">
+      <div className={styles.panel}>
         <ColorGrid themeKey={resolved} />
-        <p className="mt-3 text-caption text-fg-tertiary">{t.design.colors.note}</p>
+        <p className={cx(styles.noteInline, styles.noteSpaced)}>{t.design.colors.note}</p>
       </div>
 
       {/* ——— 2. Tipografika ——— */}
       <SectionHeader>{t.design.sections.typography}</SectionHeader>
-      <div className="space-y-3 bg-surface px-4 py-3.5">
+      <div className={styles.stack}>
         <TypeSample spec={t.design.typography.largeSpec}>
-          <span className="text-large text-fg">{t.tabs.jobs}</span>
+          <span className={styles.large}>{t.tabs.jobs}</span>
         </TypeSample>
         <TypeSample spec={t.design.typography.navSpec}>
-          <span className="text-nav text-fg">{t.design.typography.titleSample}</span>
+          <span className={styles.nav}>{t.design.typography.titleSample}</span>
         </TypeSample>
         <TypeSample spec={t.design.typography.titleSpec}>
-          <span className="text-title text-fg">{t.design.typography.titleSample}</span>
+          <span className={styles.titleSample}>{t.design.typography.titleSample}</span>
         </TypeSample>
         <TypeSample spec={t.design.typography.bodySpec}>
-          <span className="text-body text-fg">{t.design.typography.bodySample}</span>
+          <span className={styles.body}>{t.design.typography.bodySample}</span>
         </TypeSample>
         <TypeSample spec={t.design.typography.captionSpec}>
-          <span className="text-caption text-fg-secondary">
-            {t.design.typography.captionSample}
-          </span>
+          <span className={styles.caption}>{t.design.typography.captionSample}</span>
         </TypeSample>
         <TypeSample spec={t.design.typography.sectionSpec}>
-          <span className="text-section text-fg-secondary uppercase">
-            {t.design.sections.typography}
-          </span>
+          <span className={styles.section}>{t.design.sections.typography}</span>
         </TypeSample>
-        <p className="pt-1 text-caption text-fg-tertiary">{t.design.typography.fontNote}</p>
+        <p className={styles.noteInline}>{t.design.typography.fontNote}</p>
       </div>
 
       {/* ——— 3. Tugmalar ——— */}
       <SectionHeader>{t.design.sections.buttons}</SectionHeader>
-      <div className="space-y-3 bg-surface px-4 py-3.5">
-        <div className="flex flex-wrap gap-2">
+      <div className={styles.stack}>
+        <div className={styles.row}>
           <Button variant="primary">{t.design.buttons.primary}</Button>
           <Button variant="secondary">{t.design.buttons.secondary}</Button>
           <Button variant="ghost">{t.design.buttons.ghost}</Button>
@@ -185,7 +183,7 @@ export default function DesignSystemPage() {
             {t.design.buttons.danger}
           </Button>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className={styles.row}>
           <Button size="sm" variant="secondary">
             sm
           </Button>
@@ -223,7 +221,9 @@ export default function DesignSystemPage() {
             leading={<Avatar name={vacancy.company} online={vacancy.fastReply} />}
             title={vacancy.title[locale]}
             titleAdornment={
-              vacancy.verified ? <IconShieldCheck size={15} className="text-accent" /> : undefined
+              vacancy.verified ? (
+                <IconShieldCheck size={15} className={styles.accentIcon} />
+              ) : undefined
             }
             subtitle={formatSalary(
               vacancy.salaryMin,
@@ -233,13 +233,13 @@ export default function DesignSystemPage() {
             )}
             caption={`${vacancy.company} · ${vacancy.location[locale]}`}
             meta={formatAgo(vacancy.postedMinutesAgo, t.time)}
-            trailing={vacancy.fastReply ? <Dot className="bg-success" /> : undefined}
+            trailing={vacancy.fastReply ? <Dot className={styles.successDot} /> : undefined}
             last={i === sampleVacancies.length - 1}
             onClick={() => setSheetOpen(true)}
           />
         ))}
       </ListGroup>
-      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.design.listItem.note}</p>
+      <p className={styles.note}>{t.design.listItem.note}</p>
 
       {/* Xabarlar ro'yxati — aynan Telegram ko'rinishi */}
       <SectionHeader>{t.tabs.messages}</SectionHeader>
@@ -260,7 +260,7 @@ export default function DesignSystemPage() {
 
       {/* ——— 5. Kasb filtri ——— */}
       <SectionHeader>{t.design.sections.chips}</SectionHeader>
-      <div className="bg-surface py-1">
+      <div className={cx(styles.surface, styles.padY)}>
         <ChipRow>
           <Chip selected={profession === null} onClick={() => setProfession(null)}>
             {t.common.all}
@@ -272,11 +272,11 @@ export default function DesignSystemPage() {
           ))}
         </ChipRow>
       </div>
-      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.design.chips.note}</p>
+      <p className={styles.note}>{t.design.chips.note}</p>
 
       {/* ——— 6. Qidiruv ——— */}
       <SectionHeader>{t.design.sections.search}</SectionHeader>
-      <div className="bg-surface pt-1">
+      <div className={cx(styles.surface, styles.padTop)}>
         <SearchField
           value={query}
           onValueChange={setQuery}
@@ -289,27 +289,26 @@ export default function DesignSystemPage() {
         {sampleSearches.map((item, i) => (
           <ListItem
             key={item.uz}
-            leading={<IconClock size={20} className="text-fg-tertiary" />}
-            title={<span className="text-body">{item[locale]}</span>}
+            leading={<IconClock size={20} className={styles.mutedIcon} />}
+            title={<span className={styles.body}>{item[locale]}</span>}
             insetSeparator={false}
             last={i === sampleSearches.length - 1}
             onClick={() => setQuery(item[locale])}
-            className="py-2.5"
           />
         ))}
       </ListGroup>
-      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.design.search.note}</p>
+      <p className={styles.note}>{t.design.search.note}</p>
 
       {/* ——— 7. Avatar va belgilar ——— */}
       <SectionHeader>{t.design.sections.avatars}</SectionHeader>
-      <div className="space-y-3 bg-surface px-4 py-3.5">
-        <div className="flex items-end gap-3">
+      <div className={styles.stack}>
+        <div className={styles.avatarRow}>
           <Avatar name="Chorsu Market" size={56} online />
           <Avatar name="Milano Cafe" size={48} />
           <Avatar name="Express Yetkazib" size={40} />
           <Avatar name="Korzinka" size={32} />
         </div>
-        <div className="flex flex-wrap items-center gap-2">
+        <div className={styles.badgeRow}>
           <Tag tone="success" icon={<IconBolt size={13} />}>
             {t.design.avatars.badgeFast}
           </Tag>
@@ -324,16 +323,16 @@ export default function DesignSystemPage() {
           <CountBadge count={128} tone="neutral" />
           <Dot />
         </div>
-        <p className="text-caption text-fg-tertiary">{t.design.avatars.note}</p>
+        <p className={styles.noteInline}>{t.design.avatars.note}</p>
       </div>
 
       {/* ——— 8. Sheet ——— */}
       <SectionHeader>{t.design.sections.sheet}</SectionHeader>
-      <div className="space-y-3 bg-surface px-4 py-3.5">
+      <div className={styles.stack}>
         <Button block size="lg" variant="secondary" onClick={() => setSheetOpen(true)}>
           {t.design.sheet.open}
         </Button>
-        <p className="text-caption text-fg-tertiary">{t.design.sheet.note}</p>
+        <p className={styles.noteInline}>{t.design.sheet.note}</p>
       </div>
 
       {/* ——— 9. Skelet ——— */}
@@ -342,7 +341,7 @@ export default function DesignSystemPage() {
           <button
             type="button"
             onClick={() => setShowSkeleton((v) => !v)}
-            className="text-caption font-medium text-accent"
+            className={styles.toggle}
           >
             {showSkeleton ? t.common.done : t.design.skeleton.toggle}
           </button>
@@ -373,25 +372,25 @@ export default function DesignSystemPage() {
           ))}
         </ListGroup>
       )}
-      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.design.skeleton.note}</p>
+      <p className={styles.note}>{t.design.skeleton.note}</p>
 
       {/* ——— 10. Forma elementlari ——— */}
       <SectionHeader>{t.design.sections.forms}</SectionHeader>
-      <div className="bg-surface">
-        <div className="px-4 pt-3 pb-1">
-          <p className="text-caption text-fg-secondary">
+      <div className={styles.surface}>
+        <div className={styles.formsHead}>
+          <p className={styles.caption}>
             {t.design.forms.stepLabel} 2 {t.design.forms.stepOf} 4
           </p>
-          <div className="mt-2 flex gap-1">
+          <div className={styles.progressTrack}>
             {[0, 1, 2, 3].map((i) => (
               <span
                 key={i}
-                className={cn("h-[3px] flex-1 rounded-full", i <= 1 ? "bg-accent" : "bg-fill")}
+                className={cx(styles.progressStep, i <= 1 && styles.progressStepDone)}
               />
             ))}
           </div>
         </div>
-        <div className="relative hairline hairline-inset-sm">
+        <div className={cx(styles.nameField, "hairline", "hairline-inset-sm")}>
           <TextField
             value={name}
             onValueChange={setName}
@@ -420,34 +419,32 @@ export default function DesignSystemPage() {
           }
           last
         />
-        <div className="px-4 py-3">
-          <p className="pb-2 text-section text-fg-secondary uppercase">
-            {t.design.forms.segmentedLabel}
-          </p>
+        <div className={styles.segmentBlock}>
+          <p className={styles.segmentLabel}>{t.design.forms.segmentedLabel}</p>
           <Segmented options={experienceOptions} value={experience} onChange={setExperience} />
         </div>
       </div>
-      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.design.forms.note}</p>
+      <p className={styles.note}>{t.design.forms.note}</p>
 
       {/* ——— 11. Navigatsiya ——— */}
       <SectionHeader>{t.design.sections.navigation}</SectionHeader>
-      <div className="overflow-hidden rounded-tg bg-surface mx-4">
+      <div className={styles.navDemo}>
         <NavBar
           title={t.design.navigation.navBarTitle}
           leading={
-            <button type="button" className="p-2 text-accent" aria-label={t.common.search}>
+            <button type="button" className={styles.navIcon} aria-label={t.common.search}>
               <IconSearch size={22} />
             </button>
           }
           trailing={
-            <button type="button" className="p-2 text-accent" aria-label={t.common.edit}>
+            <button type="button" className={styles.navIcon} aria-label={t.common.edit}>
               <IconSliders size={22} />
             </button>
           }
-          className="border-b border-separator"
+          className={styles.navBorder}
         />
-        <div className="relative h-40 bg-bg">
-          <div className="absolute right-4 bottom-4">
+        <div className={styles.fabStage}>
+          <div className={styles.fabSpot}>
             <Fab label={t.common.apply}>
               <IconPlus size={28} />
             </Fab>
@@ -465,14 +462,14 @@ export default function DesignSystemPage() {
           badges={{ messages: 2 }}
         />
       </div>
-      <p className="px-4 pt-2 text-caption text-fg-tertiary">
+      <p className={styles.note}>
         {t.design.navigation.tabBarNote} {t.design.navigation.fabNote}
       </p>
 
       {/* ——— 12. Ikonkalar ——— */}
       <SectionHeader>{t.design.sections.icons}</SectionHeader>
-      <div className="bg-surface px-4 py-4">
-        <div className="grid grid-cols-6 gap-y-4 text-fg-secondary">
+      <div className={styles.panel}>
+        <div className={styles.iconGrid}>
           {[
             IconBriefcase,
             IconMessage,
@@ -505,12 +502,12 @@ export default function DesignSystemPage() {
             IconCheck,
             IconX,
           ].map((IconComponent, i) => (
-            <div key={i} className="flex justify-center">
+            <div key={i} className={styles.iconCell}>
               <IconComponent size={24} />
             </div>
           ))}
         </div>
-        <p className="mt-4 text-caption text-fg-tertiary">{t.design.icons.note}</p>
+        <p className={cx(styles.noteInline, styles.noteSpaced)}>{t.design.icons.note}</p>
       </div>
 
       {/* ——— 13. Chapga tortish ——— */}
@@ -541,7 +538,7 @@ export default function DesignSystemPage() {
               title={vacancy.title[locale]}
               titleAdornment={
                 saved.includes(vacancy.id) ? (
-                  <IconBookmark size={14} className="text-accent" />
+                  <IconBookmark size={14} className={styles.accentIcon} />
                 ) : undefined
               }
               subtitle={formatSalary(
@@ -556,49 +553,46 @@ export default function DesignSystemPage() {
           </SwipeListItem>
         ))}
       </ListGroup>
-      <p className="px-4 pt-2 text-caption text-fg-tertiary">{t.design.swipe.note}</p>
+      <p className={styles.note}>{t.design.swipe.note}</p>
 
       {/* ——— 14. Qoidalar ——— */}
       {/* ——— Animatsiya ——— */}
       <SectionHeader>{t.design.sections.motion}</SectionHeader>
-      <div className="space-y-3 bg-surface px-4 py-3.5">
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-body text-fg">{t.design.motion.tap}</span>
-          <button
-            type="button"
-            className="tap rounded-tg-sm bg-accent px-4 py-2 text-body font-semibold text-on-accent"
-          >
+      <div className={styles.stack}>
+        <div className={styles.rowBetween}>
+          <span className={styles.body}>{t.design.motion.tap}</span>
+          <button type="button" className={cx("tap", styles.tapButton)}>
             {t.common.example}
           </button>
         </div>
 
-        <div className="hairline hairline-inset-sm relative" />
+        <div className={cx(styles.divider, "hairline", "hairline-inset-sm")} />
 
         <div>
-          <div className="flex items-center justify-between gap-3">
-            <span className="text-body text-fg">{t.design.motion.row}</span>
+          <div className={styles.rowBetween}>
+            <span className={styles.body}>{t.design.motion.row}</span>
             <Button size="sm" variant="secondary" onClick={() => setMotionKey((n) => n + 1)}>
               {t.design.motion.replay}
             </Button>
           </div>
-          <div key={motionKey} className="mt-2.5 overflow-hidden rounded-tg-sm bg-bg">
+          <div key={motionKey} className={styles.motionStage}>
             {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="animate-row-in flex items-center gap-3 px-3 py-2.5">
-                <span className="skeleton size-8 rounded-full" />
-                <span className="skeleton h-3 flex-1 rounded-full" />
+              <div key={i} className={cx("animate-row-in", styles.motionRow)}>
+                <span className={cx("skeleton", styles.motionAvatar)} />
+                <span className={cx("skeleton", styles.motionLine)} />
               </div>
             ))}
           </div>
         </div>
 
-        <ul className="space-y-1 pt-1">
+        <ul className={styles.notes}>
           {[t.design.motion.page, t.design.motion.sheet, t.design.motion.badge].map((line) => (
-            <li key={line} className="text-caption text-fg-secondary">
+            <li key={line} className={styles.caption}>
               {line}
             </li>
           ))}
         </ul>
-        <p className="text-caption text-fg-tertiary">{t.design.motion.note}</p>
+        <p className={styles.noteInline}>{t.design.motion.note}</p>
       </div>
 
       <SectionHeader>{t.design.sections.principles}</SectionHeader>
@@ -612,13 +606,10 @@ export default function DesignSystemPage() {
         ].map((rule, i, arr) => (
           <div
             key={i}
-            className={cn(
-              "relative flex gap-3 bg-surface px-4 py-3",
-              i !== arr.length - 1 && "hairline hairline-inset-sm",
-            )}
+            className={cx(styles.principle, i !== arr.length - 1 && "hairline hairline-inset-sm")}
           >
-            <span className="text-body text-fg-tertiary tabular-nums">{i + 1}</span>
-            <span className="text-body text-fg">{rule}</span>
+            <span className={styles.principleNumber}>{i + 1}</span>
+            <span className={styles.principleText}>{rule}</span>
           </div>
         ))}
       </ListGroup>
@@ -640,24 +631,20 @@ export default function DesignSystemPage() {
           </Button>
         }
       >
-        <div className="px-4 pb-4">
-          <div className="flex items-center gap-3">
+        <div className={shared.sheetBody}>
+          <div className={styles.sheetHead}>
             <Avatar name={t.design.sheet.company} size={52} online />
-            <div className="min-w-0">
-              <h3 className="text-[1.25rem] leading-6 font-semibold text-fg">
-                {t.design.sheet.title}
-              </h3>
-              <p className="mt-0.5 truncate text-body text-fg-secondary">
-                {t.design.sheet.company}
-              </p>
+            <div className={styles.sheetHeadText}>
+              <h3 className={styles.sheetTitle}>{t.design.sheet.title}</h3>
+              <p className={styles.sheetCompany}>{t.design.sheet.company}</p>
             </div>
           </div>
 
-          <p className="mt-3 text-[1.25rem] leading-6 font-semibold text-fg">
+          <p className={styles.sheetSalary}>
             {formatSalary(4_000_000, 6_000_000, t.job.currency, t.job.negotiable)}
           </p>
 
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className={shared.tagRow}>
             <Tag tone="success" icon={<IconBolt size={13} />}>
               {t.job.fastReply}
             </Tag>
@@ -672,13 +659,13 @@ export default function DesignSystemPage() {
             </Tag>
           </div>
 
-          <p className="mt-4 text-body text-fg">{t.design.sheet.description}</p>
+          <p className={styles.sheetDescription}>{t.design.sheet.description}</p>
 
-          <div className="mt-4 flex gap-4 text-caption text-fg-tertiary">
-            <span className="flex items-center gap-1">
+          <div className={styles.sheetStats}>
+            <span className={styles.sheetStat}>
               <IconEye size={15} /> 248 {t.job.views}
             </span>
-            <span className="flex items-center gap-1">
+            <span className={styles.sheetStat}>
               <IconUsers size={15} /> 12 {t.job.applications}
             </span>
           </div>
@@ -695,19 +682,18 @@ export default function DesignSystemPage() {
           {sampleProfessions.map((p, i) => (
             <ListItem
               key={p.id}
-              title={<span className="text-body">{p.name[locale]}</span>}
+              title={<span className={styles.body}>{p.name[locale]}</span>}
               insetSeparator={false}
               last={i === sampleProfessions.length - 1}
               trailing={
                 selectedProfession === p.id ? (
-                  <IconCheck size={20} className="text-accent" />
+                  <IconCheck size={20} className={styles.accentIcon} />
                 ) : undefined
               }
               onClick={() => {
                 setSelectedProfession(p.id);
                 setProfessionSheetOpen(false);
               }}
-              className="py-3"
             />
           ))}
         </ListGroup>
@@ -721,8 +707,8 @@ export default function DesignSystemPage() {
 function TypeSample({ spec, children }: { spec: string; children: React.ReactNode }) {
   return (
     <div>
-      <div className="truncate">{children}</div>
-      <p className="mt-0.5 text-caption text-fg-tertiary">{spec}</p>
+      <div className={styles.sampleText}>{children}</div>
+      <p className={styles.sampleSpec}>{spec}</p>
     </div>
   );
 }
@@ -731,20 +717,13 @@ function ColorGrid({ themeKey }: { themeKey: "light" | "dark" }) {
   const palette = themes[themeKey];
 
   return (
-    <div className="grid grid-cols-2 gap-x-4 gap-y-2.5">
+    <div className={styles.colorGrid}>
       {COLOR_TOKENS.map((token) => (
-        <div key={token} className="flex items-center gap-2.5">
-          <span
-            className="size-8 shrink-0 rounded-tg-sm border border-separator"
-            style={{ background: `var(--${token})` }}
-          />
-          <span className="min-w-0">
-            <span className="block truncate text-caption text-fg">
-              {token.replace("color-", "")}
-            </span>
-            <span className="block truncate text-[0.6875rem] leading-[0.8125rem] text-fg-tertiary">
-              {palette[token]}
-            </span>
+        <div key={token} className={styles.colorItem}>
+          <span className={styles.swatch} style={{ background: `var(--${token})` }} />
+          <span className={styles.colorText}>
+            <span className={styles.colorName}>{token.replace("color-", "")}</span>
+            <span className={styles.colorValue}>{palette[token]}</span>
           </span>
         </div>
       ))}

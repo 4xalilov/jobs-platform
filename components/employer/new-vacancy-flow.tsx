@@ -16,7 +16,9 @@ import {
   type ProfessionDTO,
   type RequirementKey,
 } from "@/lib/db/types";
-import { cn, formatSalary } from "@/lib/utils";
+import { cx, formatSalary } from "@/lib/utils";
+import shared from "@/styles/shared.module.scss";
+import styles from "./employer.module.scss";
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
@@ -95,17 +97,15 @@ export function NewVacancyFlow({
 
   if (done) {
     return (
-      <div className="mx-auto flex min-h-dvh max-w-[27.5rem] flex-col bg-bg">
-        <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
-          <span className="flex size-16 items-center justify-center rounded-full bg-success text-white">
+      <div className={styles.doneScreen}>
+        <div className={styles.doneBody}>
+          <span className={styles.doneMark}>
             <IconCheck size={34} />
           </span>
-          <h1 className="mt-4 text-[1.25rem] leading-6 font-semibold text-fg">
-            {t.employer.post.published}
-          </h1>
-          <p className="mt-2 text-body text-fg-secondary">{t.employer.post.publishedHint}</p>
+          <h1 className={styles.doneTitle}>{t.employer.post.published}</h1>
+          <p className={styles.doneHint}>{t.employer.post.publishedHint}</p>
         </div>
-        <div className="space-y-2 px-4 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
+        <div className={styles.doneActions}>
           <Button block size="lg" onClick={() => router.replace("/employer/plans")}>
             {t.employer.post.toPlans}
           </Button>
@@ -137,40 +137,40 @@ export function NewVacancyFlow({
   const hint = t.employer.post[`q${step}Hint` as `q${Step}Hint`];
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-[27.5rem] flex-col bg-bg">
+    <div className={styles.flow}>
       <NavBar
-        className="sticky top-0 z-20 hairline"
+        className={cx(styles.flowBar, "hairline")}
         title={t.employer.post.title}
         leading={
           <button
             type="button"
             aria-label={t.common.back}
             onClick={() => (step === 1 ? router.back() : setStep((step - 1) as Step))}
-            className="p-2 text-accent"
+            className={styles.backButton}
           >
             <IconArrowLeft size={24} />
           </button>
         }
       />
 
-      <div className="bg-surface px-4 pt-3 pb-4 hairline">
-        <p className="text-caption text-fg-secondary">
+      <div className={cx(styles.progress, "hairline")}>
+        <p className={styles.progressLabel}>
           {t.employer.post.step} {step} {t.employer.post.of} {TOTAL_STEPS}
         </p>
-        <div className="mt-2 flex gap-1">
+        <div className={styles.progressTrack}>
           {[1, 2, 3, 4, 5].map((index) => (
             <span
               key={index}
-              className={cn("h-[3px] flex-1 rounded-full", index <= step ? "bg-accent" : "bg-fill")}
+              className={cx(styles.progressStep, index <= step && styles.progressStepDone)}
             />
           ))}
         </div>
       </div>
 
-      <div className="flex-1">
-        <div className="px-4 pt-5 pb-3">
-          <h2 className="text-[1.375rem] leading-7 font-semibold text-fg">{question}</h2>
-          <p className="mt-1 text-body text-fg-secondary">{hint}</p>
+      <div className={styles.flowBody}>
+        <div className={styles.question}>
+          <h2 className={styles.questionTitle}>{question}</h2>
+          <p className={styles.questionHint}>{hint}</p>
         </div>
 
         {/* 1. Lavozim — ro'yxatdan tanlanadi, xohlasa aniqlashtirib yoziladi */}
@@ -195,9 +195,7 @@ export function NewVacancyFlow({
 
             {professionId && (
               <>
-                <p className="px-4 pt-5 pb-1.5 text-section text-fg-secondary uppercase">
-                  {t.employer.post.titleLabel}
-                </p>
+                <p className={shared.fieldLabel}>{t.employer.post.titleLabel}</p>
                 <ListGroup>
                   <TextField
                     value={title}
@@ -207,9 +205,7 @@ export function NewVacancyFlow({
                     }
                   />
                 </ListGroup>
-                <p className="px-4 pt-2 text-caption text-fg-tertiary">
-                  {t.employer.post.titleHint}
-                </p>
+                <p className={shared.hint}>{t.employer.post.titleHint}</p>
               </>
             )}
           </>
@@ -235,8 +231,8 @@ export function NewVacancyFlow({
 
             {/* Maoshsiz vakansiya kam ariza oladi — buni yashirmaymiz */}
             {negotiable && (
-              <div className="mx-4 mt-4 rounded-tg bg-warning/12 px-4 py-3">
-                <p className="text-body text-fg">{t.employer.post.salaryWarning}</p>
+              <div className={styles.warning}>
+                <p className={styles.warningText}>{t.employer.post.salaryWarning}</p>
               </div>
             )}
           </>
@@ -263,9 +259,7 @@ export function NewVacancyFlow({
 
             {needsDistrict && city && (
               <>
-                <p className="px-4 pt-5 pb-1.5 text-section text-fg-secondary uppercase">
-                  {t.screens.card.district}
-                </p>
+                <p className={shared.fieldLabel}>{t.screens.card.district}</p>
                 <ListGroup>
                   {city.districts.map((option, i) => (
                     <PickRow
@@ -322,14 +316,14 @@ export function NewVacancyFlow({
                 );
               })}
             </ListGroup>
-            <p className="px-4 pt-2 text-caption text-fg-tertiary">
+            <p className={shared.hint}>
               {requirements.length} / {MAX_REQUIREMENTS}
             </p>
           </>
         )}
       </div>
 
-      <div className="sticky bottom-0 border-t border-separator bg-surface px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+      <div className={styles.flowFooter}>
         <Button
           block
           size="lg"
@@ -359,15 +353,12 @@ function PickRow({
 }) {
   return (
     <ListItem
-      title={
-        <span className={cn("text-body font-normal", dimmed && "text-fg-tertiary")}>{label}</span>
-      }
+      title={<span className={cx(shared.rowTitle, dimmed && shared.rowTitleDimmed)}>{label}</span>}
       compact
       insetSeparator={false}
       last={last}
-      trailing={selected ? <IconCheck size={20} className="text-accent" /> : undefined}
+      trailing={selected ? <IconCheck size={20} className={shared.accentIcon} /> : undefined}
       onClick={onSelect}
-      className="py-3"
     />
   );
 }

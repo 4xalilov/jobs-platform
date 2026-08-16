@@ -1,5 +1,11 @@
 import { ProfileScreen } from "@/components/profile/profile-screen";
-import { getCard, listChats, listCities, listProfessions, listSavedVacancies } from "@/lib/db/queries";
+import {
+  getCard,
+  listChats,
+  listCities,
+  listProfessions,
+  listSavedVacancies,
+} from "@/lib/db/queries";
 import { currentUserId } from "@/lib/db/session";
 
 export const dynamic = "force-dynamic";
