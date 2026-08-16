@@ -37,21 +37,29 @@ function stop(sabab, yechim) {
   process.exit(1);
 }
 
-/*
- * Windows'da `npm` — bu .cmd shim, .exe emas. Node 20.12 dan keyin
- * shim ni to'g'ridan-to'g'ri chaqirib bo'lmaydi (xavfsizlik tuzatishi)
- * va ENOENT chiqadi. `node` va `docker` haqiqiy .exe, ularga tegmaydi.
- */
 const isWindows = process.platform === "win32";
-const exe = (command) => (isWindows && command === "npm" ? "npm.cmd" : command);
 
-function run(command, args, options = {}) {
-  return spawnSync(exe(command), args, {
-    cwd: root,
-    stdio: "inherit",
-    shell: isWindows,
-    ...options,
-  });
+function run(command, args) {
+  return spawnSync(command, args, { cwd: root, stdio: "inherit" });
+}
+
+/*
+ * `npm` Windows'da .cmd shim — Node 20.12 dan keyin uni shellsiz
+ * chaqirib bo'lmaydi. Shell bilan chaqirganda esa argument massivi
+ * DEP0190 ogohlantirishini keltirib chiqaradi, shuning uchun butun
+ * buyruq bitta satr bo'lib beriladi. Bu yerda foydalanuvchi kiritgan
+ * qiymat yo'q, satr kodda turibdi.
+ */
+function runNpm(commandLine) {
+  return isWindows
+    ? spawnSync(`npm ${commandLine}`, { cwd: root, stdio: "inherit", shell: true })
+    : spawnSync("npm", commandLine.split(" "), { cwd: root, stdio: "inherit" });
+}
+
+/** Buyruq umuman o'rnatilganmi (daemon ishlayaptimi degani emas) */
+function installed(command) {
+  const probe = spawnSync(command, ["--version"], { stdio: "ignore" });
+  return probe.status === 0;
 }
 
 // ——— 1. Node ———
@@ -83,7 +91,7 @@ if (existsSync(join(root, "node_modules", "next"))) {
   note("o'rnatilgan");
 } else {
   note("o'rnatilmoqda — bu bir necha daqiqa olishi mumkin");
-  if (run("npm", ["install"]).status !== 0) {
+  if (runNpm("install").status !== 0) {
     stop("npm install yiqildi.", [
       "Internet bormi? Keyin qaytadan:  npm run setup",
       "Kesh buzilgan bo'lsa:  rm -rf node_modules package-lock.json && npm install",
@@ -104,18 +112,31 @@ if (await reachable(host, port)) {
     "Neon/Supabase da loyiha uyquga ketgan bo'lishi mumkin — panelda uyg'oting.",
   ]);
 } else {
+  // Docker umuman yo'qmi yoki bormi-yu ishga tushirilmaganmi — yechim boshqa
+  if (!installed("docker")) {
+    stop("Docker o'rnatilmagan.", [
+      "Docker Desktop ni o'rnating:",
+      "  https://www.docker.com/products/docker-desktop/",
+      "",
+      "Yoki Postgres ni o'zingiz o'rnatib, .env.local dagi",
+      "DATABASE_URL ni o'shanga qarating.",
+    ]);
+  }
+
   note("ko'tarilmoqda (docker compose)");
   // --wait muhim: usiz konteyner yaratilishi bilanoq qaytadi, Postgres
   // esa yana bir necha sekund ishga tushadi va migratsiya ulanolmaydi.
   if (run("docker", ["compose", "up", "-d", "--wait"]).status !== 0) {
-    stop("Postgres ko'tarilmadi.", [
-      "Docker Desktop ochiqmi?  docker ps  bilan tekshiring.",
-      `${port}-port band bo'lsa: docker-compose.yml da boshqa port bering`,
-      "va .env.local dagi DATABASE_URL ni ham shunga moslang.",
-      "Baza buzilgan bo'lsa:  docker compose down -v  keyin qaytadan.",
+    stop("Docker Desktop ishga tushirilmagan.", [
+      "Docker buyrug'i bor, lekin dasturning o'zi ochiq emas.",
       "",
-      "Docker o'rnatilmagan bo'lsa, Postgres ni o'zingiz o'rnatib,",
-      "DATABASE_URL ni o'shanga qaratsangiz ham bo'ladi.",
+      "  1. «Docker Desktop» ni oching (Пуск → Docker Desktop)",
+      "  2. Pastdagi kit belgisi yashil bo'lguncha kuting",
+      "  3. Shu buyruqni qaytadan bering:  npm run setup",
+      "",
+      `Agar boshqa xato chiqsa: ${port}-port band bo'lishi mumkin —`,
+      "docker-compose.yml da boshqa port bering va .env.local ni moslang.",
+      "Baza buzilgan bo'lsa:  docker compose down -v  keyin qaytadan.",
     ]);
   }
 }
