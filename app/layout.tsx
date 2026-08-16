@@ -25,6 +25,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="uz-Latn" suppressHydrationWarning>
       <head>
+        {/* Brauzer ham ikkala temani biladi — fon va boshqaruv elementlari
+            React yuklanishidan oldin to'g'ri chiziladi */}
+        <meta name="color-scheme" content="light dark" />
         {/* Tungi rejimda oq chaqnash bo'lmasligi uchun — chizishdan oldin ishlaydi */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>

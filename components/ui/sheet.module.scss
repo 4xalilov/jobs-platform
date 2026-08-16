@@ -8,11 +8,17 @@
   justify-content: flex-end;
 }
 
+/* Tungi rejimda 40% qora #181818 ustida deyarli sezilmaydi — sheet
+   fondan ajralmay qoladi. Shuning uchun qoraytirish kuchliroq. */
 .backdrop {
   position: absolute;
   inset: 0;
   background: rgb(0 0 0 / 40%);
   animation: backdrop-in $fast-transition;
+}
+
+:global(.theme-dark) .backdrop {
+  background: rgb(0 0 0 / 60%);
 }
 
 .panel {

@@ -96,6 +96,35 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+/*
+   Tema almashinuvi: ranglar 200ms bilan o'tadi (v4, §6.2).
+
+   O'tish faqat almashinuv lahzasida yoqiladi — `theme-switching`
+   klassini ThemeProvider qo'yadi va 220ms dan keyin oladi. Doimiy
+   qoldirilsa har elementda rang hisoblanadi va scroll paytida kadr
+   tushadi; scroll ketayotgan bo'lsa klass umuman qo'yilmaydi.
+*/
+.theme-switching,
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    fill 0.2s ease,
+    stroke 0.2s ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-switching,
+  .theme-switching *,
+  .theme-switching *::before,
+  .theme-switching *::after {
+    transition: none !important;
+  }
+}
+
 body {
   background: var(--color-background-secondary);
   color: var(--color-text);
@@ -104,6 +133,19 @@ body {
   line-height: 1.3125rem;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior-y: none;
+}
+
+/*
+   Fokus halqasi (v4, §6.4).
+
+   Global qoida — komponentda emas: har yangi tugma uchun alohida
+   yozilsa ertami-kechmi unutiladi, va klaviatura bilan yuradigan
+   foydalanuvchi qayerda turganini ko'rmay qoladi. Tungi rejimda
+   rang o'z-o'zidan almashadi, chunki tokendan olinadi.
+*/
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 /* Barcha qatlam shu yerga render qilinadi — ota elementning
