@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+
 import { useI18n } from "@/components/providers/i18n-provider";
 import { ChannelRow } from "@/components/channels/channel-row";
 import { Screen } from "@/components/app/screen";
@@ -17,7 +17,9 @@ import { Sheet } from "@/components/ui/sheet";
 import { apiPost } from "@/lib/api";
 import type { ChannelListItemDTO } from "@/lib/db/types";
 import { cx } from "@/lib/utils";
+import { cacheKey } from "@/lib/idb";
 import { useForwardNavigation } from "@/lib/navigation";
+import { useCachedList } from "@/lib/use-cached";
 import { useSheet } from "@/lib/use-sheet";
 import styles from "./channel-list.module.scss";
 
@@ -32,7 +34,7 @@ export function ChannelList({ initial }: { initial: ChannelListItemDTO[] }) {
   const { t, locale } = useI18n();
   const go = useForwardNavigation();
 
-  const [channels, setChannels] = useState(initial);
+  const { items: channels, setItems: setChannels } = useCachedList(cacheKey.channels(), initial);
   const menu = useSheet<ChannelListItemDTO>();
 
   const open = (channel: ChannelListItemDTO) => {

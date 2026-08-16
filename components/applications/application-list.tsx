@@ -7,6 +7,8 @@ import { Avatar } from "@/components/ui/avatar";
 import { EmptyState } from "@/components/ui/empty-state";
 import { IconCheck, IconChevronRight, IconDocument } from "@/components/ui/icon";
 import type { ApplicationDTO, ApplicationStatus } from "@/lib/db/types";
+import { cacheKey } from "@/lib/idb";
+import { useCachedList } from "@/lib/use-cached";
 import { cn } from "@/lib/utils";
 
 const ORDER: ApplicationStatus[] = ["yuborildi", "korildi", "korib_chiqilmoqda", "javob_berildi"];
@@ -16,7 +18,10 @@ const ORDER: ApplicationStatus[] = ["yuborildi", "korildi", "korib_chiqilmoqda",
  * Sababi: ariza yuborgan odam ilovaga qaytishi uchun sabab kerak, holat
  * o'zgarishi esa shu sabab. Bu bildirishnoma uchun ham eng tabiiy bahona.
  */
-export function ApplicationList({ applications }: { applications: ApplicationDTO[] }) {
+export function ApplicationList({ applications: fromServer }: { applications: ApplicationDTO[] }) {
+  // Oflaynda ro'yxat keshdan chiziladi
+  const { items: applications } = useCachedList(cacheKey.applications(), fromServer);
+
   const { t, locale } = useI18n();
   const router = useRouter();
 

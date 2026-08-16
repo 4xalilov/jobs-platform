@@ -25,6 +25,7 @@ import { Segmented } from "@/components/ui/segmented";
 import { Sheet } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { apiPost } from "@/lib/api";
+import { signOut } from "@/lib/sign-out";
 import type { CardDTO, CityDTO, ProfessionDTO } from "@/lib/db/types";
 import { locales, type Locale } from "@/lib/i18n";
 import { useSheet } from "@/lib/use-sheet";
@@ -247,7 +248,7 @@ export function ProfileScreen({
           variant="danger"
           className="mt-2"
           onClick={async () => {
-            await apiPost("/auth/logout");
+            await signOut();
             router.replace("/kirish");
             router.refresh();
           }}

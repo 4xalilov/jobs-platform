@@ -18,7 +18,7 @@ kanallar ichida oqadi.
 | v3 — themes.json, rem, UI kit SCSS modullarida             | ✅ tayyor          |
 | v4 — kanal modeli, 3.5rem panel, o'tishlar, tema           | ✅ tayyor          |
 | Unumdorlik byudjeti va stylelint                           | ✅ tayyor          |
-| Oflayn va IndexedDB                                        | ⏳ navbatda        |
+| Uch qatlamli kesh va oflayn                                | ✅ tayyor          |
 | Ekran komponentlarida qolgan Tailwind                      | ⏳ navbatda        |
 | Bildirishnoma (push)                                       | ⏳ navbatda        |
 | To'lov integratsiyasi (Payme, Click)                       | ⏳ tashlab ketildi |
@@ -289,6 +289,31 @@ qilinmaydi. O'lchov uning foydasini tasdiqladi — 102 qatorda u bilan
 `height` kabi maketni qayta hisoblatadigan xossalar animatsiya
 qilinishini taqiqlaydi; faqat `transform`, `opacity` va ranglar
 ruxsat etilgan.
+
+### Kesh va oflayn
+
+Uch qatlam, har birining o'z vazifasi bor:
+
+| Qatlam         | Nima saqlaydi                              | Qayerda                                    |
+| -------------- | ------------------------------------------ | ------------------------------------------ |
+| `localStorage` | Ko'rinish, til, kanal filtri, tab xotirasi | `lib/client-store.ts`, `lib/navigation.ts` |
+| IndexedDB      | Kanallar va arizalar ro'yxati              | `lib/idb.ts`, `lib/use-cached.ts`          |
+| Cache Storage  | HTML, JS, CSS, API javoblari               | `public/sw.js`                             |
+
+Service worker uch xil strategiya ishlatadi: `/_next/static/*` uchun
+cache-first (fayl nomida hash bor), sahifalar va `GET /api/*` uchun
+network-first (yangi ma'lumot muhim, lekin tarmoq yo'q bo'lsa keshdan).
+Yozuvchi so'rovlar umuman keshlanmaydi.
+
+**IndexedDB nima uchun kerak, agar service worker sahifani baribir
+keshlasa:** Cache Storage javoblarni manzil bo'yicha saqlaydi. Oflaynda
+hech qachon ochilmagan tabga o'tilsa o'sha manzil keshda bo'lmaydi.
+IndexedDB esa ma'lumotni manzildan ajratib saqlaydi.
+
+Zaxira ekran — `public/oflayn.html`, oddiy HTML. Next sahifasi bo'lganda
+u boshqa manzil o'rniga qaytarilib, o'z RSC ma'lumotini topolmay
+gidratsiyada yiqilardi va foydalanuvchi "Nimadir noto'g'ri ketdi"
+degan xatoni ko'rardi.
 
 ## Dizayn qoidalari
 

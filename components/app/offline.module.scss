@@ -1,0 +1,97 @@
+@use "../../styles/variables" as *;
+
+/* ——— Oflayn zaxira sahifasi ——— */
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 0 2.5rem;
+  text-align: center;
+  background: var(--color-background-secondary);
+}
+
+.icon {
+  color: var(--color-text-tertiary);
+}
+
+.title {
+  margin: 1rem 0 0;
+  font-size: $font-nav;
+  line-height: $font-nav-line;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.hint {
+  margin: 0.375rem 0 0;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--color-text-secondary);
+}
+
+.retry {
+  margin-top: 1.5rem;
+  height: 2.5rem;
+  padding: 0 1.25rem;
+  border-radius: $border-radius-button;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: $font-body;
+  font-weight: 600;
+  transition: transform $tap-feedback ease-out;
+
+  &:active {
+    transform: scale($tap-scale);
+  }
+}
+
+/*
+ * ——— Oflayn chizig'i ———
+ *
+ * Tab bar ustida turadi, tepada emas: yuqoridagi panel allaqachon
+ * sticky va top:0 da, ikkalasi bir joyda urishardi. Pastda esa u
+ * doim ko'rinadi va hech narsani to'smaydi.
+ *
+ * Modal emas — ilova oflaynda ham ishlaydi (keshdan chiziladi),
+ * shuning uchun foydalanuvchining yo'lini to'sish noto'g'ri bo'lardi.
+ */
+.banner {
+  position: fixed;
+  bottom: calc(#{$tab-bar-height} + env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 29;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  width: 100%;
+  max-width: 27.5rem;
+  height: 1.75rem;
+  background: var(--color-text-secondary);
+  color: var(--color-background);
+  font-size: $font-caption;
+  font-weight: 500;
+  animation: banner-in 0.2s $ease-slide;
+}
+
+@keyframes banner-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner {
+    animation: none;
+  }
+
+  .retry {
+    transition: none;
+  }
+}

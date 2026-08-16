@@ -292,6 +292,12 @@ export const uzCyrl: Dictionary = {
     },
   },
 
+  offline: {
+    /* Zaxira ekran matni bu yerda emas — u public/oflayn.html da,
+       chunki service worker uni React'siz qaytaradi */
+    banner: "Тармоқ йўқ — кешдан кўрсатилмоқда",
+  },
+
   screens: {
     jobs: {
       sort: "Саралаш",

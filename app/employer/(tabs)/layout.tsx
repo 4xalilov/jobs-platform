@@ -1,4 +1,5 @@
 import { EmployerTabBar } from "@/components/app/employer-tab-bar";
+import { OfflineBanner } from "@/components/app/offline-banner";
 import { unreadTotalForCompany } from "@/lib/db/queries";
 import { requireUser } from "@/lib/db/session";
 
@@ -11,6 +12,7 @@ export default async function EmployerLayout({ children }: { children: React.Rea
 
   return (
     <div className="mx-auto min-h-dvh max-w-[27.5rem] bg-bg">
+      <OfflineBanner />
       <div className="pb-[calc(3.625rem+env(safe-area-inset-bottom))]">{children}</div>
       <EmployerTabBar unread={unread} />
     </div>

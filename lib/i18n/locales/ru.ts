@@ -293,6 +293,12 @@ export const ru: Dictionary = {
     },
   },
 
+  offline: {
+    /* Zaxira ekran matni bu yerda emas — u public/oflayn.html da,
+       chunki service worker uni React'siz qaytaradi */
+    banner: "Нет сети — показано из кэша",
+  },
+
   screens: {
     jobs: {
       sort: "Сортировка",
