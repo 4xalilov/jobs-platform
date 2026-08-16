@@ -12,6 +12,13 @@ import { idbClear } from "@/lib/idb";
  * Shuning uchun chiqishda uchala qatlam ham tozalanadi.
  */
 export async function signOut(): Promise<void> {
+  /*
+   * Push obunasi birinchi bo'lib olinadi — sessiya yopilgandan keyin
+   * so'rov 401 qaytarardi va qurilma bazada qolib, keyingi odamga
+   * xabar kelib turardi.
+   */
+  await unsubscribePush();
+
   await apiPost("/auth/logout").catch(() => undefined);
 
   // 2-qatlam: IndexedDB
@@ -34,5 +41,18 @@ export async function signOut(): Promise<void> {
     sessionStorage.clear();
   } catch {
     // Xotira o'chirilgan bo'lsa ham chiqish davom etadi
+  }
+}
+
+async function unsubscribePush(): Promise<void> {
+  try {
+    const registration = await navigator.serviceWorker?.getRegistration();
+    const subscription = await registration?.pushManager.getSubscription();
+    if (!subscription) return;
+
+    await apiPost("/push/unsubscribe", { endpoint: subscription.endpoint });
+    await subscription.unsubscribe();
+  } catch {
+    // Push yo'q yoki qo'llab-quvvatlanmaydi — chiqish baribir davom etadi
   }
 }

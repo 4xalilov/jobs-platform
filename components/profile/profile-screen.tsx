@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForwardNavigation } from "@/lib/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { Screen } from "@/components/app/screen";
+import { PushSettings } from "@/components/profile/push-settings";
 import { useTheme } from "@/components/providers/theme-provider";
 import { Avatar } from "@/components/ui/avatar";
 import { Tag } from "@/components/ui/badge";
@@ -190,6 +191,9 @@ export function ProfileScreen({
           last
         />
       </ListGroup>
+
+      {/* v4 §1.5: kuniga bitta yig'ma xabar */}
+      <PushSettings />
 
       <SectionHeader>{t.screens.profile.settings}</SectionHeader>
       <ListGroup>

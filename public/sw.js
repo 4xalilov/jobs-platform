@@ -115,3 +115,53 @@ self.addEventListener("message", (event) => {
     event.waitUntil(caches.keys().then((keys) => Promise.all(keys.map((k) => caches.delete(k)))));
   }
 });
+
+/* ==========================================================================
+   PUSH BILDIRISHNOMALAR (v4, §1.5)
+
+   Kuniga bitta yig'ma xabar keladi — har vakansiyaga alohida emas.
+   Server payload ni tayyor holda yuboradi, bu yerda faqat ko'rsatiladi.
+   ========================================================================== */
+
+self.addEventListener("push", (event) => {
+  let data;
+  try {
+    data = event.data ? event.data.json() : null;
+  } catch {
+    data = null;
+  }
+  if (!data || !data.title) return;
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body ?? "",
+      icon: "/icon-192.png",
+      badge: "/icon-192.png",
+      // Bir xil tag'li eski xabar yangisi bilan almashadi
+      tag: data.tag ?? "ish",
+      data: { url: data.url ?? "/jobs" },
+    }),
+  );
+});
+
+/*
+ * Bosilganda: ilova ochiq bo'lsa o'sha oynaga o'tamiz, yopiq bo'lsa
+ * yangisini ochamiz. Ikkinchi nusxa ochilsa odam ikkita bir xil
+ * ilovada qolib ketardi.
+ */
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target = new URL(event.notification.data?.url ?? "/jobs", self.location.origin);
+
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((windows) => {
+      for (const client of windows) {
+        if (new URL(client.url).origin === target.origin && "focus" in client) {
+          client.navigate(target.href);
+          return client.focus();
+        }
+      }
+      return self.clients.openWindow(target.href);
+    }),
+  );
+});

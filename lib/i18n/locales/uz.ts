@@ -31,6 +31,21 @@ export const uz = {
     profile: "Profil",
   },
 
+  push: {
+    label: "Bildirishnomalar",
+    hint: "Kuniga bir marta — obuna kanallaringizdagi yangi ishlar",
+    on: "Yoqilgan",
+    off: "O'chirilgan",
+    hour: "Xabar vaqti",
+    hourHint: "Har kuni shu vaqtda bitta xabar keladi",
+    blocked: "Brauzer bildirishnomalarni bloklagan",
+    blockedHint: "Brauzer sozlamalaridan bu sayt uchun ruxsat bering",
+    unavailable: "Bu qurilma bildirishnomani qo'llab-quvvatlamaydi",
+    mutedNote: "Ovozsiz kanallar xabarga qo'shilmaydi",
+    digestTitle: "{count} ta yangi ish",
+    digestMore: "yana {count} ta kanal",
+  },
+
   theme: {
     label: "Ko'rinish",
     light: "Yorug'",

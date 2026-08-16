@@ -19,8 +19,8 @@ kanallar ichida oqadi.
 | v4 — kanal modeli, 3.5rem panel, o'tishlar, tema           | ✅ tayyor          |
 | Unumdorlik byudjeti va stylelint                           | ✅ tayyor          |
 | Uch qatlamli kesh va oflayn                                | ✅ tayyor          |
-| Ekran komponentlarida qolgan Tailwind                      | ⏳ navbatda        |
-| Bildirishnoma (push)                                       | ⏳ navbatda        |
+| Butun ilova SCSS Modules'da — Tailwind olib tashlandi      | ✅ tayyor          |
+| Bildirishnoma — kunlik yig'ma xabar                        | ✅ tayyor          |
 | To'lov integratsiyasi (Payme, Click)                       | ⏳ tashlab ketildi |
 
 ## Ishga tushirish
@@ -314,6 +314,50 @@ Zaxira ekran — `public/oflayn.html`, oddiy HTML. Next sahifasi bo'lganda
 u boshqa manzil o'rniga qaytarilib, o'z RSC ma'lumotini topolmay
 gidratsiyada yiqilardi va foydalanuvchi "Nimadir noto'g'ri ketdi"
 degan xatoni ko'rardi.
+
+### Bildirishnomalar
+
+Kuniga **bitta** yig'ma xabar keladi, har vakansiyaga alohida emas:
+"57 ta yangi ish — Kunlik ishlar 32, Administrator 9, yana 2 ta kanal".
+Sabab Telegram kanallaridan olingan: kuniga o'nlab xabar olgan odam
+oxiri kanalni ovozsiz qiladi va keyin hech narsani ko'rmaydi. Kuniga
+bitta xabar o'qiladi.
+
+Kanalni ovozsiz qilish (Ishlar ro'yxatida, uzoq bosish) yig'ma xabarga
+ham ta'sir qiladi — "ovozsiz" foydalanuvchi uchun bitta ma'noni
+bildiradi.
+
+Yoqish uchun VAPID kalitlari kerak:
+
+```bash
+npm run vapid          # kalit juftini chiqaradi
+# natijani .env.local ga ko'chiring
+```
+
+Kalitlar berilmasa push jim o'chiq turadi va Profilda bo'lim umuman
+ko'rinmaydi — ishlamaydigan tugma ko'rsatishdan ko'ra shunisi to'g'ri.
+
+Yuborish `POST /api/push/digest` orqali. Yo'l `CRON_SECRET` bilan
+himoyalangan; tashqi rejalashtiruvchi **har soat** chaqiradi, kimning
+soati kelganini ichkarida o'zi hisoblaydi:
+
+```
+0 * * * *  curl -fsS -X POST -H "Authorization: Bearer $CRON_SECRET" \
+             https://sizning-domen/api/push/digest
+```
+
+Vercel'da `vercel.json` dagi `crons` ham shu ishni bajaradi. Ilova
+ichida taymer yo'q: serverless muhitda jarayon so'rovlar orasida
+yashamaydi, ya'ni `setInterval` hech qachon ishlamaydi.
+
+Javob `{"ok":true,"users":3,"sent":4,"failed":0}` ko'rinishida.
+`failed` ataylab alohida: yuborish uzilib qolsa natija "0 ta odam"
+bo'lardi va bu "yuboradigan odam yo'q" dan farq qilmasdi.
+
+Qurilma javob bermasa (404/410 — brauzer o'chirilgan yoki obuna
+bekor qilingan) yozuv bazadan o'chadi. Chiqishda ham obuna bekor
+qilinadi, aks holda telefon almashgan odamga eski xabarlar kelib
+turardi.
 
 ## Dizayn qoidalari
 

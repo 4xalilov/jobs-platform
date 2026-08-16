@@ -16,7 +16,8 @@
     "themes": "node scripts/build-themes.mjs",
     "predev": "node scripts/build-themes.mjs",
     "prebuild": "node scripts/build-themes.mjs",
-    "lint:css": "stylelint \"**/*.{css,scss}\""
+    "lint:css": "stylelint \"**/*.{css,scss}\"",
+    "vapid": "node scripts/vapid.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -24,13 +25,15 @@
     "pg": "^8.23.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "server-only": "^0.0.1"
+    "server-only": "^0.0.1",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/pg": "^8.21.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/web-push": "^3.6.4",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "sass": "^1.102.0",
