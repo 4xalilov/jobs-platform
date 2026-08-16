@@ -37,20 +37,22 @@ const ICONS: Record<TabKey, IconPair> = {
 export const DEFAULT_TABS: TabKey[] = ["jobs", "applications", "messages", "profile"];
 
 /** Pastda tab bar — faqat 4 ta bo'lim, balandligi 3.125rem + safe area */
-export function TabBar({
+export function TabBar<K extends TabKey>({
   active,
-  tabs = DEFAULT_TABS,
+  tabs = DEFAULT_TABS as K[],
   onChange,
   labels,
   badges,
   className,
 }: {
-  active: TabKey;
+  active: K;
   /** Qaysi bo'limlar chiqishi — ekranlar tayyor bo'lishiga qarab */
-  tabs?: TabKey[];
-  onChange: (tab: TabKey) => void;
-  labels: Partial<Record<TabKey, string>>;
-  badges?: Partial<Record<TabKey, number>>;
+  tabs?: K[];
+  /* Generik: chaqiruvchi faqat o'zi bergan tablarni oladi, ya'ni
+     ishlatilmaydigan kalit uchun tekshiruv yozish shart emas */
+  onChange: (tab: K) => void;
+  labels: Partial<Record<K, string>>;
+  badges?: Partial<Record<K, number>>;
   className?: string;
 }) {
   return (

@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { useI18n } from "@/components/providers/i18n-provider";
+import { Screen } from "@/components/app/screen";
 import { Avatar } from "@/components/ui/avatar";
 import { Chip, ChipRow } from "@/components/ui/chip";
 import { EmptyState } from "@/components/ui/empty-state";
 import { IconUsers } from "@/components/ui/icon";
 import { ListGroup, ListItem } from "@/components/ui/list";
-import { NavBar } from "@/components/ui/nav-bar";
 import type { OpenCandidateDTO } from "@/lib/db/queries";
 import type { ProfessionDTO } from "@/lib/db/types";
 
@@ -31,15 +31,11 @@ export function OpenCandidateList({
 
   const seen = (days: number | null) => {
     if (days === null) return "";
-    return days === 0
-      ? t.trust.seenToday
-      : t.trust.seenDays.replace("{count}", String(days));
+    return days === 0 ? t.trust.seenToday : t.trust.seenDays.replace("{count}", String(days));
   };
 
   return (
-    <>
-      <NavBar title={t.trust.candidatesTitle} className="sticky top-0 z-20 hairline" />
-
+    <Screen title={t.trust.candidatesTitle}>
       <div className="sticky top-11 z-20 bg-surface hairline">
         <ChipRow>
           <Chip selected={profession === null} onClick={() => setProfession(null)}>
@@ -71,16 +67,10 @@ export function OpenCandidateList({
               className="animate-row-in"
               leading={<Avatar name={candidate.name} online />}
               title={candidate.name}
-              subtitle={[
-                candidate.professionName?.[locale],
-                t.job.experience[candidate.experience],
-              ]
+              subtitle={[candidate.professionName?.[locale], t.job.experience[candidate.experience]]
                 .filter(Boolean)
                 .join(" · ")}
-              caption={[
-                candidate.cityName?.[locale],
-                t.job.employment[candidate.employment],
-              ]
+              caption={[candidate.cityName?.[locale], t.job.employment[candidate.employment]]
                 .filter(Boolean)
                 .join(" · ")}
               meta={seen(candidate.lastSeenDays)}
@@ -89,6 +79,6 @@ export function OpenCandidateList({
           ))}
         </ListGroup>
       )}
-    </>
+    </Screen>
   );
 }

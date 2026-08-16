@@ -1,42 +1,26 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
-import { TabBar, type TabKey } from "@/components/ui/tab-bar";
+import { TabBar } from "@/components/ui/tab-bar";
+import { tabOf, type TabKey, useTabNavigation } from "@/lib/navigation";
 import { useUnread } from "@/lib/use-unread";
 
-/** v2: Saqlangan o'rniga Arizalarim. Saqlanganlar Ishlar ichida filtr. */
+/** v4: Ishlar tabi kanallar ro'yxati; Saqlangan Profil ichida. */
 const TABS: TabKey[] = ["jobs", "applications", "messages", "profile"];
-
-const ROUTES: Partial<Record<TabKey, string>> = {
-  jobs: "/jobs",
-  applications: "/arizalarim",
-  messages: "/messages",
-  profile: "/profile",
-};
-
-function activeTab(pathname: string): TabKey {
-  if (pathname.startsWith("/arizalarim")) return "applications";
-  if (pathname.startsWith("/messages")) return "messages";
-  if (pathname.startsWith("/profile")) return "profile";
-  return "jobs";
-}
 
 export function AppTabBar({ unread = 0 }: { unread?: number }) {
   const { t } = useI18n();
   const pathname = usePathname();
-  const router = useRouter();
+  const goToTab = useTabNavigation();
   const live = useUnread(unread);
 
   return (
     <div className="fixed bottom-0 left-1/2 z-30 w-full max-w-[27.5rem] -translate-x-1/2">
       <TabBar
-        active={activeTab(pathname)}
+        active={tabOf(pathname)}
         tabs={TABS}
-        onChange={(tab) => {
-          const route = ROUTES[tab];
-          if (route) router.push(route);
-        }}
+        onChange={goToTab}
         labels={{
           jobs: t.tabs.jobs,
           applications: t.tabs.applications,

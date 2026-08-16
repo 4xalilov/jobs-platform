@@ -1,11 +1,11 @@
 "use client";
 
 import { useI18n } from "@/components/providers/i18n-provider";
+import { Screen } from "@/components/app/screen";
 import { Tag } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { IconCard, IconCheck } from "@/components/ui/icon";
 import { ListGroup } from "@/components/ui/list";
-import { NavBar } from "@/components/ui/nav-bar";
 import { Sheet } from "@/components/ui/sheet";
 import { plans, type Plan } from "@/lib/plans";
 import { useSheet } from "@/lib/use-sheet";
@@ -34,9 +34,7 @@ export default function PlansPage() {
       : `${formatNumber(plan.price)} ${t.job.currency}${plan.monthly ? `/${t.employer.plans.perMonth}` : ""}`;
 
   return (
-    <>
-      <NavBar title={t.employer.plans.title} className="sticky top-0 z-20 hairline" />
-
+    <Screen title={t.employer.plans.title}>
       <ListGroup className="mt-3">
         {plans.map((plan, i) => {
           const current = plan.id === "free";
@@ -107,6 +105,6 @@ export default function PlansPage() {
           <p className="mt-2 text-caption text-fg-tertiary">{t.employer.plans.stageNote}</p>
         </div>
       </Sheet>
-    </>
+    </Screen>
   );
 }

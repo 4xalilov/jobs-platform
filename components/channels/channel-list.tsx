@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { ChannelRow } from "@/components/channels/channel-row";
+import { Screen } from "@/components/app/screen";
 import { EmptyState } from "@/components/ui/empty-state";
 import {
   IconBellOff,
@@ -17,6 +17,7 @@ import { Sheet } from "@/components/ui/sheet";
 import { apiPost } from "@/lib/api";
 import type { ChannelListItemDTO } from "@/lib/db/types";
 import { cx } from "@/lib/utils";
+import { useForwardNavigation } from "@/lib/navigation";
 import { useSheet } from "@/lib/use-sheet";
 import styles from "./channel-list.module.scss";
 
@@ -29,7 +30,7 @@ import styles from "./channel-list.module.scss";
  */
 export function ChannelList({ initial }: { initial: ChannelListItemDTO[] }) {
   const { t, locale } = useI18n();
-  const router = useRouter();
+  const go = useForwardNavigation();
 
   const [channels, setChannels] = useState(initial);
   const menu = useSheet<ChannelListItemDTO>();
@@ -38,7 +39,7 @@ export function ChannelList({ initial }: { initial: ChannelListItemDTO[] }) {
     // Belgi darhol yo'qoladi — server javobini kutmaydi
     setChannels((prev) => prev.map((c) => (c.id === channel.id ? { ...c, newCount: 0 } : c)));
     void apiPost(`/channels/${channel.id}/seen`, {});
-    router.push(`/jobs/${channel.id}`);
+    go(`/jobs/${channel.id}`);
   };
 
   /** Optimistik: holat darhol o'zgaradi, so'rov fonda ketadi */
@@ -72,11 +73,23 @@ export function ChannelList({ initial }: { initial: ChannelListItemDTO[] }) {
   };
 
   return (
-    <>
+    <Screen
+      title={t.tabs.jobs}
+      trailing={
+        <button
+          type="button"
+          aria-label={t.common.search}
+          onClick={() => go("/search")}
+          className={styles.searchAction}
+        >
+          <IconSearch size={22} />
+        </button>
+      }
+    >
       <div className={styles.group}>
         <button
           type="button"
-          onClick={() => router.push("/jobs/katalog")}
+          onClick={() => go("/jobs/katalog")}
           className={cx(styles.browse, "hairline hairline-inset")}
         >
           <span className={styles.browseIcon}>
@@ -148,6 +161,6 @@ export function ChannelList({ initial }: { initial: ChannelListItemDTO[] }) {
           </div>
         )}
       </Sheet>
-    </>
+    </Screen>
   );
 }

@@ -89,3 +89,19 @@
     transition: none;
   }
 }
+
+/* Panel o'ngidagi qidiruv tugmasi */
+.searchAction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  color: var(--color-primary);
+  transition: background-color $tap-feedback ease-out;
+
+  &:active {
+    background: var(--color-fill);
+  }
+}

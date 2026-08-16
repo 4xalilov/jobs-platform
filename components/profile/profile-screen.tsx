@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
+import { Screen } from "@/components/app/screen";
 import { useTheme } from "@/components/providers/theme-provider";
 import { Avatar } from "@/components/ui/avatar";
 import { Tag } from "@/components/ui/badge";
@@ -17,7 +18,6 @@ import {
   IconPencil,
 } from "@/components/ui/icon";
 import { ListGroup, ListItem, SectionHeader } from "@/components/ui/list";
-import { LargeTitle } from "@/components/ui/large-title";
 import { Segmented } from "@/components/ui/segmented";
 import { Sheet } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
@@ -80,9 +80,7 @@ export function ProfileScreen({
   };
 
   return (
-    <>
-      <LargeTitle>{t.tabs.profile}</LargeTitle>
-
+    <Screen title={t.tabs.profile}>
       {/* Kartochka — rezyume o'rniga */}
       <div className="bg-surface px-4 pt-4 pb-4">
         <div className="flex items-center gap-3">
@@ -307,6 +305,6 @@ export function ProfileScreen({
         <p className="px-4 pt-3 text-caption text-fg-tertiary">{t.trust.visibilityHint}</p>
         <div className="h-4" />
       </Sheet>
-    </>
+    </Screen>
   );
 }

@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
+import { Screen } from "@/components/app/screen";
 import { Avatar } from "@/components/ui/avatar";
 import { EmptyState } from "@/components/ui/empty-state";
 import { IconCheck, IconChevronRight, IconDocument } from "@/components/ui/icon";
-import { LargeTitle } from "@/components/ui/large-title";
 import type { ApplicationDTO, ApplicationStatus } from "@/lib/db/types";
 import { cn } from "@/lib/utils";
 
@@ -22,14 +22,13 @@ export function ApplicationList({ applications }: { applications: ApplicationDTO
 
   if (applications.length === 0) {
     return (
-      <>
-        <LargeTitle>{t.screens.applications.title}</LargeTitle>
+      <Screen title={t.screens.applications.title}>
         <EmptyState
           icon={<IconDocument size={44} />}
           title={t.screens.applications.empty}
           hint={t.screens.applications.emptyHint}
         />
-      </>
+      </Screen>
     );
   }
 
@@ -43,9 +42,7 @@ export function ApplicationList({ applications }: { applications: ApplicationDTO
   };
 
   return (
-    <>
-      <LargeTitle>{t.screens.applications.title}</LargeTitle>
-
+    <Screen title={t.screens.applications.title}>
       <div className="flex flex-col gap-3">
         {applications.map((application) => (
           <div key={application.id} className="animate-row-in bg-surface">
@@ -144,6 +141,6 @@ export function ApplicationList({ applications }: { applications: ApplicationDTO
           </div>
         ))}
       </div>
-    </>
+    </Screen>
   );
 }

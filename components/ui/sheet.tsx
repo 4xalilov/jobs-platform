@@ -33,7 +33,10 @@ export function Sheet({
 }: SheetProps) {
   const isClient = useIsClient();
   const [dragY, setDragY] = useState(0);
-  const startY = useRef<number | null>(null);
+  const drag = useRef<{ startY: number; lastY: number; lastAt: number; velocity: number } | null>(
+    null,
+  );
+  const panel = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -57,17 +60,38 @@ export function Sheet({
   };
 
   const onPointerDown = (e: React.PointerEvent) => {
-    startY.current = e.clientY;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    drag.current = { startY: e.clientY, lastY: e.clientY, lastAt: e.timeStamp, velocity: 0 };
   };
 
   const onPointerMove = (e: React.PointerEvent) => {
-    if (startY.current === null) return;
-    setDragY(Math.max(0, e.clientY - startY.current));
+    const state = drag.current;
+    if (!state) return;
+
+    // Tezlik px/ms da — oxirgi ikki nuqta orasidan
+    const dt = e.timeStamp - state.lastAt;
+    if (dt > 0) state.velocity = (e.clientY - state.lastY) / dt;
+    state.lastY = e.clientY;
+    state.lastAt = e.timeStamp;
+
+    setDragY(Math.max(0, e.clientY - state.startY));
   };
 
+  /*
+   * Yopish qarori ikki mezondan biri bilan (§5.4):
+   *  - sheet balandligining yarmidan ko'p tortilgan bo'lsa
+   *  - yoki tez pastga otilgan bo'lsa (0.5 px/ms dan tez)
+   * Faqat masofaga qarasak, tez qilingan qisqa harakat yopmaydi va
+   * bu qo'lga sun'iy tuyuladi.
+   */
   const onPointerUp = () => {
-    startY.current = null;
-    if (dragY > 90) close();
+    const state = drag.current;
+    drag.current = null;
+    if (!state) return;
+
+    const height = panel.current?.getBoundingClientRect().height ?? 400;
+    const flung = state.velocity > 0.5;
+    if (flung || dragY > height / 2) close();
     else setDragY(0);
   };
 
@@ -80,6 +104,7 @@ export function Sheet({
         aria-modal="true"
         tabIndex={-1}
         ref={(node) => {
+          panel.current = node;
           node?.focus();
         }}
         className={cx(styles.panel, className)}

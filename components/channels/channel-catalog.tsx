@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { ChannelRow } from "@/components/channels/channel-row";
+import { Screen } from "@/components/app/screen";
 import type { ChannelGroupDTO, ChannelListItemDTO } from "@/lib/db/types";
 import { apiPost } from "@/lib/api";
+import { useForwardNavigation } from "@/lib/navigation";
 import styles from "./channel-catalog.module.scss";
 
 type GroupKey = keyof ReturnType<typeof useI18n>["t"]["channels"]["groups"];
@@ -18,7 +19,7 @@ type GroupKey = keyof ReturnType<typeof useI18n>["t"]["channels"]["groups"];
  */
 export function ChannelCatalog({ initial }: { initial: ChannelGroupDTO[] }) {
   const { t } = useI18n();
-  const router = useRouter();
+  const go = useForwardNavigation();
   const [groups, setGroups] = useState(initial);
 
   /** Obuna darhol o'zgaradi, so'rov fonda ketadi */
@@ -44,7 +45,7 @@ export function ChannelCatalog({ initial }: { initial: ChannelGroupDTO[] }) {
   const groupName = (id: string) => t.channels.groups[id as GroupKey] ?? id;
 
   return (
-    <>
+    <Screen title={t.channels.catalog} back="/jobs">
       {groups.map((group) => (
         <section key={group.id}>
           <h2 className={styles.groupHeader}>{groupName(group.id)}</h2>
@@ -55,7 +56,7 @@ export function ChannelCatalog({ initial }: { initial: ChannelGroupDTO[] }) {
                 channel={channel}
                 variant="catalog"
                 last={index === group.channels.length - 1}
-                onOpen={(c) => router.push(`/jobs/${c.id}`)}
+                onOpen={(c) => go(`/jobs/${c.id}`)}
                 onToggleSubscribe={toggle}
               />
             ))}
@@ -74,6 +75,6 @@ export function ChannelCatalog({ initial }: { initial: ChannelGroupDTO[] }) {
           ),
         )}
       </p>
-    </>
+    </Screen>
   );
 }

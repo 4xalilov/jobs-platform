@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
+import { Screen } from "@/components/app/screen";
 import { VacancyRow } from "@/components/jobs/vacancy-row";
 import { VacancySheet } from "@/components/jobs/vacancy-sheet";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { IconBookmark, IconTrash } from "@/components/ui/icon";
 import { ListGroup } from "@/components/ui/list";
-import { NavBar } from "@/components/ui/nav-bar";
 import { SwipeListItem } from "@/components/ui/swipe-list-item";
 import { apiPost } from "@/lib/api";
 import type { VacancyDTO } from "@/lib/db/types";
@@ -28,9 +28,7 @@ export function SavedList({ initial }: { initial: VacancyDTO[] }) {
   };
 
   return (
-    <>
-      <NavBar title={t.tabs.saved} className="sticky top-0 z-20 hairline" />
-
+    <Screen title={t.tabs.saved} back="/profile">
       {items.length === 0 ? (
         <EmptyState
           icon={<IconBookmark size={44} />}
@@ -76,6 +74,6 @@ export function SavedList({ initial }: { initial: VacancyDTO[] }) {
           if (!updated.saved) setItems((c) => c.filter((item) => item.id !== updated.id));
         }}
       />
-    </>
+    </Screen>
   );
 }

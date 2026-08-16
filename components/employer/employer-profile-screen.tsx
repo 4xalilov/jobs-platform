@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
+import { Screen } from "@/components/app/screen";
 import { useTheme } from "@/components/providers/theme-provider";
 import { Avatar } from "@/components/ui/avatar";
 import { Tag } from "@/components/ui/badge";
@@ -16,7 +17,6 @@ import {
   IconUser,
 } from "@/components/ui/icon";
 import { ListGroup, ListItem, SectionHeader } from "@/components/ui/list";
-import { NavBar } from "@/components/ui/nav-bar";
 import { Segmented } from "@/components/ui/segmented";
 import { Sheet } from "@/components/ui/sheet";
 import { apiPost } from "@/lib/api";
@@ -45,9 +45,7 @@ export function EmployerProfileScreen({
   };
 
   return (
-    <>
-      <NavBar title={t.employer.tabs.profile} className="sticky top-0 z-20 hairline" />
-
+    <Screen title={t.employer.tabs.profile}>
       <div className="bg-surface px-4 pt-4 pb-4">
         <div className="flex items-center gap-3">
           <Avatar name={company.name} size={64} online={company.fastReply} />
@@ -190,6 +188,6 @@ export function EmployerProfileScreen({
         </ListGroup>
         <div className="h-4" />
       </Sheet>
-    </>
+    </Screen>
   );
 }

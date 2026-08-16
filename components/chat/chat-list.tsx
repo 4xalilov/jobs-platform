@@ -3,12 +3,12 @@
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
+import { Screen } from "@/components/app/screen";
 import { Avatar } from "@/components/ui/avatar";
 import { CountBadge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { IconMessage } from "@/components/ui/icon";
 import { ListGroup, ListItem } from "@/components/ui/list";
-import { LargeTitle } from "@/components/ui/large-title";
 import { apiGet } from "@/lib/api";
 import { usePolling } from "@/lib/use-polling";
 import type { ChatListItemDTO, ChatSide } from "@/lib/db/types";
@@ -43,9 +43,7 @@ export function ChatList({ chats: initial }: { chats: ChatListItemDTO[] }) {
   usePolling(refresh, 5000);
 
   return (
-    <>
-      <LargeTitle>{t.tabs.messages}</LargeTitle>
-
+    <Screen title={t.tabs.messages}>
       {chats.length === 0 ? (
         <EmptyState
           icon={<IconMessage size={44} />}
@@ -70,6 +68,6 @@ export function ChatList({ chats: initial }: { chats: ChatListItemDTO[] }) {
           ))}
         </ListGroup>
       )}
-    </>
+    </Screen>
   );
 }

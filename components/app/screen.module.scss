@@ -1,0 +1,166 @@
+@use "../../styles/variables" as *;
+
+/*
+ * ——— Yuqori panel (v4, §3) ———
+ * Balandligi 3.5rem va scroll'da o'zgarmaydi. Katta sarlavhalar
+ * (2.125rem) olib tashlandi: har ekranda 2rem ga yaqin vertikal joy
+ * bo'shaydi, bu bitta qo'shimcha vakansiya degani.
+ */
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  height: 3.5rem;
+  padding: 0 0.5rem;
+  background: var(--color-background);
+}
+
+/* Chiziq faqat scroll boshlangandan keyin paydo bo'ladi */
+.bar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-borders);
+  transform: scaleY(0.5);
+  transform-origin: bottom;
+  opacity: 0;
+  transition: opacity 0.15s ease-out;
+  pointer-events: none;
+}
+
+.barScrolled::after {
+  opacity: 1;
+}
+
+/* Ikkala yon bir xil joy egallaydi — shunda sarlavha o'ngdagi tugma
+   qanchalik keng bo'lishidan qat'i nazar aynan markazda qoladi */
+.side {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  min-width: 2.75rem;
+  color: var(--color-primary);
+}
+
+.side:first-of-type {
+  justify-content: flex-start;
+}
+
+.side:last-of-type {
+  justify-content: flex-end;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  transition: background-color $tap-feedback ease-out;
+
+  &:active {
+    background: var(--color-fill);
+  }
+}
+
+.titleWrap {
+  flex: 0 1 auto;
+  min-width: 0;
+  text-align: center;
+}
+
+.title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $font-nav;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* Kanal ichida: nom ostida "1 240 obunachi" */
+.subtitle {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: var(--color-text-secondary);
+}
+
+/*
+ * ——— Ekran o'tishlari (§5.1) ———
+ * Orqaga qaytish oldinga o'tishning aynan teskarisi. Har o'tish
+ * 300ms dan oshmaydi.
+ */
+.screen {
+  animation-duration: 0.28s;
+  animation-timing-function: $ease-slide;
+  animation-fill-mode: both;
+}
+
+.forward {
+  animation-name: push-in;
+}
+
+.back {
+  animation-name: pop-in;
+}
+
+/* Tab almashinuvi: siljish yo'q, 100ms cross-fade */
+.fade {
+  animation-name: cross-fade;
+  animation-duration: 0.1s;
+  animation-timing-function: ease-out;
+}
+
+@keyframes push-in {
+  from {
+    opacity: 0;
+    transform: translate3d(1.75rem, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translate3d(-1.75rem, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes cross-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen {
+    animation: none;
+  }
+
+  .bar::after {
+    transition: none;
+  }
+}

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useI18n } from "@/components/providers/i18n-provider";
+import { Screen } from "@/components/app/screen";
 import { VacancyRow } from "@/components/jobs/vacancy-row";
 import { VacancySheet } from "@/components/jobs/vacancy-sheet";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -139,14 +140,11 @@ export function ChannelView({
   }));
 
   return (
-    <>
-      <header className={cx(styles.header, "hairline")}>
-        <span className={styles.headerText}>
-          <span className={styles.name}>{channel.name[locale]}</span>
-          <span className={styles.meta}>
-            {t.channels.subscribers.replace("{count}", String(subscribers))}
-          </span>
-        </span>
+    <Screen
+      title={channel.name[locale]}
+      subtitle={t.channels.subscribers.replace("{count}", String(subscribers))}
+      back="/jobs"
+      trailing={
         <button
           type="button"
           onClick={toggleSubscribe}
@@ -154,8 +152,8 @@ export function ChannelView({
         >
           {subscribed ? t.channels.subscribed : t.channels.subscribe}
         </button>
-      </header>
-
+      }
+    >
       <div className={cx(styles.chips, "hairline")}>
         {chips.map((chip) => (
           <button
@@ -203,6 +201,6 @@ export function ChannelView({
         onClose={vacancySheet.close}
         onChange={(next) => setItems((prev) => prev.map((v) => (v.id === next.id ? next : v)))}
       />
-    </>
+    </Screen>
   );
 }

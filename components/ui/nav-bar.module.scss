@@ -1,11 +1,14 @@
 @use "../../styles/variables" as *;
 
+/* v4, §3: panel balandligi hamma joyda 3.5rem. To'liq ekranli oqimlar
+   (chat, tanishtiruv, kartochka) Screen qobig'iga sig'maydi — ularning
+   o'z tuzilishi bor — lekin balandlik bir xil bo'lishi kerak. */
 .bar {
   position: relative;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  height: 2.75rem;
+  height: 3.5rem;
   padding: env(safe-area-inset-top) 0.5rem 0;
   background: color-mix(in srgb, var(--color-background) 95%, transparent);
   backdrop-filter: blur(0.75rem);

@@ -4,13 +4,13 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSystemMessageText } from "@/components/chat/chat-list";
 import { useI18n } from "@/components/providers/i18n-provider";
+import { Screen } from "@/components/app/screen";
 import { Avatar } from "@/components/ui/avatar";
 import { CountBadge, Tag } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { IconCheck, IconMessage, IconUsers, IconX } from "@/components/ui/icon";
 import { ListGroup, ListItem } from "@/components/ui/list";
-import { NavBar } from "@/components/ui/nav-bar";
 import { Sheet } from "@/components/ui/sheet";
 import { SwipeListItem } from "@/components/ui/swipe-list-item";
 import { apiGet, apiPost } from "@/lib/api";
@@ -46,9 +46,7 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
   };
 
   return (
-    <>
-      <NavBar title={t.employer.candidates.title} className="sticky top-0 z-20 hairline" />
-
+    <Screen title={t.employer.candidates.title}>
       {candidates.length === 0 ? (
         <EmptyState
           icon={<IconUsers size={44} />}
@@ -149,6 +147,6 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
           </div>
         )}
       </Sheet>
-    </>
+    </Screen>
   );
 }

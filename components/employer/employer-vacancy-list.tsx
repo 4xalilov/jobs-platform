@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
+import { Screen } from "@/components/app/screen";
 import { Avatar } from "@/components/ui/avatar";
 import { Tag } from "@/components/ui/badge";
 import { Button, Fab } from "@/components/ui/button";
@@ -16,7 +17,6 @@ import {
   IconUsers,
 } from "@/components/ui/icon";
 import { ListGroup, ListItem, SectionHeader } from "@/components/ui/list";
-import { NavBar } from "@/components/ui/nav-bar";
 import { Sheet } from "@/components/ui/sheet";
 import { apiDelete } from "@/lib/api";
 import type { EmployerVacancyDTO } from "@/lib/db/types";
@@ -74,9 +74,7 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
   );
 
   return (
-    <>
-      <NavBar title={t.employer.vacancies.title} className="sticky top-0 z-20 hairline" />
-
+    <Screen title={t.employer.vacancies.title}>
       {items.length === 0 ? (
         <EmptyState
           icon={<IconBriefcase size={44} />}
@@ -184,6 +182,6 @@ export function EmployerVacancyList({ initial }: { initial: EmployerVacancyDTO[]
           </div>
         )}
       </Sheet>
-    </>
+    </Screen>
   );
 }

@@ -1,38 +1,6 @@
 @use "../../styles/variables" as *;
 
-/* ——— Kanal sarlavhasi: nomi, obunachi soni, obuna tugmasi ——— */
-.header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem $side-padding;
-  background: var(--color-background);
-}
-
-.headerText {
-  flex: 1;
-  min-width: 0;
-}
-
-.name {
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: $font-nav;
-  line-height: $font-nav-line;
-  font-weight: 600;
-  color: var(--color-text);
-}
-
-.meta {
-  display: block;
-  margin-top: 0.0625rem;
-  font-size: $font-caption;
-  line-height: $font-caption-line;
-  color: var(--color-text-secondary);
-}
-
+/* Panel o'ngidagi obuna tugmasi */
 .subscribe {
   flex-shrink: 0;
   height: 2rem;
