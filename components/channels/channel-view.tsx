@@ -1,10 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { Screen } from "@/components/app/screen";
 import { VacancyRow } from "@/components/jobs/vacancy-row";
-import { VacancySheet } from "@/components/jobs/vacancy-sheet";
+
 import { EmptyState } from "@/components/ui/empty-state";
 import { IconBriefcase } from "@/components/ui/icon";
 import { ListSkeleton } from "@/components/ui/skeleton";
@@ -29,6 +30,16 @@ function whenOf(minutesAgo: number): WhenKey {
   if (minutesAgo < 60 * 24 * 7) return "thisWeek";
   return "earlier";
 }
+
+/*
+ * Vakansiya sheeti alohida bo'lakka chiqariladi va faqat ochilganda
+ * render qilinadi. Doim render qilinsa (ichida null qaytarsa ham)
+ * dynamic() bo'lakni darrov yuklab oladi va butun ma'no yo'qoladi.
+ */
+const VacancySheet = dynamic(
+  () => import("@/components/jobs/vacancy-sheet").then((m) => m.VacancySheet),
+  { ssr: false },
+);
 
 export function ChannelView({
   channel,
@@ -195,12 +206,14 @@ export function ChannelView({
         </div>
       )}
 
-      <VacancySheet
-        vacancy={vacancySheet.value}
-        open={vacancySheet.isOpen}
-        onClose={vacancySheet.close}
-        onChange={(next) => setItems((prev) => prev.map((v) => (v.id === next.id ? next : v)))}
-      />
+      {vacancySheet.isOpen && (
+        <VacancySheet
+          vacancy={vacancySheet.value}
+          open={vacancySheet.isOpen}
+          onClose={vacancySheet.close}
+          onChange={(next) => setItems((prev) => prev.map((v) => (v.id === next.id ? next : v)))}
+        />
+      )}
     </Screen>
   );
 }

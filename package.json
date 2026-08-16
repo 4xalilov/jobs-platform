@@ -15,7 +15,8 @@
     "db:setup": "npm run db:migrate && npm run db:seed",
     "themes": "node scripts/build-themes.mjs",
     "predev": "node scripts/build-themes.mjs",
-    "prebuild": "node scripts/build-themes.mjs"
+    "prebuild": "node scripts/build-themes.mjs",
+    "lint:css": "stylelint \"**/*.{css,scss}\""
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -35,6 +36,9 @@
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "sass": "^1.102.0",
+    "stylelint": "^17.14.1",
+    "stylelint-config-standard-scss": "^17.0.0",
+    "stylelint-high-performance-animation": "^2.0.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

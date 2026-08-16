@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { Screen } from "@/components/app/screen";
 import { VacancyRow } from "@/components/jobs/vacancy-row";
-import { VacancySheet } from "@/components/jobs/vacancy-sheet";
+
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { IconBookmark, IconTrash } from "@/components/ui/icon";
@@ -14,6 +15,16 @@ import { SwipeListItem } from "@/components/ui/swipe-list-item";
 import { apiPost } from "@/lib/api";
 import type { VacancyDTO } from "@/lib/db/types";
 import { useSheet } from "@/lib/use-sheet";
+
+/*
+ * Vakansiya sheeti alohida bo'lakka chiqariladi va faqat ochilganda
+ * render qilinadi. Doim render qilinsa (ichida null qaytarsa ham)
+ * dynamic() bo'lakni darrov yuklab oladi va butun ma'no yo'qoladi.
+ */
+const VacancySheet = dynamic(
+  () => import("@/components/jobs/vacancy-sheet").then((m) => m.VacancySheet),
+  { ssr: false },
+);
 
 export function SavedList({ initial }: { initial: VacancyDTO[] }) {
   const { t } = useI18n();
@@ -65,15 +76,17 @@ export function SavedList({ initial }: { initial: VacancyDTO[] }) {
         </ListGroup>
       )}
 
-      <VacancySheet
-        vacancy={vacancySheet.value}
-        open={vacancySheet.isOpen}
-        onClose={vacancySheet.close}
-        onChange={(updated) => {
-          vacancySheet.replace(updated);
-          if (!updated.saved) setItems((c) => c.filter((item) => item.id !== updated.id));
-        }}
-      />
+      {vacancySheet.isOpen && (
+        <VacancySheet
+          vacancy={vacancySheet.value}
+          open={vacancySheet.isOpen}
+          onClose={vacancySheet.close}
+          onChange={(updated) => {
+            vacancySheet.replace(updated);
+            if (!updated.saved) setItems((c) => c.filter((item) => item.id !== updated.id));
+          }}
+        />
+      )}
     </Screen>
   );
 }

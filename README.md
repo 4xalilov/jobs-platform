@@ -5,23 +5,22 @@ kanallari. Demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 
 ## Holat
 
-Barcha ekranlar ishlaydi va bazaga ulangan. Hozirgi ish — v3
-spetsifikatsiyasi: dizayn qatlamini SCSS modullariga ko'chirish,
-animatsiya, unumdorlik va oflayn.
+Barcha ekranlar ishlaydi va bazaga ulangan. v4 tugadi: vakansiyalar endi
+kanallar ichida oqadi.
 
 | Nima                                                       | Holat              |
 | ---------------------------------------------------------- | ------------------ |
 | Dizayn tizimi                                              | ✅ tayyor          |
-| Ish qidiruvchi ekranlari                                   | ✅ tayyor          |
-| Ish beruvchi ekranlari                                     | ✅ tayyor          |
-| Baza va API                                                | ✅ tayyor          |
-| Telegram autentifikatsiya                                  | ✅ tayyor          |
+| Ish qidiruvchi va ish beruvchi ekranlari                   | ✅ tayyor          |
+| Baza, API, Telegram autentifikatsiya                       | ✅ tayyor          |
 | Ishonch qatlami — moslik, javob ko'rsatkichi, ariza holati | ✅ tayyor          |
 | Chat — matn va ovoz                                        | ✅ tayyor          |
-| v3 poydevori — themes.json, rem, Telegram egri chiziqlari  | ✅ tayyor          |
-| v3 — UI kit SCSS modullarida                               | ✅ tayyor          |
-| v3 — ekran komponentlari SCSS ga, Tailwind olib tashlash   | 🔨 ishda           |
-| v3 — universal `Transition`, virtualizatsiya, oflayn       | ⏳ navbatda        |
+| v3 — themes.json, rem, UI kit SCSS modullarida             | ✅ tayyor          |
+| v4 — kanal modeli, 3.5rem panel, o'tishlar, tema           | ✅ tayyor          |
+| Unumdorlik byudjeti va stylelint                           | ✅ tayyor          |
+| Oflayn va IndexedDB                                        | ⏳ navbatda        |
+| Ekran komponentlarida qolgan Tailwind                      | ⏳ navbatda        |
+| Bildirishnoma (push)                                       | ⏳ navbatda        |
 | To'lov integratsiyasi (Payme, Click)                       | ⏳ tashlab ketildi |
 
 ## Ishga tushirish
@@ -57,7 +56,9 @@ qaytadi, Postgres esa yana bir necha sekund ishga tushadi — shu orada
 chiqaradi — stack trace o'rniga nima qilish kerakligini yozadi.
 
 `npm run db:setup` = `db:migrate` + `db:seed`. Seed jadvallarni tozalab,
-20 ta kompaniya, 48 ta vakansiya, demo nomzod va uning chatlarini yozadi.
+23 ta kanal, 34 ta kompaniya, 180 ta vakansiya, demo nomzod va uning
+chatlarini yozadi. Har kanalda kamida 6 ta vakansiya bo'lishi
+kafolatlanadi — 5 tadan kam bo'lsa kanal katalogda ko'rsatilmaydi.
 Generator turg'un urug'dan foydalanadi — har safar bir xil ma'lumot chiqadi.
 
 Boshqa bazaga ulanish uchun `.env.local` dagi `DATABASE_URL` ni o'zgartiring.
@@ -123,25 +124,28 @@ kutubxonasiz.
 
 ### Ekranlar
 
-| Manzil                 | Ekran                                                         |
-| ---------------------- | ------------------------------------------------------------- |
-| `/jobs`                | Ishlar — kasb va Saqlangan filtri, cheksiz aylanish, saralash |
-| `/search`              | Qidiruv — bitta maydon va so'nggi qidiruvlar                  |
-| `/messages`            | Xabarlar — ish beruvchilar bilan chatlar                      |
-| `/chat/[id]`           | Chat — ariza shu yerda davom etadi                            |
-| `/arizalarim`          | Arizalarim — yuborilgan arizalar va holati                    |
-| `/profile`             | Profil — kartochka, til, ko'rinish                            |
-| `/card`                | Kartochkani tahrirlash — 5 maydon (5-si: ish turi)            |
-| `/employer/vacancies`  | Mening vakansiyalarim — ko'rishlar va arizalar soni           |
-| `/employer/new`        | Vakansiya joylash — 5 qadam, 90 sekund ichida                 |
-| `/employer/candidates` | Nomzodlar — arizalar chat ro'yxati sifatida                   |
-| `/employer/chat/[id]`  | Nomzod bilan chat                                             |
-| `/employer/qidiruv`    | "Ish qidiryapman" belgisini yoqqan nomzodlar                  |
-| `/employer/plans`      | Tariflar — Payme va Click (Profil orqali)                     |
-| `/employer/profile`    | Kompaniya profili                                             |
-| `/kirish`              | Kirish — Telegram Login Widget                                |
-| `/boshlash`            | Tanishtiruv — rol, kasb, shahar yoki kompaniya, telefon       |
-| `/design`              | Dizayn tizimi (1-bosqich)                                     |
+| Manzil                 | Ekran                                                   |
+| ---------------------- | ------------------------------------------------------- |
+| `/jobs`                | Ishlar — obuna bo'lingan kanallar ro'yxati              |
+| `/jobs/katalog`        | Kanallar katalogi — kasb guruhlari bo'yicha             |
+| `/jobs/[kanal]`        | Kanal ichi — bandlik chiplari, cheksiz aylanish         |
+| `/saved`               | Saqlangan vakansiyalar (Profil ichidan)                 |
+| `/search`              | Qidiruv — bitta maydon va so'nggi qidiruvlar            |
+| `/messages`            | Xabarlar — ish beruvchilar bilan chatlar                |
+| `/chat/[id]`           | Chat — ariza shu yerda davom etadi                      |
+| `/arizalarim`          | Arizalarim — yuborilgan arizalar va holati              |
+| `/profile`             | Profil — kartochka, til, ko'rinish                      |
+| `/card`                | Kartochkani tahrirlash — 5 maydon (5-si: ish turi)      |
+| `/employer/vacancies`  | Mening vakansiyalarim — ko'rishlar va arizalar soni     |
+| `/employer/new`        | Vakansiya joylash — 5 qadam, 90 sekund ichida           |
+| `/employer/candidates` | Nomzodlar — arizalar chat ro'yxati sifatida             |
+| `/employer/chat/[id]`  | Nomzod bilan chat                                       |
+| `/employer/qidiruv`    | "Ish qidiryapman" belgisini yoqqan nomzodlar            |
+| `/employer/plans`      | Tariflar — Payme va Click (Profil orqali)               |
+| `/employer/profile`    | Kompaniya profili                                       |
+| `/kirish`              | Kirish — Telegram Login Widget                          |
+| `/boshlash`            | Tanishtiruv — rol, kasb, shahar yoki kompaniya, telefon |
+| `/design`              | Dizayn tizimi (1-bosqich)                               |
 
 Rol Profil ekranidagi tugma orqali almashadi (ish qidiruvchi ↔ ish beruvchi).
 Yangi rolda kartochka yoki kompaniya bo'lmasa, `/boshlash` ga yo'naltiriladi.
@@ -256,10 +260,35 @@ Til va ko'rinish Profil ekranidan, dizayn tizimi sahifasida esa yuqoridagi
 tanlagichlardan almashtiriladi.
 
 ```bash
-npm run build   # ishlab chiqarish uchun yig'ish
-npm run lint    # eslint
+npm run build     # ishlab chiqarish uchun yig'ish
+npm run lint      # eslint
+npm run lint:css  # stylelint — past unumdorlikli animatsiyalarni topadi
 npx tsc --noEmit
 ```
+
+### Unumdorlik
+
+O'lchov 4 barobar sekinlashtirilgan protsessorda, 390×844 ekranda,
+uch marta o'lchab medianasi olinadi.
+
+| Ko'rsatkich      | Byudjet  | Hozir                          |
+| ---------------- | -------- | ------------------------------ |
+| DOMContentLoaded | < 1000ms | 128ms (Ishlar) · 303ms (kanal) |
+| load             | < 2000ms | 528ms · 580ms                  |
+| Tap javobi       | < 100ms  | 31ms                           |
+| Scroll           | 60 FPS   | 60 FPS, 0 ta uzun kadr         |
+
+**Virtualizatsiya kutubxonasi ataylab qo'shilmadi.** Eng katta kanalda
+32 ta vakansiya (576 DOM tugun), sun'iy ravishda uch barobar
+kattalashtirilganda ham 60 FPS saqlanadi. Uning o'rniga qatorlarga
+`content-visibility: auto` qo'yilgan: ekrandan chiqqan qator render
+qilinmaydi. O'lchov uning foydasini tasdiqladi — 102 qatorda u bilan
+1 ta uzun kadr, usiz 4 ta.
+
+`stylelint-high-performance-animation` `left`, `top`, `width`,
+`height` kabi maketni qayta hisoblatadigan xossalar animatsiya
+qilinishini taqiqlaydi; faqat `transform`, `opacity` va ranglar
+ruxsat etilgan.
 
 ## Dizayn qoidalari
 
