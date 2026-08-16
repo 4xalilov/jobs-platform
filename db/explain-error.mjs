@@ -16,11 +16,11 @@ export function explainError(error, connectionString) {
       return [
         `Baza javob bermayapti (${where}).`,
         "",
-        "Ehtimol Postgres hali ko'tarilmagan. Tekshiring:",
-        "  docker compose up -d --wait     # healthcheck tugashini kutadi",
-        "  docker compose ps               # holati 'healthy' bo'lishi kerak",
+        "Postgres ko'tarilmagan. Ko'p hollarda shu yetadi:",
+        "  npm run setup",
         "",
-        "Docker ishlamayotgan bo'lsa — Docker Desktop ni oching.",
+        "Docker bilan ishlayotgan bo'lsangiz — Docker Desktop ochiqmi?",
+        "Holatni ko'rish:  docker compose ps  (healthy bo'lishi kerak)",
       ].join("\n");
 
     case "ENOTFOUND":

@@ -1,5 +1,7 @@
 import "server-only";
 import { Pool, type QueryResultRow } from "pg";
+// JSDoc bilan yozilgan .mjs — migratsiya skriptlari bilan umumiy manba
+import { explainError } from "../../db/explain-error.mjs";
 
 declare global {
   var __ishPool: Pool | undefined;
@@ -54,12 +56,40 @@ function pool(): Pool {
   return globalThis.__ishPool;
 }
 
+/**
+ * Baza xatosi — sababi odam tushunadigan matnda.
+ *
+ * `pg` ning xom xatosi ("ECONNREFUSED 127.0.0.1:5432") terminalda ham,
+ * brauzerda ham nima qilish kerakligini aytmaydi. Migratsiya skriptlari
+ * buni allaqachon tarjima qiladi; ilova ham xuddi shu matnni beradi,
+ * shunda ikkalasi bir xil gapiradi.
+ */
+export class DatabaseError extends Error {
+  readonly code: string | undefined;
+
+  constructor(message: string, cause: unknown) {
+    super(message, { cause });
+    this.name = "DatabaseError";
+    this.code = (cause as { code?: string })?.code;
+  }
+}
+
+function rethrow(error: unknown): never {
+  const explained = explainError(error, process.env.DATABASE_URL) as string | null;
+  if (explained) throw new DatabaseError(explained, error);
+  throw error;
+}
+
 export async function query<T extends QueryResultRow>(
   text: string,
   params: readonly unknown[] = [],
 ): Promise<T[]> {
-  const result = await pool().query<T>(text, params as unknown[]);
-  return result.rows;
+  try {
+    const result = await pool().query<T>(text, params as unknown[]);
+    return result.rows;
+  } catch (error) {
+    rethrow(error);
+  }
 }
 
 export async function queryOne<T extends QueryResultRow>(

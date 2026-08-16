@@ -53,7 +53,7 @@
 /* Telegram xato qaytarganda — sababi va nima qilish kerakligi */
 .error {
   width: 100%;
-  margin-top: 1.25rem;
+  margin-top: 1rem;
   padding: 0.75rem $side-padding;
   border-radius: $border-radius-default;
   background: color-mix(in srgb, var(--color-error) 10%, transparent);
@@ -72,6 +72,9 @@
   font-size: $font-caption;
   line-height: $font-caption-line;
   color: var(--color-text-secondary);
+  /* Xato matni uzun va ko'p qatorli bo'lishi mumkin */
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .actions {
