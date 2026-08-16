@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForwardNavigation } from "@/lib/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { Screen } from "@/components/app/screen";
 import { useTheme } from "@/components/providers/theme-provider";
@@ -9,8 +10,10 @@ import { Avatar } from "@/components/ui/avatar";
 import { Tag } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
+  IconBookmark,
   IconBriefcase,
   IconCamera,
+  IconDocument,
   IconCheck,
   IconGlobe,
   IconMic,
@@ -43,6 +46,7 @@ export function ProfileScreen({
   const { t, locale, setLocale } = useI18n();
   const { mode, setMode } = useTheme();
   const router = useRouter();
+  const go = useForwardNavigation();
   const languageSheet = useSheet<true>();
   const visibilitySheet = useSheet<true>();
 
@@ -173,16 +177,25 @@ export function ProfileScreen({
 
       <ListGroup className="mt-5">
         <ListItem
+          leading={<IconDocument size={22} className="text-fg-secondary" />}
           title={
             <span className="text-body font-normal">{t.screens.profile.applicationsCount}</span>
           }
           insetSeparator={false}
           trailing={<span className="text-body text-fg-secondary">{applicationCount}</span>}
+          onClick={() => go("/arizalarim")}
+          chevron
         />
+        {/* v4: "Saqlangan" Ishlar ichidagi filtr edi. Ishlar endi
+            kanallar ro'yxati — u yerda filtrga joy yo'q, shuning
+            uchun o'z ekrani Profil ichidan ochiladi. */}
         <ListItem
-          title={<span className="text-body font-normal">{t.screens.profile.savedCount}</span>}
+          leading={<IconBookmark size={22} className="text-fg-secondary" />}
+          title={<span className="text-body font-normal">{t.tabs.saved}</span>}
           insetSeparator={false}
           trailing={<span className="text-body text-fg-secondary">{savedCount}</span>}
+          onClick={() => go("/saved")}
+          chevron
           last
         />
       </ListGroup>
