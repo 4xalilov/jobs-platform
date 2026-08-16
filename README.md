@@ -61,7 +61,29 @@ Qayta ishlatish xavfsiz: bori qayta yaratilmaydi.
 | Jadvallar    | migratsiya + namunaviy ma'lumot                                    |
 
 Baza avval **ulanib ko'riladi**, keyingina Docker ga qo'l uriladi:
-Postgres ni o'zi o'rnatgan odamga Docker umuman kerak emas.
+Postgres ni o'zi o'rnatgan odamga Docker umuman kerak emas. Baza yo'q
+bo'lsa skript uni o'zi yaratadi — Docker konteyneri buni `POSTGRES_DB`
+bilan qiladi, qo'lda o'rnatilgan Postgres esa qilmaydi.
+
+### Docker'siz ishlatish
+
+Docker Desktop Windows'da virtualizatsiyani talab qiladi va u har
+kompyuterda ham yoqilmagan (`WSL ... HCS/0x80370110` xatosi shundan).
+Bunday holatda Postgres ni to'g'ridan-to'g'ri o'rnatish osonroq:
+
+1. [postgresql.org/download/windows](https://www.postgresql.org/download/windows/) —
+   EDB o'rnatuvchisini yuklab oling.
+2. O'rnatishda parol so'raydi — **`postgres`** deb bering. Port `5432`
+   qolsin. «Stack Builder» kerak emas.
+3. `npm run setup` — port javob berishi bilan Docker chetlab o'tiladi va
+   `ishtop` bazasi o'zi yaratiladi.
+
+Boshqa parol qo'ygan bo'lsangiz `.env.local` dagi `DATABASE_URL` ni
+moslang:
+
+```
+DATABASE_URL=postgres://postgres:SIZNING_PAROL@127.0.0.1:5432/ishtop
+```
 
 `--wait` muhim: usiz `docker compose up -d` konteyner yaratilishi bilanoq
 qaytadi, Postgres esa yana bir necha sekund ishga tushadi — shu orada

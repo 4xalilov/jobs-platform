@@ -44,7 +44,10 @@ export function explainError(error, connectionString) {
       return [
         "Bunday baza yo'q.",
         "",
-        "Konteyner eski nom bilan yaratilgan bo'lishi mumkin. Tozalab qayta ko'taring:",
+        "Odatda `npm run setup` uni o'zi yaratadi — shuni ishlatib ko'ring.",
+        "",
+        "Docker bilan ishlayotgan bo'lsangiz, konteyner eski nom bilan",
+        "yaratilgan bo'lishi mumkin. Tozalab qayta ko'taring:",
         "  docker compose down -v && docker compose up -d --wait",
       ].join("\n");
 

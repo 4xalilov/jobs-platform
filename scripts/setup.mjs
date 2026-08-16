@@ -16,6 +16,7 @@ import { randomBytes } from "node:crypto";
 import { createConnection } from "node:net";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { sslFor } from "../db/ssl.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const envPath = join(root, ".env.local");
@@ -106,6 +107,7 @@ const { host, port, remote } = parseDatabaseUrl();
 if (await reachable(host, port)) {
   // Kimdir Postgres ni o'zi o'rnatgan bo'lishi mumkin — Docker shart emas
   note(`${host}:${port} javob berdi`);
+  await ensureDatabase();
 } else if (remote) {
   stop(`Baza ${host}:${port} javob bermayapti.`, [
     ".env.local dagi DATABASE_URL to'g'rimi?",
@@ -138,6 +140,47 @@ if (await reachable(host, port)) {
       "docker-compose.yml da boshqa port bering va .env.local ni moslang.",
       "Baza buzilgan bo'lsa:  docker compose down -v  keyin qaytadan.",
     ]);
+  }
+}
+
+/*
+ * Docker konteyneri bazani o'zi yaratadi (POSTGRES_DB), o'z qo'li bilan
+ * Postgres o'rnatgan odamda esa u yo'q va migratsiya "bunday baza yo'q"
+ * deb yiqilardi. Shu bir qadam Docker'ni ixtiyoriy qiladi.
+ */
+async function ensureDatabase() {
+  const url = process.env.DATABASE_URL ?? readEnvFile("DATABASE_URL");
+  if (!url) return;
+
+  let name;
+  let adminUrl;
+  try {
+    const parsed = new URL(url);
+    name = decodeURIComponent(parsed.pathname.slice(1));
+    if (!name) return;
+    // Xizmat bazasi — u har doim bor
+    parsed.pathname = "/postgres";
+    adminUrl = parsed.toString();
+  } catch {
+    return;
+  }
+
+  const { default: pg } = await import("pg");
+  const client = new pg.Client({ connectionString: adminUrl, ssl: sslFor(adminUrl) });
+
+  try {
+    await client.connect();
+    const { rows } = await client.query("select 1 from pg_database where datname = $1", [name]);
+    if (rows.length === 0) {
+      // Nom faqat DATABASE_URL dan keladi; qo'shtirnoq ichida qalqonlanadi
+      await client.query(`create database "${name.replaceAll('"', '""')}"`);
+      note(`«${name}» bazasi yaratildi`);
+    }
+  } catch (error) {
+    // Ulanolmasak jim ketamiz: sababini migratsiya o'zbekcha aytadi
+    if (process.env.DEBUG) console.error(error);
+  } finally {
+    await client.end().catch(() => undefined);
   }
 }
 
