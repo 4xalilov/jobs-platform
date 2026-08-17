@@ -415,6 +415,85 @@ lekin nomlar eski. B2 ularni almashtiradi va eski nomlar o'chiriladi.
 360px ekranda 23–25 joyda matn kesiladi (katalog qatori) — bu B3 ning
 ishi. Shuningdek `Segmented` hali `role="tablist"` ishlatadi (B2).
 
+### B2 — komponent qatlami (tugadi)
+
+**Nima o'zgardi.**
+
+_Tokenlar._ 32 SCSS fayl + `shared.module.scss` yangi guruhlangan nomlarga
+ko'chdi. LEGACY aliaslar va v4 nomlari (`$border-radius-*`, `$font-large`,
+`$font-title`) butunlay o'chirildi — eski nomni yozib qo'yib ketishning
+imkoni qolmadi. `public/oflayn.html` palitrasi ham endi `themes.json` dan
+generatsiya qilinadi (5 token, `THEME:BOSHLANDI`/`THEME:TUGADI` belgilari
+orasida).
+
+_Uch holat._ `components/ui/state.tsx` — `EmptyState`, `LoadingState`,
+`ErrorState`. Eski `components/ui/empty-state.tsx` o'chirildi. `EmptyState`
+da harakat tugmasi **majburiy** (`action: React.ReactNode`, ixtiyoriy
+emas) — TypeScript endi tugmasiz bo'sh ekranni yozishga yo'l qo'ymaydi.
+Auditda tugmasiz qolgan 7 ta ekranga chiqish yo'li qo'shildi:
+
+| Ekran                 | Bo'sh holatdagi harakat            |
+| --------------------- | ---------------------------------- |
+| Qidiruv (natija yo'q) | Kanallarni ko'rish                 |
+| Kanal ichi            | Filtr faol bo'lsa — "Hammasi",     |
+|                       | bo'lmasa — katalog                 |
+| Kanallar ro'yxati     | Kanallarni ko'rish                 |
+| Xabarlar              | Ishlar                             |
+| Arizalarim            | Ishlar                             |
+| Nomzodlar             | Vakansiyalarim                     |
+| Ish qidiruvchilar     | Kasb filtrini tozalash ("Hammasi") |
+
+_Skelet._ `ListSkeleton` ga `shape` qo'shildi: `list` / `channel` /
+`vacancy` / `card` / `text`. Har shaklning balandligi haqiqiy qator bilan
+bir xil (vakansiya: 12+11+14+11px chiziq + 3×8px oraliq + 24px padding =
+roppa-rosa 6rem), aks holda kontent kelganda ro'yxat sakraydi.
+
+Skelet yo'q edigan ekranlar `loading.tsx` orqali tuzatildi — 14 ta yangi
+fayl, hammasi `ScreenLoading` ni chaqiradi. Sabab: ekranlar serverda
+render bo'ladi, ya'ni yuklanish holati mijozda emas, marshrutda. Chat
+o'z paneli borligi uchun alohida (`ChatLoading`).
+
+_Haptik._ `lib/haptics.ts` — uchta daraja (`select` / `confirm` /
+`reject`), `prefers-reduced-motion` hurmat qilinadi. `Chip`, `Switch`,
+`Segmented` ichida (chaqiruv joyida yozilsa unutiladi), qolganlari
+ma'nosiga qarab: ariza yuborish va nomzodni chaqirish — `confirm`, rad
+etish — `reject`, obuna/saqlash/xabar — `select`.
+
+_Bosish javobi._ `styles/_mixins.scss` — `tap-fill` va `tap-scale`. Ilgari
+15 faylda 15 nusxa bor edi va uchtasida `prefers-reduced-motion` himoyasi
+umuman yozilmagan. **Ikki yo'ldan biri tanlandi:** (a) SCSS miksin, (b)
+global utilita klassi TSX da. Miksin tanlandi — qaror CSS da qoladi,
+markupga klass qo'shilmaydi va har komponent o'z bosilgan rangini
+saqlaydi.
+
+_Klaviatura._ `Segmented` `role="tablist"` dan `radiogroup`/`radio` ga
+o'tdi (tab varaqlar orasida almashadi, radio bitta qiymatni tanlaydi);
+strelkalar bilan yuriladi, guruhda bitta Tab to'xtash joyi.
+`lib/use-focus-trap.ts` — sheet ichida Tab qamaladi, yopilganda fokus
+ochgan tugmaga qaytadi. Yo'l-yo'lakay topilgan xato: sheet paneli
+`ref={(node) => node?.focus()}` bilan **har renderda** o'ziga fokus
+tortib olardi, ya'ni sheet ichidagi maydonga yozish uzilardi.
+
+**Natija (brauzerda, production build, 360px, ikki tema):**
+
+| Mezon                         | B1        | B2                    |
+| ----------------------------- | --------- | --------------------- |
+| `role="tablist"` noto'g'ri    | 4 joyda   | **0** (4 radiogroup)  |
+| Sheet ochilganda fokus ichida | yo'q      | **ha**                |
+| Tab tuzoqdan chiqib ketishi   | ketardi   | **12 bosishda 0**     |
+| Esc bilan yopish              | ishlardi  | ishlaydi              |
+| Yopilganda fokus tiklanishi   | yo'q      | **ha**                |
+| Fokus halqasi yo'q element    | ?         | **0** (4 ekran, 40×4) |
+| Harakat tugmasi yo'q bo'sh h. | 7         | **0** (tur majburlab) |
+| Skeleti yo'q ro'yxat ekrani   | 10        | **0**                 |
+| `:active` nusxalari           | 15 faylda | 1 miksin              |
+
+**Nima qilinmadi.** 360px da matn kesilishi (katalog qatori) hali bor —
+B3. First Load JS budjeti hali buzilgan (134–146 kB brotli) — uchta til
+bitta bo'lakda. Xato holati faqat qidiruv va kanal ichida ulangan;
+qolgan ekranlar serverda render bo'ladi, ular B4 dagi yagona xato
+konvertidan keyin ulanadi.
+
 ## 8. Keyingi bosqich uchun yo'nalishlar
 
 Buyruq yozayotganda shulardan tanlashingiz mumkin. Har biri mustaqil.
