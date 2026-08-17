@@ -9,6 +9,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import { createStorageStore, useSystemPrefersDark } from "@/lib/client-store";
+import themes from "@/styles/themes.json";
 
 export type ThemeMode = "light" | "dark" | "system";
 
@@ -66,7 +67,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
      * tungi rejimda bo'lsayu foydalanuvchi yorug'ni tanlagan bo'lsa,
      * media so'rov hali ham tungi rangni beradi.
      */
-    setThemeColorMeta(isDark ? "#181818" : "#f4f4f5");
+    setThemeColorMeta(isDark ? themes.dark.surface.base : themes.light.surface.base);
 
     if (!changing) return;
     const timer = setTimeout(() => root.classList.remove("theme-switching"), 220);

@@ -123,7 +123,7 @@
 
 .backButton {
   padding: 0.5rem;
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 /* Nom bo'sh bo'lsa saqlash o'chadi, lekin joyida qoladi */
@@ -131,7 +131,7 @@
   padding: 0 0.5rem;
   font-size: $font-body;
   font-weight: 500;
-  color: var(--color-primary);
+  color: var(--brand-text);
 
   &:disabled {
     opacity: 0.4;

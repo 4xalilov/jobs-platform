@@ -21,7 +21,7 @@
 
 .backButton {
   padding: 0.5rem;
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 /* Sarlavha: avatar + nom, ostida holat */
@@ -215,7 +215,7 @@
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: var(--color-error);
+  background: var(--error-solid);
   animation: pulse 1.5s ease-in-out infinite;
 }
 
@@ -273,7 +273,7 @@
 
 .iconButtonAccent {
   padding: 0.5rem;
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 /* ——————————————————————————————————————————————

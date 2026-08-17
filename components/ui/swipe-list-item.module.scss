@@ -30,7 +30,7 @@
   font-size: 0.6875rem;
   line-height: 0.8125rem;
   font-weight: 500;
-  color: #fff;
+  color: var(--text-on-solid);
 }
 
 .accent {
@@ -38,11 +38,11 @@
 }
 
 .danger {
-  background: var(--color-error);
+  background: var(--error-solid);
 }
 
 .success {
-  background: var(--color-green);
+  background: var(--success-solid);
 }
 
 .neutral {

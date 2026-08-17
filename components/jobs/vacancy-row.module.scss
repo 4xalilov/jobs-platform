@@ -67,7 +67,7 @@
 .verified {
   flex-shrink: 0;
   display: flex;
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 /* "Yangi" — 24 soat ichida qo'shilgan vakansiyalarda */
@@ -79,7 +79,7 @@
   font-size: $font-caption;
   line-height: $font-caption-line;
   font-weight: 500;
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 .newDot {
@@ -153,13 +153,10 @@
   white-space: nowrap;
 }
 
+/* «Shoshilinch» o'z ma'no rangiga ega (v5, 2.3) — ogohlantirish emas */
 .urgent {
-  background: color-mix(in srgb, var(--color-warning) 18%, transparent);
-  color: #9a6108;
-}
-
-:global(.theme-dark) .urgent {
-  color: var(--color-warning);
+  background: var(--meaning-urgent-soft);
+  color: var(--meaning-urgent-text);
 }
 
 /* ——— 4-qator: javob ko'rsatkichi · ariza soni ——— */
@@ -185,21 +182,21 @@
   width: 0.4375rem;
   height: 0.4375rem;
   border-radius: 50%;
-  background: var(--color-text-tertiary);
+  background: var(--neutral-solid);
 }
 
 .rateGood {
-  background: var(--color-green);
+  background: var(--success-solid);
 }
 
 .rateMid {
-  background: var(--color-warning);
+  background: var(--warning-solid);
 }
 
 .saved {
   flex-shrink: 0;
   display: flex;
-  color: var(--color-primary);
+  color: var(--brand-text);
   margin-left: auto;
 }
 

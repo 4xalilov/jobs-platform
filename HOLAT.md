@@ -6,8 +6,8 @@ kanallari** — demak mahsulot Telegram kanalidan qulayroq bo'lishi kerak.
 Bu hujjat nima qilinganini, **nega shunday qilinganini** va nima qilinmaganini
 yozadi. Keyingi bosqich uchun buyruq yozayotganda shundan foydalaning.
 
-Holat: **v4 tugadi.** Barcha ekranlar ishlaydi, bazaga ulangan, telefonda ham,
-kompyuterda ham ochiladi.
+Holat: **v5 boshlandi.** B0 (audit) va B1 (vizual til) tugadi. Barcha ekranlar
+ishlaydi, bazaga ulangan, telefonda ham, kompyuterda ham ochiladi.
 
 | O'lcham            | Qiymat                                                  |
 | ------------------ | ------------------------------------------------------- |
@@ -173,22 +173,42 @@ Pastdagi 4 ta bo'lim: **Ishlar · Arizalarim · Xabarlar · Profil**.
 
 Kodga yozilmaydi — **`styles/themes.json`** yagona manba. Undan
 `scripts/build-themes.mjs` `app/themes.generated.css` ni chiqaradi (`predev`
-va `prebuild` da avtomatik).
+va `prebuild` da avtomatik), `scripts/check-contrast.mjs` esa har bir
+juftlikni WCAG 2.2 AA bo'yicha tekshiradi (`npm run lint:tokens`).
 
-| Token                        | Kunduzgi  | Tungi     |
-| ---------------------------- | --------- | --------- |
-| `color-primary`              | `#3390EC` | `#8774E1` |
-| `color-background`           | `#FFFFFF` | `#212121` |
-| `color-background-secondary` | `#F4F4F5` | `#181818` |
-| `color-text`                 | `#000000` | `#FFFFFF` |
-| `color-borders`              | `#DADCE0` | `#303030` |
-| `color-green`                | `#4DB74D` | `#4DB74D` |
+**Tungi rejim birinchi loyihalanadi**, yorug'i undan chiqariladi: OLED
+ekranda qora piksel quvvat sarflamaydi va auditoriya kechqurun telefon
+ko'radi. Toza qora (#000) ishlatilmaydi — OLED da chegarada dog' beradi.
 
-Qiymatlar Telegram Web A ning jonli CSS o'zgaruvchilaridan olingan. Avatar
-ranglari 7 ta «peer» rangdan nom xeshi bo'yicha tanlanadi.
+**Brend rangi — jade `#0D856A`.** Nega u: Telegram ko'kidan butunlay farq
+qiladi, «sovuq emas» talabiga mos, AA dan bosh ko'tarib o'tadi (oq matn
+4.58, yuzada 5.28), va bu mahsulotda «ijobiy» ma'no bilan tabiiy ustma-ust
+tushadi — tasdiqlangan, tez javob, ariza qabul qilindi. Ya'ni alohida
+«success» rangi uchun hue sarflanmaydi va to'rtta ma'no rangi
+(kunlik / yangi / tez / shoshilinch) o'z hue'sida qoladi.
 
-Tema `<html class="theme-dark">` orqali almashadi, o'tish 200ms — faqat
-almashinuv lahzasida yoqiladi, aks holda scroll paytida kadr tushadi.
+Token guruhlari:
+
+| Guruh                          | Nima               | Darajalar                                                      |
+| ------------------------------ | ------------------ | -------------------------------------------------------------- |
+| `surface-*`                    | Sirtlar            | `base` · `raised` · `overlay` · `sunken` · `pressed`           |
+| `text-*`                       | Matn               | `primary` · `secondary` · `tertiary` · `on-solid`              |
+| `border-*`                     | Chegara            | `subtle` · `default` · `strong`                                |
+| `brand-*`                      | Brend              | `solid` · `solid-pressed` · `text` · `soft` · `border`         |
+| `success/warning/error/info-*` | Semantik           | `text` · `solid` · `soft` · `border`                           |
+| `meaning-*`                    | Ma'no chiplari     | `daily` · `new` · `fast` · `urgent` (har biri `text` + `soft`) |
+| `neutral-solid`                | Neytral to'ldirish | belgi foni                                                     |
+| `scrim-*`                      | Qatlam orqasi      | `default` · `strong`                                           |
+| `skeleton-*`                   | Yuklanish          | `base` · `shine`                                               |
+| `color-peer-0…6`               | Avatar             | 7 rang, oq matn AA dan o'tadi                                  |
+
+Muhim farq: **`*-text` yuzada matn uchun, `*-solid` to'ldirilgan fon
+uchun.** Ular almashib ketsa kontrast yiqiladi — v4 da aynan shu xato bor
+edi (`--color-primary` matn sifatida ishlatilardi, kontrast 3.80).
+
+Qo'lda yozilgan rang stylelint bilan taqiqlangan (`color-no-hex`,
+`color-named`, `rgb()` taqiqi). Brauzer panelining rangi ham `themes.json`
+dan olinadi — qo'lda yozilganda palitra o'zgargach eskirib qolardi.
 
 ### O'lchamlar
 
@@ -206,8 +226,18 @@ kattalashtirsa butun interfeys proporsional o'sadi.
 | Yon bo'shliq     | 1rem                      |
 | Ajratuvchi       | 0.5px (qurilma pikselida) |
 
-Tipografika: katta sarlavha 2.125rem/700, panel 1.0625rem/600, matn
-0.9375rem, izoh 0.8125rem.
+**Shkalalar qat'iy** (v5/B1), oraliq qiymat ishlatilmaydi:
+
+- Bo'shliq: 4 / 8 / 12 / 16 / 24 / 32 / 48 (`$space-1…12`)
+- Radius: 8 / 12 / 16 / 20 / to'liq (`$radius-sm…full`)
+- Tipografika: display 34/700 · title-1 24 · title-2 20 · **amount 18/700**
+  · nav 17 · body 15 · body-sm 14 · caption 13 · micro 11
+
+`amount` — maosh uchun: vakansiya kartochkasida eng ko'zga tashlanadigan
+element bo'lishi kerak.
+
+Balandlik soya bilan emas, **tonal sirt** bilan beriladi
+(`base → raised → overlay`). Soya faqat yorug' rejimdagi qatlam uchun.
 
 ### Animatsiya
 
@@ -349,6 +379,41 @@ Bu ro'yxat keyingi bosqich uchun eng foydali qism.
 - **Ekran o'quvchi** — `aria-label` lar bor, lekin to'liq tekshirilmagan.
 
 ---
+
+## 7.5. v5 jarayoni
+
+### B0 — audit (tugadi)
+
+`AUDIT.md` — 448 qator o'lchov. Uchta eng zaif joy topildi: palitra AA dan
+o'tmasligi (550 xato), har sahifada so'rovlarning yarmi takrorlanishi,
+xato holatining loyihalanmagani.
+
+### B1 — vizual til (tugadi)
+
+**Nima o'zgardi.** `themes.json` butunlay qayta yozildi: 17 tekis token
+o'rniga 46 ta guruhlangan token × 2 tema. To'rt sirt darajasi, semantik va
+ma'no ranglari, yangi brend rangi. `_variables.scss` da bo'shliq, radius va
+tipografika shkalalari paydo bo'ldi. `/design` ko'rgazmadan **sinov
+maydoniga** aylandi: har bir juftlik yonida brauzerda hisoblangan kontrast
+turadi.
+
+**Nega.** AUDIT.md ning 5.1-bo'limi: 550 ta kontrast xatosining hammasi 6
+ta qiymatdan kelib chiqardi. Eng arzon tuzatiladigan eng katta muammo.
+
+**Natija (bir xil usul bilan qayta o'lchandi):**
+
+| O'lcham                     | B0       | B1                  |
+| --------------------------- | -------- | ------------------- |
+| Kontrast xatolari, kunduzgi | 328      | **0**               |
+| Kontrast xatolari, tungi    | 222      | **0**               |
+| Token juftligi tekshiruvi   | yo'q edi | 111 ta, 0 xato      |
+| Qo'lda yozilgan rang        | 11 joyda | 0 (lint taqiqlaydi) |
+
+**Nima qilinmadi.** Komponentlar hali `--color-*` eski nomlarini
+ishlatadi — ular yangi qiymatlarga ishora qiladi, ya'ni ranglar to'g'ri,
+lekin nomlar eski. B2 ularni almashtiradi va eski nomlar o'chiriladi.
+360px ekranda 23–25 joyda matn kesiladi (katalog qatori) — bu B3 ning
+ishi. Shuningdek `Segmented` hali `role="tablist"` ishlatadi (B2).
 
 ## 8. Keyingi bosqich uchun yo'nalishlar
 

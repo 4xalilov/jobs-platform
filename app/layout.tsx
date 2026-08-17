@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { I18nProvider } from "@/components/providers/i18n-provider";
 import { ThemeProvider, themeInitScript } from "@/components/providers/theme-provider";
 import shell from "@/components/app/shell.module.scss";
+import themes from "@/styles/themes.json";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,9 +17,11 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   viewportFit: "cover",
+  /* Qiymat themes.json dan olinadi — qo'lda yozilsa palitra
+     o'zgarganda brauzer paneli eski rangda qolib ketardi */
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f4f4f5" },
-    { media: "(prefers-color-scheme: dark)", color: "#181818" },
+    { media: "(prefers-color-scheme: light)", color: themes.light.surface.base },
+    { media: "(prefers-color-scheme: dark)", color: themes.dark.surface.base },
   ],
 };
 

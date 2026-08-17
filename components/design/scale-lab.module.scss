@@ -1,0 +1,80 @@
+@use "../../styles/variables" as *;
+
+.lab {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  padding: $space-3 $side-padding $space-4;
+  background: var(--surface-raised);
+}
+
+.groupTitle {
+  margin: $space-2 0 0;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.rows,
+.typeRows {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.label {
+  flex-shrink: 0;
+  width: 5.5rem;
+  font-size: $font-micro;
+  line-height: $font-micro-line;
+  color: var(--text-primary);
+}
+
+/* Bo'shliqni ko'rsatadigan chiziq — kengligi aynan o'sha qiymat */
+.bar {
+  height: 0.75rem;
+  border-radius: $radius-sm;
+  background: var(--brand-solid);
+}
+
+.radiusBox {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 2rem;
+  border: 2px solid var(--brand-border);
+  background: var(--brand-soft);
+}
+
+.value {
+  font-size: $font-micro;
+  line-height: $font-micro-line;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.typeRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding-bottom: $space-2;
+  border-bottom: 1px solid var(--border-subtle);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.sample {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-primary);
+}

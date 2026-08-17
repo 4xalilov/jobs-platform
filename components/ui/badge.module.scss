@@ -41,21 +41,21 @@
   color: var(--color-on-primary);
 }
 .countSuccess {
-  background: var(--color-green);
-  color: #fff;
+  background: var(--success-solid);
+  color: var(--text-on-solid);
 }
 .countWarning {
-  background: var(--color-warning);
-  color: #fff;
+  background: var(--warning-solid);
+  color: var(--text-on-solid);
 }
 .countNeutral {
-  background: var(--color-text-tertiary);
-  color: #fff;
+  background: var(--neutral-solid);
+  color: var(--text-on-solid);
 }
 
 .tagAccent {
   background: var(--color-primary-soft);
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 .tagSuccess {
   background: color-mix(in srgb, var(--color-green) 12%, transparent);

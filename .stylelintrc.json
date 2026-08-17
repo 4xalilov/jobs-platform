@@ -1,12 +1,22 @@
 {
-  "extends": ["stylelint-config-standard-scss"],
-  "plugins": ["stylelint-high-performance-animation"],
+  "extends": [
+    "stylelint-config-standard-scss"
+  ],
+  "plugins": [
+    "stylelint-high-performance-animation"
+  ],
   "rules": {
     "plugin/no-low-performance-animation-properties": [
       true,
       {
         "severity": "error",
-        "ignoreProperties": ["color", "background-color", "border-color", "fill", "stroke"]
+        "ignoreProperties": [
+          "color",
+          "background-color",
+          "border-color",
+          "fill",
+          "stroke"
+        ]
       }
     ],
     "custom-property-empty-line-before": null,
@@ -31,24 +41,80 @@
     "scss/at-rule-no-unknown": [
       true,
       {
-        "ignoreAtRules": ["theme", "custom-variant"]
+        "ignoreAtRules": [
+          "theme",
+          "custom-variant"
+        ]
       }
     ],
     "selector-pseudo-class-no-unknown": [
       true,
       {
-        "ignorePseudoClasses": ["global", "local"]
+        "ignorePseudoClasses": [
+          "global",
+          "local"
+        ]
+      }
+    ],
+    "color-no-hex": [
+      true,
+      {
+        "message": "Rang qo'lda yozilmaydi. styles/themes.json ga token qo'shing va var(--...) bilan ishlatilsin."
+      }
+    ],
+    "color-named": [
+      "never",
+      {
+        "message": "Rang nomi ishlatilmaydi (white, black...). styles/themes.json dagi token ishlatilsin."
+      }
+    ],
+    "declaration-property-value-disallowed-list": [
+      {
+        "color": [
+          "/^rgba?\\(/",
+          "/^hsla?\\(/"
+        ],
+        "background": [
+          "/^rgba?\\(/",
+          "/^hsla?\\(/"
+        ],
+        "background-color": [
+          "/^rgba?\\(/",
+          "/^hsla?\\(/"
+        ],
+        "border-color": [
+          "/^rgba?\\(/",
+          "/^hsla?\\(/"
+        ]
+      },
+      {
+        "message": "rgb()/hsl() to'g'ridan-to'g'ri yozilmaydi — themes.json ga token qo'shing."
       }
     ]
   },
   "overrides": [
     {
-      "files": ["app/globals.css"],
+      "files": [
+        "app/globals.css"
+      ],
       "rules": {
         "at-rule-no-unknown": null,
         "import-notation": null
       }
+    },
+    {
+      "files": [
+        "styles/_variables.scss"
+      ],
+      "rules": {
+        "declaration-property-value-disallowed-list": null,
+        "color-no-hex": null
+      }
     }
   ],
-  "ignoreFiles": ["app/themes.generated.css", ".next/**", "node_modules/**"]
+  "ignoreFiles": [
+    "app/themes.generated.css",
+    ".next/**",
+    "node_modules/**"
+  ]
 }

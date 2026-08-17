@@ -1,50 +1,174 @@
 {
-  "_comment": "Ranglarning yagona manbai. Kodga qattiq yozilmaydi — bu fayldan CSS generatsiya qilinadi (scripts/build-themes.mjs). Qiymatlar Telegram Web A ning jonli CSS o'zgaruvchilaridan olingan.",
-  "light": {
-    "color-primary": "#3390EC",
-    "color-primary-shade": "#2B82CE",
-    "color-primary-soft": "#EAF3FC",
-    "color-on-primary": "#FFFFFF",
-    "color-background": "#FFFFFF",
-    "color-background-secondary": "#F4F4F5",
-    "color-background-pressed": "#EBEBEC",
-    "color-fill": "#F1F1F2",
-    "color-text": "#000000",
-    "color-text-secondary": "#707579",
-    "color-text-tertiary": "#A2ACB4",
-    "color-borders": "#DADCE0",
-    "color-green": "#4DB74D",
-    "color-warning": "#F5A623",
-    "color-error": "#E53935",
-    "color-skeleton": "#E9E9EB",
-    "color-skeleton-shine": "#F4F4F5"
-  },
+  "_comment": "Ranglarning yagona manbai. Kodga hex yozilmaydi — bu fayldan CSS generatsiya qilinadi (scripts/build-themes.mjs), scripts/check-contrast.mjs esa har bir juftlikni WCAG 2.2 AA bo'yicha tekshiradi (npm run lint:tokens). Tungi rejim BIRINCHI loyihalangan, yorug'i undan chiqarilgan: OLED ekranda qora piksel quvvat sarflamaydi va auditoriya kechqurun telefon ko'radi. Toza qora (#000) ishlatilmaydi — OLED da chegarada dog' beradi va kontrast keskin bo'lib ko'zni qamashtiradi. Brend rangi jade (#0D856A): AA dan bosh ko'tarib o'tadi, Telegram ko'kidan butunlay farq qiladi, va bu mahsulotda 'ijobiy' ma'no bilan tabiiy ustma-ust tushadi (tasdiqlangan, tez javob, ariza qabul qilindi) — ya'ni alohida 'success' rangi uchun hue sarflanmaydi.",
   "dark": {
-    "color-primary": "#8774E1",
-    "color-primary-shade": "#7A66D8",
-    "color-primary-soft": "#2A2438",
-    "color-on-primary": "#FFFFFF",
-    "color-background": "#212121",
-    "color-background-secondary": "#181818",
-    "color-background-pressed": "#2C2C2C",
-    "color-fill": "#2C2C2C",
-    "color-text": "#FFFFFF",
-    "color-text-secondary": "#AAAAAA",
-    "color-text-tertiary": "#7D7D7D",
-    "color-borders": "#303030",
-    "color-green": "#4DB74D",
-    "color-warning": "#F5A623",
-    "color-error": "#E53935",
-    "color-skeleton": "#2C2C2C",
-    "color-skeleton-shine": "#383838"
+    "surface": {
+      "base": "#0E0F12",
+      "raised": "#181A1F",
+      "overlay": "#212429",
+      "sunken": "#0A0B0D",
+      "pressed": "#26292F"
+    },
+    "border": {
+      "subtle": "#23262C",
+      "default": "#2E323A",
+      "strong": "#63666E"
+    },
+    "text": {
+      "primary": "#F5F6F7",
+      "secondary": "#B6BCC6",
+      "tertiary": "#89919D",
+      "on-solid": "#FFFFFF"
+    },
+    "brand": {
+      "solid": "#0D856A",
+      "solid-pressed": "#0A6F58",
+      "text": "#2F9B81",
+      "soft": "#04271F",
+      "border": "#084C3D"
+    },
+    "success": {
+      "text": "#2F9B81",
+      "soft": "#04271F",
+      "border": "#084C3D",
+      "solid": "#0D856A"
+    },
+    "warning": {
+      "text": "#D97706",
+      "soft": "#3D2102",
+      "border": "#77420A",
+      "solid": "#B45309"
+    },
+    "error": {
+      "text": "#E55F5F",
+      "soft": "#3E0B0B",
+      "border": "#791515",
+      "solid": "#C62828"
+    },
+    "info": {
+      "text": "#2294CE",
+      "soft": "#012538",
+      "border": "#01496D",
+      "solid": "#0369A1"
+    },
+    "meaning": {
+      "daily": {
+        "text": "#EB5F15",
+        "soft": "#421903"
+      },
+      "new": {
+        "text": "#2F9B81",
+        "soft": "#04271F"
+      },
+      "fast": {
+        "text": "#2294CE",
+        "soft": "#012538"
+      },
+      "urgent": {
+        "text": "#E95978",
+        "soft": "#3F0814"
+      }
+    },
+    "skeleton": {
+      "base": "#1F2228",
+      "shine": "#2A2E35"
+    },
+    "scrim": {
+      "default": "rgb(0 0 0 / 60%)",
+      "strong": "rgb(0 0 0 / 72%)"
+    },
+    "neutral": {
+      "solid": "#525A66"
+    }
   },
+  "light": {
+    "surface": {
+      "base": "#F4F3F1",
+      "raised": "#FFFFFF",
+      "overlay": "#FFFFFF",
+      "sunken": "#ECEAE7",
+      "pressed": "#E6E4E0"
+    },
+    "border": {
+      "subtle": "#E4E2DE",
+      "default": "#D6D3CE",
+      "strong": "#8E8B87"
+    },
+    "text": {
+      "primary": "#101114",
+      "secondary": "#4C525E",
+      "tertiary": "#60666F",
+      "on-solid": "#FFFFFF"
+    },
+    "brand": {
+      "solid": "#0D856A",
+      "solid-pressed": "#0A6F58",
+      "text": "#0D7A61",
+      "soft": "#E2F1EE",
+      "border": "#ADD8CE"
+    },
+    "success": {
+      "text": "#0D7A61",
+      "soft": "#E2F1EE",
+      "border": "#ADD8CE",
+      "solid": "#0D856A"
+    },
+    "warning": {
+      "text": "#A55B05",
+      "soft": "#FAEFE1",
+      "border": "#EDCFA4",
+      "solid": "#B45309"
+    },
+    "error": {
+      "text": "#CC2424",
+      "soft": "#FBE5E5",
+      "border": "#F1B4B4",
+      "solid": "#C62828"
+    },
+    "info": {
+      "text": "#0271AC",
+      "soft": "#E1F0F8",
+      "border": "#A8D5EC",
+      "solid": "#0369A1"
+    },
+    "meaning": {
+      "daily": {
+        "text": "#BA460A",
+        "soft": "#FCEBE2"
+      },
+      "new": {
+        "text": "#0D7A61",
+        "soft": "#E2F1EE"
+      },
+      "fast": {
+        "text": "#0271AC",
+        "soft": "#E1F0F8"
+      },
+      "urgent": {
+        "text": "#CD1B42",
+        "soft": "#FBE4E9"
+      }
+    },
+    "skeleton": {
+      "base": "#E7E5E1",
+      "shine": "#F1EFEC"
+    },
+    "scrim": {
+      "default": "rgb(0 0 0 / 40%)",
+      "strong": "rgb(0 0 0 / 52%)"
+    },
+    "neutral": {
+      "solid": "#525A66"
+    }
+  },
+  "_peerComment": "Avatar ranglari — logo bo'lmaganda nom bosh harfi shu ranglardan birida chiziladi. Telegram ning pastel ohanglari saqlangan, lekin oq matn AA dan o'tguncha to'qlashtirilgan: avvalgi qiymatlarda kontrast 1.93–3.10 edi.",
   "peer": [
-    "#E17076",
-    "#EDA86C",
-    "#A695E7",
-    "#7BC862",
-    "#6EC9CB",
-    "#65AADD",
-    "#EE7AAE"
-  ]
+    "#B65B60",
+    "#9A6D46",
+    "#7B6EAB",
+    "#508240",
+    "#457F80",
+    "#497A9F",
+    "#B05A81"
+  ],
+  "_solidComment": "*-solid — to'ldirilgan fon (swipe harakati, belgi, ogohlantirish tasmasi). *-text esa yuzada matn uchun. Ikkitasi almashib ketsa kontrast yiqiladi: to'ldirish rangi matn sifatida yetarli to'q emas (AUDIT.md dan keyin aynan shu xato topilgan)."
 }

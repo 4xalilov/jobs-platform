@@ -18,6 +18,7 @@
     "predev": "node scripts/build-themes.mjs",
     "prebuild": "node scripts/build-themes.mjs",
     "lint:css": "stylelint \"**/*.{css,scss}\"",
+    "lint:tokens": "node scripts/check-contrast.mjs",
     "vapid": "node scripts/vapid.mjs"
   },
   "dependencies": {

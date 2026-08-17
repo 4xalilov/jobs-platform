@@ -49,7 +49,7 @@
 
 .ghost {
   background: transparent;
-  color: var(--color-primary);
+  color: var(--brand-text);
 
   &:active:not(:disabled) {
     background: var(--color-fill);
@@ -126,7 +126,7 @@
   border-radius: 50%;
   background: var(--color-primary);
   color: var(--color-on-primary);
-  box-shadow: 0 0.25rem 0.875rem rgb(0 0 0 / 25%);
+  box-shadow: $shadow-float;
   transition: transform $tap-feedback ease-out;
 
   &:active {

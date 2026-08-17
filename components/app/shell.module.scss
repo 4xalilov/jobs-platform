@@ -86,7 +86,7 @@
 }
 
 .employerTabActive {
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 .employerTabIcon {
@@ -140,13 +140,13 @@
   padding: 0 $side-padding;
   font-size: $font-body;
   font-weight: 500;
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 .searchClear {
   font-size: $font-caption;
   font-weight: 500;
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 .searchRecentIcon {

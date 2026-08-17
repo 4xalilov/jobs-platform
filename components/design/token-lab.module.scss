@@ -1,0 +1,180 @@
+@use "../../styles/variables" as *;
+
+.lab {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  padding: $space-3 $side-padding $space-4;
+  background: var(--surface-raised);
+}
+
+.groupTitle {
+  margin: $space-2 0 0;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-2 $space-3;
+}
+
+.swatch {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  min-width: 0;
+}
+
+.chip {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--border-default);
+  border-radius: $radius-sm;
+}
+
+/* Chegara namunasi — ichi bo'sh, faqat chizig'i ko'rinadi */
+.borderChip {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid;
+  border-radius: $radius-sm;
+}
+
+.swatchText {
+  min-width: 0;
+}
+
+.swatchName {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  color: var(--text-primary);
+}
+
+.swatchValue {
+  display: block;
+  font-size: $font-micro;
+  line-height: $font-micro-line;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-tertiary);
+}
+
+/* ——— Kontrast jadvali ——— */
+.table {
+  width: 100%;
+  font-size: $font-micro;
+  line-height: $font-micro-line;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+
+  th,
+  td {
+    padding: $space-1 0;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  th:first-child,
+  td:first-child {
+    text-align: left;
+    width: 40%;
+  }
+
+  th {
+    font-weight: 400;
+    color: var(--text-tertiary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+}
+
+/* O'tgan qiymat so'nik, o'tmagani ko'zga tashlanadi — xato qidirish oson bo'lsin */
+.pass {
+  color: var(--text-tertiary);
+}
+
+.fail {
+  font-weight: 700;
+  color: var(--error-text);
+}
+
+/* ——— Semantik va ma'no ranglari ——— */
+.semantics {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.semantic {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.badge {
+  padding: 0.125rem $space-2;
+  border: 1px solid transparent;
+  border-radius: $radius-sm;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  font-weight: 500;
+}
+
+.solid {
+  padding: $space-1 $space-3;
+  border-radius: $radius-sm;
+  font-size: $font-caption;
+  line-height: $font-caption-line;
+  font-weight: 600;
+}
+
+.semanticMeta {
+  font-size: $font-micro;
+  line-height: $font-micro-line;
+  color: var(--text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ——— Avatar ranglari ——— */
+.peers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+}
+
+.peerCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.peer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: $radius-full;
+}
+
+.peerInitials {
+  font-size: $font-caption;
+  font-weight: 600;
+  color: var(--text-on-solid);
+}
+
+.peerRatio {
+  font-size: $font-micro;
+  line-height: $font-micro-line;
+  font-variant-numeric: tabular-nums;
+}

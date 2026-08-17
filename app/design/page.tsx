@@ -57,30 +57,10 @@ import {
   sampleVacancies,
 } from "@/lib/design-samples";
 import { cx, formatAgo, formatSalary } from "@/lib/utils";
+import { ScaleLab } from "@/components/design/scale-lab";
+import { TokenLab } from "@/components/design/token-lab";
 import shared from "@/styles/shared.module.scss";
 import styles from "./design.module.scss";
-import themes from "@/styles/themes.json";
-
-/**
- * Ko'rsatiladigan tokenlar. Hex qiymatlar bu yerda takrorlanmaydi —
- * to'g'ridan-to'g'ri themes.json dan olinadi, shuning uchun ro'yxat
- * ranglar o'zgarganda eskirib qolmaydi.
- */
-const COLOR_TOKENS = [
-  "color-primary",
-  "color-primary-shade",
-  "color-background",
-  "color-background-secondary",
-  "color-background-pressed",
-  "color-fill",
-  "color-borders",
-  "color-text",
-  "color-text-secondary",
-  "color-text-tertiary",
-  "color-green",
-  "color-warning",
-  "color-error",
-] as const;
 
 type ExperienceLevel = "none" | "upToOne" | "oneToThree" | "threePlus";
 
@@ -143,10 +123,12 @@ export default function DesignSystemPage() {
 
       {/* ——— 1. Ranglar ——— */}
       <SectionHeader>{t.design.sections.colors}</SectionHeader>
-      <div className={styles.panel}>
-        <ColorGrid themeKey={resolved} />
-        <p className={cx(styles.noteInline, styles.noteSpaced)}>{t.design.colors.note}</p>
-      </div>
+      <TokenLab theme={resolved} />
+      <p className={styles.note}>{t.design.colors.note}</p>
+
+      {/* ——— Shkalalar: bo'shliq, radius, tipografika ——— */}
+      <SectionHeader>Shkalalar</SectionHeader>
+      <ScaleLab />
 
       {/* ——— 2. Tipografika ——— */}
       <SectionHeader>{t.design.sections.typography}</SectionHeader>
@@ -709,24 +691,6 @@ function TypeSample({ spec, children }: { spec: string; children: React.ReactNod
     <div>
       <div className={styles.sampleText}>{children}</div>
       <p className={styles.sampleSpec}>{spec}</p>
-    </div>
-  );
-}
-
-function ColorGrid({ themeKey }: { themeKey: "light" | "dark" }) {
-  const palette = themes[themeKey];
-
-  return (
-    <div className={styles.colorGrid}>
-      {COLOR_TOKENS.map((token) => (
-        <div key={token} className={styles.colorItem}>
-          <span className={styles.swatch} style={{ background: `var(--${token})` }} />
-          <span className={styles.colorText}>
-            <span className={styles.colorName}>{token.replace("color-", "")}</span>
-            <span className={styles.colorValue}>{palette[token]}</span>
-          </span>
-        </div>
-      ))}
     </div>
   );
 }

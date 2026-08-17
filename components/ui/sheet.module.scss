@@ -13,12 +13,12 @@
 .backdrop {
   position: absolute;
   inset: 0;
-  background: rgb(0 0 0 / 40%);
+  background: var(--scrim-default);
   animation: backdrop-in $fast-transition;
 }
 
 :global(.theme-dark) .backdrop {
-  background: rgb(0 0 0 / 60%);
+  background: var(--scrim-strong);
 }
 
 .panel {

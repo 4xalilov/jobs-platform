@@ -207,7 +207,7 @@
 
 .backButton {
   padding: 0.5rem;
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 .progress {
@@ -314,8 +314,8 @@
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
-  background: var(--color-green);
-  color: #fff;
+  background: var(--success-solid);
+  color: var(--text-on-solid);
 }
 
 .doneTitle {
@@ -405,7 +405,7 @@
   font-size: $font-caption;
   line-height: $font-caption-line;
   font-weight: 500;
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 .payPrice {

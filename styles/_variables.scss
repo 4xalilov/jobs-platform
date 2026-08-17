@@ -1,35 +1,96 @@
-// O'lchamlar va animatsiya — dizayn tizimining yagona manbai.
+// O'lchamlar, tipografika va animatsiya — dizayn tizimining yagona manbai.
 // Ranglar bu yerda emas: ular themes.json da (tema almashinuvi shunga bog'liq).
 //
 // Hamma narsa rem da. Ildiz 16px. Sabab: foydalanuvchi brauzer shriftini
 // kattalashtirsa butun interfeys proporsional o'sadi, sindirmaydi.
 
-// ——— O'lchamlar ———
-$border-radius-default: 0.75rem; // karta, sheet
-$border-radius-card: 0.9375rem; // 15px — Telegram xabar radiusi
-$border-radius-button: 0.625rem;
-$list-item-height: 4.75rem; // vakansiya elementi
-$settings-item-height: 2.75rem;
-$avatar-size: 3rem;
+// ——————————————————————————————————————————————
+// BO'SHLIQ — 4px asosda qat'iy shkala
+//
+// v4 da bo'shliqlar 0.125 dan 1.5rem gacha erkin yozilardi (0.375,
+// 0.625, 0.875 …) va bir xil ko'rinishi kerak bo'lgan joylar
+// bir-biriga to'g'ri kelmasdi. Endi oraliq qiymat ishlatilmaydi.
+// ——————————————————————————————————————————————
+$space-1: 0.25rem; // 4
+$space-2: 0.5rem; // 8
+$space-3: 0.75rem; // 12
+$space-4: 1rem; // 16
+$space-6: 1.5rem; // 24
+$space-8: 2rem; // 32
+$space-12: 3rem; // 48
+
+// ——————————————————————————————————————————————
+// RADIUS — har komponent qaysi darajada ekanini biladi
+// ——————————————————————————————————————————————
+$radius-sm: 0.5rem; // 8  — chip, badge, kichik tugma
+$radius-md: 0.75rem; // 12 — kartochka, xabar pufagi, input
+$radius-lg: 1rem; // 16 — sheet, katta quti
+$radius-xl: 1.25rem; // 20 — modal, rasm
+$radius-full: 62.4375rem; // to'liq yumaloq
+
+// ——————————————————————————————————————————————
+// TIPOGRAFIKA
+//
+// v4 da shkala 0.8125 → 2.125rem oralig'ida siqilgan edi va ierarxiya
+// faqat shrift qalinligi bilan berilardi. Endi o'lcham ham ishlaydi:
+// eng kichik matn kichikroq, muhim raqam kattaroq.
+// ——————————————————————————————————————————————
+$font-display: 2.125rem; // 34 — ekran sarlavhasi
+$font-display-line: 2.5625rem;
+$font-display-weight: 700;
+// Sheet va bo'lim sarlavhalari
+$font-title-1: 1.5rem; // 24 — sheet sarlavhasi
+$font-title-1-line: 1.75rem;
+$font-title-2: 1.25rem; // 20 — bo'lim sarlavhasi
+$font-title-2-line: 1.5rem;
+
+// Maosh — vakansiya kartochkasidagi eng ko'zga tashlanadigan element (v5, 2.4)
+$font-amount: 1.125rem; // 18
+$font-amount-line: 1.375rem;
+$font-amount-weight: 700;
+$font-nav: 1.0625rem; // 17 — panel sarlavhasi, ro'yxat elementi nomi
+$font-nav-line: 1.375rem;
+$font-body: 0.9375rem; // 15 — asosiy matn
+$font-body-line: 1.3125rem;
+$font-body-sm: 0.875rem; // 14 — ikkinchi darajali matn
+$font-body-sm-line: 1.25rem;
+$font-caption: 0.8125rem; // 13 — izoh, meta
+$font-caption-line: 1.125rem;
+$font-micro: 0.6875rem; // 11 — vaqt, belgi, zanjir yorlig'i
+$font-micro-line: 0.875rem;
+
+// ——————————————————————————————————————————————
+// BALANDLIK
+//
+// Soya ishlatilmaydi: tungi rejimda soya ko'rinmaydi va u yerda
+// ierarxiya tonal sirt bilan beriladi (surface-base → raised →
+// overlay). Soya faqat yorug' rejimdagi qatlam uchun, u ham nozik.
+// ——————————————————————————————————————————————
+$shadow-overlay:
+  0 -1px 3px rgb(0 0 0 / 4%),
+  0 -8px 24px rgb(0 0 0 / 8%);
+$shadow-float: 0 2px 8px rgb(0 0 0 / 12%);
+
+// ——————————————————————————————————————————————
+// O'LCHAMLAR
+// ——————————————————————————————————————————————
+$app-width: 27.5rem; // 440 — telefon kengligidagi ustun
+$nav-height: 3.5rem; // yuqori panel
 $tab-bar-height: 3.125rem;
 $button-height: 3.125rem;
-$side-padding: 1rem;
+$button-height-sm: 2.25rem;
+$list-item-height: 4.75rem;
+$settings-item-height: 2.75rem;
+$vacancy-row-height: 6rem; // 4 qatorli vakansiya elementi
+$avatar-size: 3rem;
+$side-padding: $space-4;
 
 // Ajratuvchi avatar tugagan joydan boshlanadi
 $separator-inset: 4.75rem;
 
-// ——— Tipografika ———
-$font-large: 2.125rem;
-$font-large-line: 2.5625rem;
-$font-nav: 1.0625rem;
-$font-nav-line: 1.375rem;
-$font-title: 1.0625rem;
-$font-body: 0.9375rem;
-$font-body-line: 1.3125rem;
-$font-caption: 0.8125rem;
-$font-caption-line: 1.125rem;
-
-// ——— Animatsiya: Telegram ning haqiqiy egri chiziqlari ———
+// ——————————————————————————————————————————————
+// ANIMATSIYA: Telegram ning haqiqiy egri chiziqlari
+// ——————————————————————————————————————————————
 $ease-slide: cubic-bezier(0.25, 1, 0.5, 1);
 $ease-layer: cubic-bezier(0.33, 1, 0.68, 1);
 $slide-transition: 0.3s $ease-slide;
@@ -38,8 +99,24 @@ $fast-transition: 0.15s ease-out;
 $tap-feedback: 0.1s;
 $tap-scale: 0.97;
 
-// ——— Responsive nuqtalari ———
+// ——————————————————————————————————————————————
+// RESPONSIVE
+// ——————————————————————————————————————————————
 $bp-mobile: 600px;
 $bp-two-column: 601px;
 $bp-wide: 925px;
 $bp-three-column: 1275px;
+
+// ——————————————————————————————————————————————
+// v4 NOMLARI — B2/B3 da olib tashlanadi
+//
+// 33 ta modul shu nomlarga tayanadi. Ularni bir commit'da almashtirish
+// butun ilovani bir vaqtda sindirardi, shuning uchun eski nomlar yangi
+// shkalaga ishora qilib turadi.
+// ——————————————————————————————————————————————
+$border-radius-default: $radius-md;
+$border-radius-card: $radius-md;
+$border-radius-button: $radius-sm;
+$font-large: $font-display;
+$font-large-line: $font-display-line;
+$font-title: $font-nav;

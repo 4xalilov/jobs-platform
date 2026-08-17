@@ -120,7 +120,7 @@
 .toggle {
   font-size: $font-caption;
   font-weight: 500;
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 /* ——— Tipografika namunalari ——— */
@@ -237,7 +237,7 @@
 
 .navIcon {
   padding: 0.5rem;
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 /* FAB qayerda turishini ko'rsatuvchi bo'sh maydon */
@@ -443,11 +443,11 @@
 }
 
 .successDot {
-  background: var(--color-green);
+  background: var(--success-solid);
 }
 
 .accentIcon {
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 .mutedIcon {
