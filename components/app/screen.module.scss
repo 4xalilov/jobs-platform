@@ -1,4 +1,5 @@
 @use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 /*
  * ——— Yuqori panel (v4, §3) ———
@@ -15,7 +16,7 @@
   gap: 0.25rem;
   height: 3.5rem;
   padding: 0 0.5rem;
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 /* Chiziq faqat scroll boshlangandan keyin paydo bo'ladi */
@@ -26,7 +27,7 @@
   right: 0;
   bottom: 0;
   height: 1px;
-  background: var(--color-borders);
+  background: var(--border-default);
   transform: scaleY(0.5);
   transform-origin: bottom;
   opacity: 0;
@@ -63,11 +64,7 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  transition: background-color $tap-feedback ease-out;
-
-  &:active {
-    background: var(--color-fill);
-  }
+  @include tap-fill(var(--surface-sunken));
 }
 
 .titleWrap {
@@ -84,7 +81,7 @@
   font-size: $font-nav;
   line-height: 1.25rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 /* Kanal ichida: nom ostida "1 240 obunachi" */
@@ -95,7 +92,7 @@
   white-space: nowrap;
   font-size: 0.75rem;
   line-height: 1rem;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 /*

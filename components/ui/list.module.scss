@@ -1,4 +1,5 @@
 @use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 /* Bo'lim sarlavhasi: kulrang, BOSH HARFLARDA */
 .sectionHeader {
@@ -13,11 +14,11 @@
   line-height: $font-caption-line;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .group {
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 .item {
@@ -29,7 +30,7 @@
   min-height: $list-item-height;
   padding: 0.875rem $side-padding;
   text-align: left;
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 /* Sozlamalar uslubi — pastroq qator */
@@ -41,18 +42,7 @@
 
 /* Qator bosilganda butun qator kichraymaydi — faqat fon o'zgaradi */
 .interactive {
-  transition: background-color $tap-feedback ease-out;
-  touch-action: manipulation;
-
-  &:active {
-    background: var(--color-background-pressed);
-  }
-}
-
-@media (hover: hover) {
-  .interactive:hover {
-    background: var(--color-background-pressed);
-  }
+  @include tap-fill;
 }
 
 .main {
@@ -70,10 +60,10 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: $font-title;
+  font-size: $font-nav;
   line-height: $font-nav-line;
   font-weight: 400;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .strong {
@@ -88,7 +78,7 @@
   white-space: nowrap;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .wrap {
@@ -104,7 +94,7 @@
   white-space: nowrap;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .side {
@@ -120,10 +110,10 @@
 .meta {
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .chevron {
   flex-shrink: 0;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }

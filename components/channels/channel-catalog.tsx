@@ -5,6 +5,7 @@ import { useI18n } from "@/components/providers/i18n-provider";
 import { ChannelRow } from "@/components/channels/channel-row";
 import { Screen } from "@/components/app/screen";
 import type { ChannelGroupDTO, ChannelListItemDTO } from "@/lib/db/types";
+import { haptic } from "@/lib/haptics";
 import { apiPost } from "@/lib/api";
 import { useForwardNavigation } from "@/lib/navigation";
 import styles from "./channel-catalog.module.scss";
@@ -24,6 +25,7 @@ export function ChannelCatalog({ initial }: { initial: ChannelGroupDTO[] }) {
 
   /** Obuna darhol o'zgaradi, so'rov fonda ketadi */
   const toggle = (channel: ChannelListItemDTO) => {
+    haptic("select");
     const subscribed = !channel.subscribed;
     setGroups((prev) =>
       prev.map((group) => ({

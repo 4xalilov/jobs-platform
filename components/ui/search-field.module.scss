@@ -1,4 +1,5 @@
 @use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .wrap {
   padding: 0.5rem $side-padding;
@@ -11,15 +12,15 @@
   align-items: center;
   width: 100%;
   height: 2.25rem;
-  border-radius: $border-radius-button;
-  background: var(--color-fill);
+  border-radius: $radius-sm;
+  background: var(--surface-sunken);
   text-align: left;
 }
 
 .icon {
   position: absolute;
   left: 0.625rem;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .input {
@@ -29,10 +30,10 @@
   background: transparent;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 
   &::placeholder {
-    color: var(--color-text-tertiary);
+    color: var(--text-tertiary);
   }
 
   &:focus {
@@ -48,7 +49,7 @@
   padding-left: 2.25rem;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .clear {
@@ -60,9 +61,6 @@
   width: 1.5rem;
   height: 1.5rem;
   border-radius: 50%;
-  color: var(--color-text-tertiary);
-
-  &:active {
-    background: var(--color-borders);
-  }
+  color: var(--text-tertiary);
+  @include tap-fill(var(--border-default), $hover: false);
 }

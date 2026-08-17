@@ -1,26 +1,23 @@
 @use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 /* Panel o'ngidagi obuna tugmasi */
 .subscribe {
   flex-shrink: 0;
   height: 2rem;
   padding: 0 0.9375rem;
-  border-radius: $border-radius-button;
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  border-radius: $radius-sm;
+  background: var(--brand-solid);
+  color: var(--text-on-solid);
   font-size: $font-caption;
   font-weight: 600;
   white-space: nowrap;
-  transition: transform $tap-feedback ease-out;
-
-  &:active {
-    transform: scale($tap-scale);
-  }
+  @include tap-scale;
 }
 
 .subscribed {
-  background: var(--color-fill);
-  color: var(--color-text-secondary);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
 }
 
 /*
@@ -35,7 +32,7 @@
   padding: 0.5rem $side-padding;
   overflow-x: auto;
   scrollbar-width: none;
-  background: var(--color-background);
+  background: var(--surface-raised);
 
   &::-webkit-scrollbar {
     display: none;
@@ -50,8 +47,8 @@
   height: 2rem;
   padding: 0 0.75rem;
   border-radius: 1rem;
-  background: var(--color-background-secondary);
-  color: var(--color-text);
+  background: var(--surface-base);
+  color: var(--text-primary);
   font-size: $font-body;
   font-weight: 500;
   white-space: nowrap;
@@ -61,8 +58,8 @@
 }
 
 .chipActive {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--brand-solid);
+  color: var(--text-on-solid);
 }
 
 .chipCount {
@@ -80,16 +77,16 @@
   top: 0;
   z-index: 1;
   padding: 0.875rem $side-padding 0.375rem;
-  background: var(--color-background-secondary);
+  background: var(--surface-base);
   font-size: $font-caption;
   line-height: $font-caption-line;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .group {
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 /* Chip almashganda ro'yxat 150ms fade bilan yangilanadi (§2) */
@@ -110,7 +107,7 @@
   padding: 1.25rem $side-padding 2rem;
   text-align: center;
   font-size: $font-caption;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -121,9 +118,5 @@
   .chip,
   .subscribe {
     transition: none;
-  }
-
-  .subscribe:active {
-    transform: none;
   }
 }

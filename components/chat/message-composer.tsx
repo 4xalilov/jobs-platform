@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { formatDuration } from "@/components/chat/voice-bubble";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { IconMic, IconSend, IconSquare, IconX } from "@/components/ui/icon";
+import { haptic } from "@/lib/haptics";
 import { useRecorder } from "@/lib/use-recorder";
 import styles from "./chat.module.scss";
 
@@ -22,6 +23,7 @@ export function MessageComposer({
 
   const submit = () => {
     if (!hasText) return;
+    haptic("select");
     onSend({ text });
     setText("");
     // Bir necha qatorga o'sgan maydon qayta bir qatorga qaytadi

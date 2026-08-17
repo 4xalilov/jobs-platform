@@ -1,5 +1,6 @@
 "use client";
 
+import { haptic } from "@/lib/haptics";
 import { cx } from "@/lib/utils";
 import styles from "./chip.module.scss";
 
@@ -8,6 +9,7 @@ export function Chip({
   children,
   leading,
   className,
+  onClick,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
   selected?: boolean;
@@ -17,6 +19,11 @@ export function Chip({
     <button
       type="button"
       aria-pressed={selected}
+      /* Haptik komponent ichida: har chaqiruv joyida yozilsa unutiladi */
+      onClick={(event) => {
+        haptic("select");
+        onClick?.(event);
+      }}
       className={cx(styles.chip, selected && styles.selected, className)}
       {...props}
     >

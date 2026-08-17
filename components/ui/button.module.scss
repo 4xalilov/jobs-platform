@@ -1,17 +1,13 @@
 @use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  border-radius: $border-radius-button;
-  transition: transform $tap-feedback ease-out;
-  transform: translateZ(0);
-
-  &:active:not(:disabled) {
-    transform: scale($tap-scale);
-  }
+  border-radius: $radius-sm;
+  @include tap-scale($guard: ":not(:disabled)");
 
   &:disabled {
     pointer-events: none;
@@ -19,7 +15,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--brand-solid);
     outline-offset: 2px;
   }
 }
@@ -30,20 +26,20 @@
 
 /* ——— Ko'rinishlar ——— */
 .primary {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--brand-solid);
+  color: var(--text-on-solid);
 
   &:active:not(:disabled) {
-    background: var(--color-primary-shade);
+    background: var(--brand-solid-pressed);
   }
 }
 
 .secondary {
-  background: var(--color-fill);
-  color: var(--color-text);
+  background: var(--surface-sunken);
+  color: var(--text-primary);
 
   &:active:not(:disabled) {
-    background: var(--color-borders);
+    background: var(--border-default);
   }
 }
 
@@ -52,16 +48,16 @@
   color: var(--brand-text);
 
   &:active:not(:disabled) {
-    background: var(--color-fill);
+    background: var(--surface-sunken);
   }
 }
 
 .danger {
-  background: var(--color-fill);
-  color: var(--color-error);
+  background: var(--surface-sunken);
+  color: var(--error-text);
 
   &:active:not(:disabled) {
-    background: var(--color-borders);
+    background: var(--border-default);
   }
 }
 
@@ -124,23 +120,17 @@
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--brand-solid);
+  color: var(--text-on-solid);
   box-shadow: $shadow-float;
-  transition: transform $tap-feedback ease-out;
+  @include tap-scale(0.95);
 
   &:active {
-    transform: scale(0.95);
-    background: var(--color-primary-shade);
+    background: var(--brand-solid-pressed);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .button:active:not(:disabled),
-  .fab:active {
-    transform: none;
-  }
-
   .dot {
     animation: none;
   }

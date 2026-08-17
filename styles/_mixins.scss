@@ -1,0 +1,69 @@
+@use "variables" as *;
+
+// ——————————————————————————————————————————————
+// BOSISH JAVOBI — butun ilovada bir xil (v5, B2)
+//
+// Ilgari har komponent o'zining `:active` qoidasini yozardi va
+// 15 faylda 15 nusxa bor edi. Natijasi: davomiylik joyiga qarab
+// farq qilardi, `prefers-reduced-motion` himoyasi esa uch faylda
+// umuman yozilmagan edi. Endi bitta joyda.
+//
+// Ikki xil javob bor, uchinchisi yo'q:
+//
+//   tap-fill  — sirt to'ldiriladi. Ro'yxat qatori, panel tugmasi,
+//               forma maydoni: kattaligi o'zgarmaydi, chunki qator
+//               kichrayishi qo'shni qatorlarni ham qimirlatib
+//               ko'rinadi.
+//   tap-scale — element kichrayadi. Tugma, chip, tab: chegarasi
+//               aniq va o'zi kichik, "bosildi" hissi shundan keladi.
+//
+// Ikkalasi ham 0.1s ($tap-feedback): javob server javobini kutmaydi.
+// ——————————————————————————————————————————————
+
+/// Bosilganda sirt to'ldiriladi. Sichqoncha bor qurilmada hover ham.
+/// @param {Color} $pressed - bosilgan holat foni
+/// @param {Bool} $hover - hover ham shu rangga o'tsinmi
+@mixin tap-fill($pressed: var(--surface-pressed), $hover: true) {
+  transition: background-color $tap-feedback ease-out;
+  touch-action: manipulation;
+
+  &:active {
+    background: $pressed;
+  }
+
+  @if $hover {
+    // Faqat sichqoncha bor qurilmada: telefonda hover "yopishib" qoladi
+    @media (hover: hover) {
+      &:hover {
+        background: $pressed;
+      }
+    }
+  }
+}
+
+/// Bosilganda element kichrayadi.
+/// @param {Number} $scale - masshtab (standart $tap-scale = 0.97)
+/// @param {String} $guard - qo'shimcha shart, masalan ":not(:disabled)"
+@mixin tap-scale($scale: $tap-scale, $guard: "") {
+  transition: transform $tap-feedback ease-out;
+  // Alohida qatlam: transform har bosishda layout ni qayta hisoblamaydi
+  transform: translateZ(0);
+  touch-action: manipulation;
+
+  &:active#{$guard} {
+    transform: scale($scale);
+  }
+
+  /*
+   * Harakatni kamaytirishni so'ragan foydalanuvchida masshtab yo'q.
+   * Javob yo'qolmaydi: bu holatda ham `:active` fon o'zgarishi yoki
+   * haptik qoladi (lib/haptics.ts).
+   */
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &:active#{$guard} {
+      transform: none;
+    }
+  }
+}

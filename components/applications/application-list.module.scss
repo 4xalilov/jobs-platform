@@ -1,4 +1,5 @@
 @use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .list {
   display: flex;
@@ -7,7 +8,7 @@
 }
 
 .card {
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 /* Sarlavha qatori — kompaniya va lavozim, bosilsa chat ochiladi */
@@ -18,11 +19,7 @@
   width: 100%;
   padding: 0.875rem $side-padding 0.5rem;
   text-align: left;
-  transition: background-color $tap-feedback ease-out;
-
-  &:active {
-    background: var(--color-background-pressed);
-  }
+  @include tap-fill;
 }
 
 .headText {
@@ -35,9 +32,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: $font-title;
+  font-size: $font-nav;
   line-height: $font-nav-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .subtitle {
@@ -48,12 +45,12 @@
   white-space: nowrap;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .chevron {
   flex-shrink: 0;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 /* ——— Ariza yo'li: Yuborildi → Ko'rildi → ... ——— */
@@ -82,22 +79,22 @@
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  background: var(--color-fill);
+  background: var(--surface-sunken);
 }
 
 .dotReached {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--brand-solid);
+  color: var(--text-on-solid);
 }
 
 .line {
   flex: 1;
   height: 2px;
-  background: var(--color-fill);
+  background: var(--surface-sunken);
 }
 
 .lineDone {
-  background: var(--color-primary);
+  background: var(--brand-solid);
 }
 
 .stepLabel {
@@ -106,25 +103,25 @@
   padding-right: 0.25rem;
   font-size: 0.6875rem;
   line-height: 0.875rem;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .stepCurrent {
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .stepDate {
   display: block;
   font-size: 0.6875rem;
   line-height: 0.875rem;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
   font-variant-numeric: tabular-nums;
 }
 
 /* ——— 7 kun javob bo'lmasa: turtki va o'xshash vakansiyalar ——— */
 .nudge {
-  border-top: 1px solid var(--color-borders);
+  border-top: 1px solid var(--border-default);
   padding: 0.75rem $side-padding;
 }
 
@@ -132,14 +129,14 @@
   margin: 0;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .similarTitle {
   margin: 0.5rem 0 0;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .similarList {
@@ -151,14 +148,10 @@
 
 .similarItem {
   padding: 0.5rem 0.75rem;
-  border-radius: $border-radius-button;
-  background: var(--color-fill);
+  border-radius: $radius-sm;
+  background: var(--surface-sunken);
   text-align: left;
-  transition: background-color $tap-feedback ease-out;
-
-  &:active {
-    background: var(--color-borders);
-  }
+  @include tap-fill(var(--border-default));
 }
 
 .similarName {
@@ -168,7 +161,7 @@
   white-space: nowrap;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .similarMeta {
@@ -178,7 +171,7 @@
   white-space: nowrap;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 @media (prefers-reduced-motion: reduce) {

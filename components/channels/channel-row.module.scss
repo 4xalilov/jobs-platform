@@ -1,4 +1,5 @@
 @use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 /*
  * Kanal qatori — Telegram chat list'ining aynan o'zi (v4, §1.2).
@@ -16,19 +17,8 @@
   min-height: $list-item-height;
   padding: 0.75rem $side-padding;
   text-align: left;
-  background: var(--color-background);
-  transition: background-color $tap-feedback ease-out;
-  touch-action: manipulation;
-
-  &:active {
-    background: var(--color-background-pressed);
-  }
-}
-
-@media (hover: hover) {
-  .row:hover {
-    background: var(--color-background-pressed);
-  }
+  background: var(--surface-raised);
+  @include tap-fill;
 }
 
 /* Bosiladigan maydon: avatar va matn. Obuna tugmasi undan tashqarida
@@ -60,29 +50,29 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: $font-title;
+  font-size: $font-nav;
   line-height: $font-nav-line;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .muted {
   flex-shrink: 0;
   display: flex;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .pinned {
   flex-shrink: 0;
   display: flex;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .time {
   flex-shrink: 0;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
   font-variant-numeric: tabular-nums;
 }
 
@@ -103,13 +93,13 @@
   white-space: nowrap;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .salary {
   flex-shrink: 0;
   font-weight: 600;
-  color: var(--color-green);
+  color: var(--success-text);
   font-variant-numeric: tabular-nums;
 }
 
@@ -122,8 +112,8 @@
   height: 1.375rem;
   padding: 0 0.4375rem;
   border-radius: 999px;
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--brand-solid);
+  color: var(--text-on-solid);
   font-size: $font-caption;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -139,22 +129,18 @@
   flex-shrink: 0;
   height: 1.875rem;
   padding: 0 0.875rem;
-  border-radius: $border-radius-button;
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  border-radius: $radius-sm;
+  background: var(--brand-solid);
+  color: var(--text-on-solid);
   font-size: $font-caption;
   font-weight: 600;
   white-space: nowrap;
-  transition: transform $tap-feedback ease-out;
-
-  &:active {
-    transform: scale($tap-scale);
-  }
+  @include tap-scale;
 }
 
 .subscribed {
-  background: var(--color-fill);
-  color: var(--color-text-secondary);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
 }
 
 .counts {
@@ -165,16 +151,11 @@
   white-space: nowrap;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .row,
-  .subscribe {
+  .row {
     transition: none;
-  }
-
-  .subscribe:active {
-    transform: none;
   }
 }

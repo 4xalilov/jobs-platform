@@ -5,6 +5,7 @@ import { useI18n } from "@/components/providers/i18n-provider";
 import { Avatar } from "@/components/ui/avatar";
 import { IconBellOff, IconPin } from "@/components/ui/icon";
 import type { ChannelListItemDTO } from "@/lib/db/types";
+import { haptic } from "@/lib/haptics";
 import { cx, formatAgo, formatSalaryShort } from "@/lib/utils";
 import styles from "./channel-row.module.scss";
 
@@ -100,7 +101,10 @@ export function ChannelRow({
       {variant === "catalog" && onToggleSubscribe && (
         <button
           type="button"
-          onClick={() => onToggleSubscribe(channel)}
+          onClick={() => {
+            haptic("select");
+            onToggleSubscribe(channel);
+          }}
           className={cx(styles.subscribe, channel.subscribed && styles.subscribed)}
         >
           {channel.subscribed ? t.channels.subscribed : t.channels.subscribe}

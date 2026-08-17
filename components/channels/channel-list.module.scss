@@ -1,7 +1,8 @@
 @use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .group {
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 /* Ro'yxat tepasidagi bitta qator — katalogga o'tish (§1.2) */
@@ -13,17 +14,13 @@
   width: 100%;
   min-height: 3.5rem;
   padding: 0.75rem $side-padding;
-  background: var(--color-background);
+  background: var(--surface-raised);
   color: var(--brand-text);
-  font-size: $font-title;
+  font-size: $font-nav;
   line-height: $font-nav-line;
   font-weight: 500;
   text-align: left;
-  transition: background-color $tap-feedback ease-out;
-
-  &:active {
-    background: var(--color-background-pressed);
-  }
+  @include tap-fill;
 }
 
 .browseIcon {
@@ -34,7 +31,7 @@
   height: $avatar-size;
   flex-shrink: 0;
   border-radius: 50%;
-  background: var(--color-primary-soft);
+  background: var(--brand-soft);
 }
 
 .browseText {
@@ -44,7 +41,7 @@
 
 .chevron {
   flex-shrink: 0;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 /* ——— Uzoq bosish menyusi ——— */
@@ -60,26 +57,22 @@
   min-height: 3.25rem;
   padding: 0 $side-padding;
   text-align: left;
-  font-size: $font-title;
-  color: var(--color-text);
-  transition: background-color $tap-feedback ease-out;
-
-  &:active {
-    background: var(--color-background-pressed);
-  }
+  font-size: $font-nav;
+  color: var(--text-primary);
+  @include tap-fill;
 }
 
 .menuIcon {
   display: flex;
   flex-shrink: 0;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .menuDanger {
-  color: var(--color-error);
+  color: var(--error-text);
 
   .menuIcon {
-    color: var(--color-error);
+    color: var(--error-text);
   }
 }
 
@@ -99,9 +92,5 @@
   height: 2.5rem;
   border-radius: 50%;
   color: var(--brand-text);
-  transition: background-color $tap-feedback ease-out;
-
-  &:active {
-    background: var(--color-fill);
-  }
+  @include tap-fill(var(--surface-sunken));
 }
