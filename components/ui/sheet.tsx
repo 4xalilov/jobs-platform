@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useIsClient } from "@/lib/client-store";
+import { useFocusTrap } from "@/lib/use-focus-trap";
 import { cx } from "@/lib/utils";
 import styles from "./sheet.module.scss";
 
@@ -37,6 +38,9 @@ export function Sheet({
     null,
   );
   const panel = useRef<HTMLDivElement | null>(null);
+
+  /* Tab ichkarida qamaladi, yopilganda fokus ochgan tugmaga qaytadi */
+  useFocusTrap(panel, open);
 
   useEffect(() => {
     if (!open) return;
@@ -103,10 +107,7 @@ export function Sheet({
         role="dialog"
         aria-modal="true"
         tabIndex={-1}
-        ref={(node) => {
-          panel.current = node;
-          node?.focus();
-        }}
+        ref={panel}
         className={cx(styles.panel, className)}
         style={
           dragY

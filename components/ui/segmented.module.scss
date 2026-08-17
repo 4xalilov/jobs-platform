@@ -4,8 +4,8 @@
   position: relative;
   display: flex;
   padding: 3px;
-  border-radius: $border-radius-button;
-  background: var(--color-fill);
+  border-radius: $radius-sm;
+  background: var(--surface-sunken);
 }
 
 /* Tanlangan bo'lakni ko'rsatuvchi yuza — chapdan o'ngga siljiydi */
@@ -15,7 +15,7 @@
   bottom: 3px;
   left: 3px;
   border-radius: 0.5rem;
-  background: var(--color-background);
+  background: var(--surface-raised);
   box-shadow: $shadow-float;
   transition: transform 0.2s $ease-slide;
   will-change: transform;
@@ -31,15 +31,15 @@
   line-height: $font-caption-line;
   font-weight: 500;
   white-space: nowrap;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   transition: color $fast-transition;
 
-  &[aria-selected="true"] {
-    color: var(--color-text);
+  &[aria-checked="true"] {
+    color: var(--text-primary);
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--brand-solid);
     outline-offset: 2px;
   }
 }
