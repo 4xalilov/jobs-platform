@@ -6,11 +6,11 @@
   width: 3.1875rem;
   height: 1.9375rem;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--color-text-tertiary) 40%, transparent);
+  background: color-mix(in srgb, var(--text-tertiary) 40%, transparent);
   transition: background-color 0.2s ease-out;
 
   &[aria-checked="true"] {
-    background: var(--color-primary);
+    background: var(--brand-solid);
   }
 }
 

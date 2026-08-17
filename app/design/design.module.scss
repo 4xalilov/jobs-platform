@@ -10,7 +10,7 @@
   min-height: 100dvh;
   max-width: 27.5rem;
   padding-bottom: 4rem;
-  background: var(--color-background-secondary);
+  background: var(--surface-base);
 }
 
 .header {
@@ -18,7 +18,7 @@
   top: 0;
   z-index: 30;
   padding: 1.25rem $side-padding 0.75rem;
-  background: color-mix(in srgb, var(--color-background-secondary) 90%, transparent);
+  background: color-mix(in srgb, var(--surface-base) 90%, transparent);
   backdrop-filter: blur(0.75rem);
 }
 
@@ -27,14 +27,14 @@
   font-size: 1.5rem;
   line-height: 1.75rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .subtitle {
   margin: 0.25rem 0 0;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .controls {
@@ -47,7 +47,7 @@
 /* ——— Bo'lim qutilari ——— */
 .panel {
   padding: 0.75rem $side-padding;
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 /* Ichidagilar orasida bir xil bo'shliq */
@@ -56,11 +56,11 @@
   flex-direction: column;
   gap: 0.75rem;
   padding: 0.875rem $side-padding;
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 .surface {
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 .padTop {
@@ -76,7 +76,7 @@
   padding: 0.5rem $side-padding 0;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 /* Quti ichidagi izoh — o'z yon bo'shlig'i yo'q */
@@ -84,7 +84,7 @@
   margin: 0;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .noteSpaced {
@@ -134,46 +134,46 @@
   margin: 0.125rem 0 0;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .large {
-  font-size: $font-large;
-  line-height: $font-large-line;
+  font-size: $font-display;
+  line-height: $font-display-line;
   font-weight: 700;
   letter-spacing: -0.025em;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .nav {
   font-size: $font-nav;
   line-height: $font-nav-line;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .titleSample {
-  font-size: $font-title;
+  font-size: $font-nav;
   line-height: $font-nav-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .body {
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .bodyMuted {
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .caption {
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .section {
@@ -181,7 +181,7 @@
   line-height: $font-caption-line;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 /* ——— Forma bo'limi ——— */
@@ -199,11 +199,11 @@
   flex: 1;
   height: 3px;
   border-radius: 62.4375rem;
-  background: var(--color-fill);
+  background: var(--surface-sunken);
 }
 
 .progressStepDone {
-  background: var(--color-primary);
+  background: var(--brand-solid);
 }
 
 .nameField {
@@ -220,19 +220,19 @@
   line-height: $font-caption-line;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 /* ——— Navigatsiya namunasi ——— */
 .navDemo {
   overflow: hidden;
   margin: 0 $side-padding;
-  border-radius: $border-radius-default;
-  background: var(--color-background);
+  border-radius: $radius-md;
+  background: var(--surface-raised);
 }
 
 .navBorder {
-  border-bottom: 1px solid var(--color-borders);
+  border-bottom: 1px solid var(--border-default);
 }
 
 .navIcon {
@@ -244,7 +244,7 @@
 .fabStage {
   position: relative;
   height: 10rem;
-  background: var(--color-background-secondary);
+  background: var(--surface-base);
 }
 
 .fabSpot {
@@ -258,7 +258,7 @@
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   row-gap: 1rem;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .iconCell {
@@ -269,11 +269,11 @@
 /* ——— Animatsiya bo'limi ——— */
 .tapButton {
   padding: 0.5rem $side-padding;
-  border-radius: $border-radius-button;
-  background: var(--color-primary);
+  border-radius: $radius-sm;
+  background: var(--brand-solid);
   font-size: $font-body;
   font-weight: 600;
-  color: var(--color-on-primary);
+  color: var(--text-on-solid);
 }
 
 .divider {
@@ -283,8 +283,8 @@
 .motionStage {
   overflow: hidden;
   margin-top: 0.625rem;
-  border-radius: $border-radius-button;
-  background: var(--color-background-secondary);
+  border-radius: $radius-sm;
+  background: var(--surface-base);
 }
 
 .motionRow {
@@ -321,7 +321,7 @@
   display: flex;
   gap: 0.75rem;
   padding: 0.75rem $side-padding;
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 /* Raqamlar bir xil kenglikda — ro'yxat tekis turadi */
@@ -329,13 +329,13 @@
   font-size: $font-body;
   line-height: $font-body-line;
   font-variant-numeric: tabular-nums;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .principleText {
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 /* ——— Namuna sheet ——— */
@@ -354,7 +354,7 @@
   font-size: 1.25rem;
   line-height: 1.5rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .sheetCompany {
@@ -364,7 +364,7 @@
   white-space: nowrap;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .sheetSalary {
@@ -372,14 +372,14 @@
   font-size: 1.25rem;
   line-height: 1.5rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .sheetDescription {
   margin: 1rem 0 0;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .sheetStats {
@@ -388,7 +388,7 @@
   margin-top: 1rem;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .sheetStat {
@@ -414,8 +414,8 @@
   flex-shrink: 0;
   width: 2rem;
   height: 2rem;
-  border: 1px solid var(--color-borders);
-  border-radius: $border-radius-button;
+  border: 1px solid var(--border-default);
+  border-radius: $radius-sm;
 }
 
 .colorText {
@@ -429,7 +429,7 @@
   white-space: nowrap;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .colorValue {
@@ -439,7 +439,7 @@
   white-space: nowrap;
   font-size: 0.6875rem;
   line-height: 0.8125rem;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .successDot {
@@ -451,5 +451,5 @@
 }
 
 .mutedIcon {
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }

@@ -13,36 +13,38 @@
       RSC ma'lumotini topolmay gidratsiyada yiqilardi va foydalanuvchi
       "Nimadir noto'g'ri ketdi" degan xato ekranini ko'rardi.
 
-      Ranglar themes.json dagi qiymatlar bilan bir xil — bu fayl
-      generatsiyaga qo'shilmagani uchun ular shu yerda takrorlangan.
+      Ranglar bu yerda qo'lda yozilmaydi: `scripts/build-themes.mjs`
+      quyidagi belgilar orasini themes.json dan to'ldiradi. Ilgari ular
+      takrorlangan edi va palitra o'zgargach eskirib qoldi.
     -->
     <style>
+      /* THEME:BOSHLANDI — generatsiya qilinadi, tahrirlamang */
       :root {
-        --bg: #f4f4f5;
-        --text: #000;
-        --muted: #707579;
-        --tertiary: #a2acb4;
-        --primary: #3390ec;
-        --on-primary: #fff;
+        --bg: #F4F3F1;
+        --text: #101114;
+        --muted: #4C525E;
+        --tertiary: #60666F;
+        --primary: #0D7A61;
       }
 
       html.theme-dark {
-        --bg: #181818;
-        --text: #fff;
-        --muted: #aaa;
-        --tertiary: #7d7d7d;
-        --primary: #8774e1;
+        --bg: #0E0F12;
+        --text: #F5F6F7;
+        --muted: #B6BCC6;
+        --tertiary: #89919D;
+        --primary: #2F9B81;
       }
 
       @media (prefers-color-scheme: dark) {
         html:not(.theme-light) {
-          --bg: #181818;
-          --text: #fff;
-          --muted: #aaa;
-          --tertiary: #7d7d7d;
-          --primary: #8774e1;
+          --bg: #0E0F12;
+          --text: #F5F6F7;
+          --muted: #B6BCC6;
+          --tertiary: #89919D;
+          --primary: #2F9B81;
         }
       }
+      /* THEME:TUGADI */
 
       * {
         box-sizing: border-box;

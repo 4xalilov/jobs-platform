@@ -32,13 +32,13 @@
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: var(--color-primary);
+  background: var(--brand-solid);
 }
 
 /* ——— Ohanglar ——— */
 .countAccent {
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--brand-solid);
+  color: var(--text-on-solid);
 }
 .countSuccess {
   background: var(--success-solid);
@@ -54,18 +54,18 @@
 }
 
 .tagAccent {
-  background: var(--color-primary-soft);
+  background: var(--brand-soft);
   color: var(--brand-text);
 }
 .tagSuccess {
-  background: color-mix(in srgb, var(--color-green) 12%, transparent);
-  color: var(--color-green);
+  background: color-mix(in srgb, var(--success-text) 12%, transparent);
+  color: var(--success-text);
 }
 .tagWarning {
-  background: color-mix(in srgb, var(--color-warning) 12%, transparent);
-  color: var(--color-warning);
+  background: color-mix(in srgb, var(--warning-text) 12%, transparent);
+  color: var(--warning-text);
 }
 .tagNeutral {
-  background: var(--color-fill);
-  color: var(--color-text-secondary);
+  background: var(--surface-sunken);
+  color: var(--text-secondary);
 }

@@ -22,7 +22,7 @@
   font-size: 1.25rem;
   line-height: 1.5rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 /* Teglar qatori — sig'masa keyingi qatorga o'tadi */
@@ -40,23 +40,23 @@
 }
 
 .rowTitleDimmed {
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 /* Ro'yxat elementining o'ng tomonidagi qiymat */
 .rowValue {
   font-size: $font-body;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 /* Ro'yxat oldidagi ikonka */
 .rowIcon {
   flex-shrink: 0;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .accentIcon {
-  color: var(--color-primary);
+  color: var(--brand-text);
 }
 
 /* Ro'yxat ostidagi kichik izoh */
@@ -65,7 +65,7 @@
   padding: 0.5rem $side-padding 0;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 /* Bo'lim sarlavhasi ko'rinishidagi kichik yozuv */
@@ -76,7 +76,7 @@
   line-height: $font-caption-line;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 /* Vertikal ustma-ust tugmalar */
@@ -99,28 +99,28 @@
   margin: 0;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .bodyMuted {
   margin: 0;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .caption {
   margin: 0;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .captionMuted {
   margin: 0;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .spaceTopSmall {

@@ -3,7 +3,7 @@
 .root {
   position: relative;
   overflow: hidden;
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 .actions {
@@ -34,7 +34,7 @@
 }
 
 .accent {
-  background: var(--color-primary);
+  background: var(--brand-solid);
 }
 
 .danger {
@@ -46,12 +46,12 @@
 }
 
 .neutral {
-  background: var(--color-text-secondary);
+  background: var(--text-secondary);
 }
 
 /* Tortiladigan yuza — vertikal skroll ishlab turadi */
 .surface {
   position: relative;
-  background: var(--color-background);
+  background: var(--surface-raised);
   touch-action: pan-y;
 }

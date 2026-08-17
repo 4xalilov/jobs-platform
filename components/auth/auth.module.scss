@@ -11,7 +11,7 @@
   min-height: 100dvh;
   max-width: 27.5rem;
   padding: 0 1.5rem;
-  background: var(--color-background-secondary);
+  background: var(--surface-base);
 }
 
 /* Logo va sarlavha ekran o'rtasida turadi, tugma esa pastda */
@@ -31,8 +31,8 @@
   width: 4rem;
   height: 4rem;
   border-radius: 1rem;
-  background: var(--color-primary);
-  color: var(--color-on-primary);
+  background: var(--brand-solid);
+  color: var(--text-on-solid);
 }
 
 .title {
@@ -40,14 +40,14 @@
   font-size: 1.75rem;
   line-height: 2rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .subtitle {
   margin: 0.5rem 0 0;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 /* Telegram xato qaytarganda — sababi va nima qilish kerakligi */
@@ -55,8 +55,8 @@
   width: 100%;
   margin-top: 1rem;
   padding: 0.75rem $side-padding;
-  border-radius: $border-radius-default;
-  background: color-mix(in srgb, var(--color-error) 10%, transparent);
+  border-radius: $radius-md;
+  background: color-mix(in srgb, var(--error-text) 10%, transparent);
 }
 
 .errorTitle {
@@ -64,14 +64,14 @@
   font-size: $font-body;
   line-height: $font-body-line;
   font-weight: 500;
-  color: var(--color-error);
+  color: var(--error-text);
 }
 
 .errorHint {
   margin: 0.125rem 0 0;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   /* Xato matni uzun va ko'p qatorli bo'lishi mumkin */
   white-space: pre-wrap;
   overflow-wrap: break-word;
@@ -86,7 +86,7 @@
   text-align: center;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .noteTight {
@@ -96,8 +96,8 @@
 /* Bot sozlanmagan bo'lsa — nima yetishmayotgani */
 .notConfigured {
   padding: 0.75rem $side-padding;
-  border-radius: $border-radius-default;
-  background: var(--color-fill);
+  border-radius: $radius-md;
+  background: var(--surface-sunken);
   text-align: center;
 }
 
@@ -105,14 +105,14 @@
   margin: 0;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .notConfiguredHint {
   margin: 0.25rem 0 0;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 /* Telegram vidjeti iframe'ni o'zi qo'yadi — biz faqat markazlaymiz */
@@ -131,7 +131,7 @@
   margin: 0 auto;
   min-height: 100dvh;
   max-width: 27.5rem;
-  background: var(--color-background-secondary);
+  background: var(--surface-base);
 }
 
 .onboardingBar {
@@ -153,7 +153,7 @@
   margin: 0;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .heading {
@@ -165,14 +165,14 @@
   font-size: 1.5rem;
   line-height: 1.75rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .headingHint {
   margin: 0.25rem 0 0;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .roleIcon {

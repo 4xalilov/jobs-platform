@@ -6,7 +6,7 @@
 
 .card {
   padding: 1rem $side-padding;
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 .head {
@@ -26,8 +26,8 @@
  */
 .avatarOpen {
   box-shadow:
-    0 0 0 2px var(--color-background),
-    0 0 0 5px var(--color-green);
+    0 0 0 2px var(--surface-raised),
+    0 0 0 5px var(--success-text);
 }
 
 .headText {
@@ -43,7 +43,7 @@
   font-size: 1.25rem;
   line-height: 1.5rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .role {
@@ -53,7 +53,7 @@
   white-space: nowrap;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .editButton {
@@ -66,7 +66,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem $side-padding;
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 .themeControl {
@@ -86,7 +86,7 @@
   margin-top: 1rem;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
   text-decoration: underline;
 }
 
@@ -95,7 +95,7 @@
   padding: 0.75rem $side-padding 0;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 /* Sheet oxiridagi nafas — oxirgi qator chetga yopishmasin */
@@ -112,7 +112,7 @@
   min-height: 100dvh;
   max-width: 27.5rem;
   padding-bottom: 2.5rem;
-  background: var(--color-background-secondary);
+  background: var(--surface-base);
 }
 
 .editorBar {
@@ -145,5 +145,5 @@
 
 .segmentRow {
   padding: 0.75rem $side-padding;
-  background: var(--color-background);
+  background: var(--surface-raised);
 }

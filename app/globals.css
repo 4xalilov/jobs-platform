@@ -95,7 +95,7 @@
 
   ::placeholder {
     opacity: 1;
-    color: var(--color-text-tertiary);
+    color: var(--text-tertiary);
   }
 
   /* Rasm va ikonka qatorda emas, blok — pastda sabab bo'shliq qolmaydi */
@@ -162,8 +162,8 @@ html {
 }
 
 body {
-  background: var(--color-background-secondary);
-  color: var(--color-text);
+  background: var(--surface-base);
+  color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 0.9375rem;
   line-height: 1.3125rem;
@@ -180,7 +180,7 @@ body {
    rang o'z-o'zidan almashadi, chunki tokendan olinadi.
 */
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--brand-solid);
   outline-offset: 2px;
 }
 
@@ -199,7 +199,7 @@ body {
   right: 0;
   bottom: 0;
   height: 1px;
-  background: var(--color-borders);
+  background: var(--border-default);
   transform: scaleY(0.5);
   transform-origin: bottom;
   pointer-events: none;
@@ -213,7 +213,7 @@ body {
   left: 0;
   right: 0;
   height: 1px;
-  background: var(--color-borders);
+  background: var(--border-default);
   transform: scaleY(0.5);
   transform-origin: top;
   pointer-events: none;
@@ -243,7 +243,7 @@ body {
 
 /* Faqat opacity animatsiya qilinadi — background-position layout ni qimirlatardi */
 .skeleton {
-  background: var(--color-skeleton);
+  background: var(--skeleton-base);
   animation: skeleton-shine 1.4s ease-in-out infinite;
 }
 
@@ -349,7 +349,7 @@ body {
 /* Sichqoncha bo'lsa hover, barmoq bo'lsa kattaroq bosish maydoni */
 @media (hover: hover) {
   .tap-flat:hover {
-    background: var(--color-background-pressed);
+    background: var(--surface-pressed);
   }
 }
 

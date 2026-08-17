@@ -33,38 +33,6 @@ function flatten(node, prefix = []) {
 const declare = (pairs, indent = "  ") =>
   pairs.map(([name, value]) => `${indent}--${name}: ${value};`).join("\n");
 
-/**
- * v4 dagi nomlar — hozircha yashaydi.
- *
- * 33 ta SCSS moduli `--color-*` ga tayanadi. Ularni B2 da yangi nomlarga
- * ko'chiramiz; shu paytgacha eski nomlar yangi qiymatlarga ishora qiladi.
- * Foydasi: butun ilova hoziroq AA ga mos ranglarni oladi, bitta komponent
- * ham tegilmagan holda.
- */
-const LEGACY = {
-  "color-primary": "brand-solid",
-  "color-primary-shade": "brand-solid-pressed",
-  "color-primary-soft": "brand-soft",
-  "color-on-primary": "text-on-solid",
-  "color-background": "surface-raised",
-  "color-background-secondary": "surface-base",
-  "color-background-pressed": "surface-pressed",
-  "color-fill": "surface-sunken",
-  "color-text": "text-primary",
-  "color-text-secondary": "text-secondary",
-  "color-text-tertiary": "text-tertiary",
-  "color-borders": "border-default",
-  "color-green": "success-text",
-  "color-warning": "warning-text",
-  "color-error": "error-text",
-  "color-skeleton": "skeleton-base",
-  "color-skeleton-shine": "skeleton-shine",
-};
-
-const legacy = Object.entries(LEGACY)
-  .map(([old, next]) => `  --${old}: var(--${next});`)
-  .join("\n");
-
 /** Avatar ranglari + ularning 12% shaffof foni */
 const peers = themes.peer
   .map((value, i) => `  --color-peer-${i}: ${value};\n  --color-peer-${i}-bg: ${value}1f;`)
@@ -89,17 +57,58 @@ ${peers}
 ${declare(dark)}
   color-scheme: dark;
 }
-
-/* ——— v4 nomlari: B2 da olib tashlanadi ——— */
-:root,
-.theme-light,
-.theme-dark {
-${legacy}
-}
 `;
 
 writeFileSync(join(root, "app/themes.generated.css"), css);
+
+/*
+ * Oflayn sahifasi — oddiy HTML, CSS modullarini import qilolmaydi va
+ * tarmoq yo'q bo'lganda ochiladi, ya'ni tashqi fayl ham kutib
+ * bo'lmaydi. Shuning uchun kerakli beshta token unga to'g'ridan-to'g'ri
+ * yoziladi. Qo'lda yozilganda palitra o'zgargach eskirib qolgan edi.
+ */
+const OFFLINE_TOKENS = {
+  bg: "surface.base",
+  text: "text.primary",
+  muted: "text.secondary",
+  tertiary: "text.tertiary",
+  primary: "brand.text",
+};
+
+const pick = (theme, path) => path.split(".").reduce((n, k) => n[k], themes[theme]);
+const offlineBlock = (theme, indent) =>
+  Object.entries(OFFLINE_TOKENS)
+    .map(([name, path]) => `${indent}--${name}: ${pick(theme, path)};`)
+    .join("\n");
+
+const offlineCss = `      /* THEME:BOSHLANDI — generatsiya qilinadi, tahrirlamang */
+      :root {
+${offlineBlock("light", "        ")}
+      }
+
+      html.theme-dark {
+${offlineBlock("dark", "        ")}
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html:not(.theme-light) {
+${offlineBlock("dark", "          ")}
+        }
+      }
+      /* THEME:TUGADI */`;
+
+const offlinePath = join(root, "public/oflayn.html");
+const offline = readFileSync(offlinePath, "utf8");
+const MARKERS = /[ ]*\/\* THEME:BOSHLANDI[\s\S]*?THEME:TUGADI \*\//;
+
+// Belgilarning borligini tekshiramiz, tarkib o'zgarganini emas: skript
+// ikkinchi marta ishlaganda natija bir xil bo'ladi va bu xato emas.
+if (!MARKERS.test(offline)) {
+  throw new Error("oflayn.html da THEME belgilari topilmadi — generatsiya to'xtatildi");
+}
+writeFileSync(offlinePath, offline.replace(MARKERS, offlineCss));
 console.log(
   `themes.generated.css yozildi — ${light.length} token × 2 tema, ` +
-    `${themes.peer.length} peer rangi, ${Object.keys(LEGACY).length} eski nom`,
+    `${themes.peer.length} peer rangi`,
 );
+console.log(`oflayn.html yangilandi — ${Object.keys(OFFLINE_TOKENS).length} token`);

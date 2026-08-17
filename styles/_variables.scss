@@ -106,17 +106,3 @@ $bp-mobile: 600px;
 $bp-two-column: 601px;
 $bp-wide: 925px;
 $bp-three-column: 1275px;
-
-// ——————————————————————————————————————————————
-// v4 NOMLARI — B2/B3 da olib tashlanadi
-//
-// 33 ta modul shu nomlarga tayanadi. Ularni bir commit'da almashtirish
-// butun ilovani bir vaqtda sindirardi, shuning uchun eski nomlar yangi
-// shkalaga ishora qilib turadi.
-// ——————————————————————————————————————————————
-$border-radius-default: $radius-md;
-$border-radius-card: $radius-md;
-$border-radius-button: $radius-sm;
-$font-large: $font-display;
-$font-large-line: $font-display-line;
-$font-title: $font-nav;

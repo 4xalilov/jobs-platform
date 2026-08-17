@@ -11,7 +11,7 @@
   margin: 0 auto;
   min-height: 100dvh;
   max-width: 27.5rem;
-  background: var(--color-background-secondary);
+  background: var(--surface-base);
 }
 
 /* Tab bar tagida qolib ketmasin */
@@ -42,7 +42,7 @@
   max-width: 27.5rem;
   padding: 0 2rem;
   text-align: center;
-  background: var(--color-background-secondary);
+  background: var(--surface-base);
 }
 
 .errorTitle {
@@ -50,14 +50,14 @@
   font-size: $font-nav;
   line-height: $font-nav-line;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .errorHint {
   margin: 0;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 /*
@@ -69,7 +69,7 @@
   position: relative;
   display: flex;
   padding-bottom: env(safe-area-inset-bottom);
-  background: color-mix(in srgb, var(--color-background) 95%, transparent);
+  background: color-mix(in srgb, var(--surface-raised) 95%, transparent);
   backdrop-filter: blur(0.75rem);
 }
 
@@ -82,7 +82,7 @@
   justify-content: center;
   gap: 0.125rem;
   height: $tab-bar-height;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .employerTabActive {
@@ -98,7 +98,7 @@
   position: absolute;
   top: -0.25rem;
   right: -0.625rem;
-  border: 2px solid var(--color-background);
+  border: 2px solid var(--surface-raised);
 }
 
 .employerTabLabel {
@@ -118,7 +118,7 @@
   margin: 0 auto;
   min-height: 100dvh;
   max-width: 27.5rem;
-  background: var(--color-background-secondary);
+  background: var(--surface-base);
 }
 
 .searchBar {
@@ -128,7 +128,7 @@
   display: flex;
   align-items: center;
   padding-top: env(safe-area-inset-top);
-  background: var(--color-background);
+  background: var(--surface-raised);
 }
 
 .searchField {
@@ -150,5 +150,5 @@
 }
 
 .searchRecentIcon {
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }

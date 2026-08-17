@@ -19,12 +19,12 @@
   white-space: nowrap;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .save {
   padding: 0.25rem;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .saveActive {
@@ -37,14 +37,14 @@
   font-size: 1.25rem;
   line-height: 1.5rem;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .description {
   margin: 1rem 0 0;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 /* Bo'lim sarlavhasi — talablar, javob ko'rsatkichi */
@@ -54,7 +54,7 @@
   line-height: $font-caption-line;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .checkList {
@@ -82,7 +82,7 @@
 .checkText {
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 /* v2 6.5: faqat raqam, nomzodning o'rni ko'rsatilmaydi */
@@ -90,7 +90,7 @@
   margin: 1rem 0 0;
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .stats {
@@ -99,7 +99,7 @@
   margin-top: 0.75rem;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .stat {
@@ -121,8 +121,8 @@
 .match {
   margin-top: 1rem;
   padding: 0.75rem $side-padding;
-  border-radius: $border-radius-default;
-  background: var(--color-fill);
+  border-radius: $radius-md;
+  background: var(--surface-sunken);
 }
 
 .matchTitle {
@@ -130,7 +130,7 @@
   font-size: $font-body;
   line-height: $font-body-line;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .matchList {
@@ -151,13 +151,13 @@
 .matchIconOk {
   flex-shrink: 0;
   margin-top: 0.125rem;
-  color: var(--color-green);
+  color: var(--success-text);
 }
 
 .matchIconMissing {
   flex-shrink: 0;
   margin-top: 0.125rem;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 .matchText {
@@ -167,19 +167,19 @@
 .matchLabel {
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 /* Mos kelmagani kulrang — nima yetishmayotgani ostida */
 .matchLabelMissing {
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }
 
 .matchMine {
   display: block;
   font-size: $font-caption;
   line-height: $font-caption-line;
-  color: var(--color-text-tertiary);
+  color: var(--text-tertiary);
 }
 
 /* ——— Javob ko'rsatkichi (v2, 6.3) ——— */
@@ -195,11 +195,11 @@
 .statsPrimary {
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
 
 .statsSecondary {
   font-size: $font-body;
   line-height: $font-body-line;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
 }

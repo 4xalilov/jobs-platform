@@ -10,7 +10,7 @@
   gap: 0.5rem;
   height: 3.5rem;
   padding: env(safe-area-inset-top) 0.5rem 0;
-  background: color-mix(in srgb, var(--color-background) 95%, transparent);
+  background: color-mix(in srgb, var(--surface-raised) 95%, transparent);
   backdrop-filter: blur(0.75rem);
 }
 
@@ -37,5 +37,5 @@
   font-size: $font-nav;
   line-height: $font-nav-line;
   font-weight: 600;
-  color: var(--color-text);
+  color: var(--text-primary);
 }
