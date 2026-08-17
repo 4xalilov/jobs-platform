@@ -21,6 +21,9 @@ export const uz = {
     retry: "Qayta urinish",
     loading: "Yuklanmoqda",
     example: "Namuna",
+    /* ErrorState uchun umumiy matn — ekran o'z sababini uzatmasa shu chiqadi */
+    errorTitle: "Yuklab bo'lmadi",
+    errorHint: "Internetni tekshirib, qayta urinib ko'ring.",
   },
 
   tabs: {
@@ -202,6 +205,10 @@ export const uz = {
       note: "Yuklanishda spinner emas, skeleton ko'rsatiladi.",
       toggle: "Skeletonni ko'rsatish",
     },
+    states: {
+      shape: "Skelet shakli",
+      sampleReason: "Server javob bermadi (503)",
+    },
     forms: {
       inputLabel: "Ism",
       inputPlaceholder: "Ismingizni yozing",
@@ -296,6 +303,8 @@ export const uz = {
     empty: "Hech qanday kanalga obuna bo'lmagansiz",
     emptyHint: "Katalogdan o'zingizga mos kanalni tanlang",
     emptyChannel: "Bu kanalda hozircha vakansiya yo'q",
+    emptyChannelHint: "Yangi vakansiya kelganda shu yerda chiqadi",
+    emptyFilterHint: "Tanlangan bandlik turi bo'yicha hech narsa topilmadi",
     newCount: "{count} ta yangi",
     urgent: "Shoshilinch",
     isNew: "Yangi",

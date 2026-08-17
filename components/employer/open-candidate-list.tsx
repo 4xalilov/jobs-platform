@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { Screen } from "@/components/app/screen";
 import { Avatar } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Chip, ChipRow } from "@/components/ui/chip";
-import { EmptyState } from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/ui/state";
 import { IconUsers } from "@/components/ui/icon";
 import { ListGroup, ListItem } from "@/components/ui/list";
 import type { OpenCandidateDTO } from "@/lib/db/queries";
@@ -61,6 +62,12 @@ export function OpenCandidateList({
           icon={<IconUsers size={44} />}
           title={t.trust.candidatesEmpty}
           hint={t.trust.candidatesHint}
+          action={
+            /* Kasb filtri natijani nolga tushirgan bo'lishi mumkin */
+            <Button variant="secondary" onClick={() => setProfession(null)}>
+              {t.common.all}
+            </Button>
+          }
         />
       ) : (
         <ListGroup className={shared.groupGapSmall}>

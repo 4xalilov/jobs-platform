@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { VacancyRow } from "@/components/jobs/vacancy-row";
 import { VacancySheet } from "@/components/jobs/vacancy-sheet";
-import { EmptyState } from "@/components/ui/empty-state";
 import { IconClock, IconSearch } from "@/components/ui/icon";
 import { ListGroup, ListItem, SectionHeader } from "@/components/ui/list";
 import { SearchField } from "@/components/ui/search-field";
-import { ListSkeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { EmptyState, ErrorState, LoadingState } from "@/components/ui/state";
 import { apiGet } from "@/lib/api";
 import type { Page, VacancyDTO } from "@/lib/db/types";
 import { useRecentQueries } from "@/lib/stores";
@@ -26,6 +26,7 @@ export default function SearchPage() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<VacancyDTO[]>([]);
   const [loading, setLoading] = useState(false);
+  const [failed, setFailed] = useState<string | null>(null);
   const vacancySheet = useSheet<VacancyDTO>();
   const debounce = useRef<number | null>(null);
 
@@ -37,10 +38,17 @@ export default function SearchPage() {
       return;
     }
     setLoading(true);
-    const page = await apiGet<Page<VacancyDTO>>(
-      `/vacancies?q=${encodeURIComponent(trimmed)}&limit=30`,
-    );
-    setResults(page.items);
+    setFailed(null);
+    try {
+      const page = await apiGet<Page<VacancyDTO>>(
+        `/vacancies?q=${encodeURIComponent(trimmed)}&limit=30`,
+      );
+      setResults(page.items);
+    } catch (error) {
+      // Qidiruv sekin tarmoqda tez-tez uziladi — sababi ko'rsatiladi
+      setFailed(error instanceof Error ? error.message : null);
+      setResults([]);
+    }
     setLoading(false);
   }, []);
 
@@ -116,13 +124,20 @@ export default function SearchPage() {
         </>
       ) : loading ? (
         <ListGroup className={shared.groupGapSmall}>
-          <ListSkeleton rows={4} />
+          <LoadingState shape="vacancy" rows={4} />
         </ListGroup>
+      ) : failed !== null ? (
+        <ErrorState reason={failed} onRetry={() => void runSearch(query)} />
       ) : results.length === 0 ? (
         <EmptyState
           icon={<IconSearch size={44} />}
           title={t.screens.search.noResults}
           hint={t.screens.search.noResultsHint}
+          action={
+            <Button variant="secondary" onClick={() => router.push("/jobs/katalog")}>
+              {t.channels.browse}
+            </Button>
+          }
         />
       ) : (
         <>

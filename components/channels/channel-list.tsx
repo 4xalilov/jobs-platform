@@ -1,10 +1,10 @@
 "use client";
 
-
 import { useI18n } from "@/components/providers/i18n-provider";
 import { ChannelRow } from "@/components/channels/channel-row";
 import { Screen } from "@/components/app/screen";
-import { EmptyState } from "@/components/ui/empty-state";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/state";
 import {
   IconBellOff,
   IconBriefcase,
@@ -119,6 +119,11 @@ export function ChannelList({ initial }: { initial: ChannelListItemDTO[] }) {
           icon={<IconBriefcase size={44} />}
           title={t.channels.empty}
           hint={t.channels.emptyHint}
+          action={
+            <Button variant="secondary" onClick={() => go("/jobs/katalog")}>
+              {t.channels.browse}
+            </Button>
+          }
         />
       )}
 

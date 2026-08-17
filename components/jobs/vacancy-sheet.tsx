@@ -19,6 +19,7 @@ import {
   IconX,
 } from "@/components/ui/icon";
 import { Sheet } from "@/components/ui/sheet";
+import { haptic } from "@/lib/haptics";
 import { apiPost } from "@/lib/api";
 import type { MatchDTO, ResponseStatsDTO, VacancyDTO } from "@/lib/db/types";
 import { cx, formatSalary } from "@/lib/utils";
@@ -48,6 +49,8 @@ export function VacancySheet({
 
   // Optimistic UI: javob kutilmaydi, holat darhol o'zgaradi
   const apply = () => {
+    // Ariza yuborish — kunning eng muhim harakati, shuning uchun "confirm"
+    haptic("confirm");
     onChange?.({
       ...vacancy,
       applied: true,
@@ -57,6 +60,7 @@ export function VacancySheet({
   };
 
   const toggleSaved = () => {
+    haptic("select");
     onChange?.({ ...vacancy, saved: !vacancy.saved });
     void apiPost(`/vacancies/${vacancy.id}/save`).then(() => router.refresh());
   };

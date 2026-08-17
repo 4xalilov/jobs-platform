@@ -8,11 +8,12 @@ import { Screen } from "@/components/app/screen";
 import { Avatar } from "@/components/ui/avatar";
 import { CountBadge, Tag } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/ui/state";
 import { IconCheck, IconMessage, IconUsers, IconX } from "@/components/ui/icon";
 import { ListGroup, ListItem } from "@/components/ui/list";
 import { Sheet } from "@/components/ui/sheet";
 import { SwipeListItem } from "@/components/ui/swipe-list-item";
+import { haptic } from "@/lib/haptics";
 import { apiGet, apiPost } from "@/lib/api";
 import type { CandidateDTO } from "@/lib/db/types";
 import { usePolling } from "@/lib/use-polling";
@@ -37,6 +38,8 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
 
   /** Qaror darhol ko'rinadi, so'rov fonda ketadi */
   const decide = (candidate: CandidateDTO, decision: "rad_etildi" | "qabul_qilindi") => {
+    /* Chaqirish va rad etish qaytarilmaydi — qo'l ikkisini farqlasin */
+    haptic(decision === "qabul_qilindi" ? "confirm" : "reject");
     setCandidates((prev) => prev.filter((item) => item.applicationId !== candidate.applicationId));
     void apiPost(`/employer/applications/${candidate.applicationId}`, {
       decision,
@@ -56,6 +59,12 @@ export function CandidateList({ candidates: initial }: { candidates: CandidateDT
           icon={<IconUsers size={44} />}
           title={t.employer.candidates.empty}
           hint={t.employer.candidates.emptyHint}
+          action={
+            /* Nomzod yo'q bo'lsa sabab ko'pincha vakansiya yo'qligida */
+            <Button variant="secondary" onClick={() => router.push("/employer/vacancies")}>
+              {t.employer.vacancies.title}
+            </Button>
+          }
         />
       ) : (
         <ListGroup>

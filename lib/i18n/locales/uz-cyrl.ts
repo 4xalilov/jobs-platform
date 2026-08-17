@@ -20,6 +20,8 @@ export const uzCyrl: Dictionary = {
     retry: "Қайта уриниш",
     loading: "Юкланмоқда",
     example: "Намуна",
+    errorTitle: "Юклаб бўлмади",
+    errorHint: "Интернетни текшириб, қайта уриниб кўринг.",
   },
 
   tabs: {
@@ -188,6 +190,10 @@ export const uzCyrl: Dictionary = {
       note: "Юкланишда спиннер эмас, скелет кўрсатилади.",
       toggle: "Скелетни кўрсатиш",
     },
+    states: {
+      shape: "Скелет шакли",
+      sampleReason: "Сервер жавоб бермади (503)",
+    },
     forms: {
       inputLabel: "Исм",
       inputPlaceholder: "Исмингизни ёзинг",
@@ -281,6 +287,8 @@ export const uzCyrl: Dictionary = {
     empty: "Ҳеч қандай каналга обуна бўлмагансиз",
     emptyHint: "Каталогдан ўзингизга мос канални танланг",
     emptyChannel: "Бу каналда ҳозирча вакансия йўқ",
+    emptyChannelHint: "Янги вакансия келганда шу ерда чиқади",
+    emptyFilterHint: "Танланган бандлик тури бўйича ҳеч нарса топилмади",
     newCount: "{count} та янги",
     urgent: "Шошилинч",
     isNew: "Янги",

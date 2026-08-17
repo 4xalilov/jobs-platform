@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { Screen } from "@/components/app/screen";
 import { Avatar } from "@/components/ui/avatar";
-import { EmptyState } from "@/components/ui/empty-state";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/state";
 import { IconCheck, IconChevronRight, IconDocument } from "@/components/ui/icon";
 import type { ApplicationDTO, ApplicationStatus } from "@/lib/db/types";
 import { cacheKey } from "@/lib/idb";
@@ -33,6 +34,11 @@ export function ApplicationList({ applications: fromServer }: { applications: Ap
           icon={<IconDocument size={44} />}
           title={t.screens.applications.empty}
           hint={t.screens.applications.emptyHint}
+          action={
+            <Button variant="secondary" onClick={() => router.push("/jobs")}>
+              {t.tabs.jobs}
+            </Button>
+          }
         />
       </Screen>
     );

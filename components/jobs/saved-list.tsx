@@ -8,7 +8,7 @@ import { Screen } from "@/components/app/screen";
 import { VacancyRow } from "@/components/jobs/vacancy-row";
 
 import { Button } from "@/components/ui/button";
-import { EmptyState } from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/ui/state";
 import { IconBookmark, IconTrash } from "@/components/ui/icon";
 import { ListGroup } from "@/components/ui/list";
 import { SwipeListItem } from "@/components/ui/swipe-list-item";

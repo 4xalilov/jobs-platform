@@ -4,14 +4,29 @@
   border-radius: 0.375rem;
 }
 
+/* ——————————————————————————————————————————————
+   Qator shakllari
+   —————————————————————————————————————————————— */
+
+/*
+ * Ikki qatorli element — kanal, chat, nomzod. Balandlik va ichki
+ * bo'shliq haqiqiy qator bilan bir xil ($list-item-height, 0.75rem),
+ * aks holda kontent kelganda ro'yxat siljiydi.
+ */
 .row {
   position: relative;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   min-height: $list-item-height;
-  padding: 0.875rem $side-padding;
-  background: var(--color-background);
+  padding: 0.75rem $side-padding;
+  background: var(--surface-raised);
+}
+
+/* To'rt qatorli vakansiya elementi — 6rem, yuqoridan tekislanadi */
+.rowVacancy {
+  align-items: flex-start;
+  min-height: $vacancy-row-height;
 }
 
 .avatar {
@@ -23,22 +38,106 @@
 
 .lines {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
+/*
+ * Chiziq balandliklari matn o'lchamiga emas, umumiy yig'indiga
+ * moslangan: vakansiyada 12+11+14+11 = 48px va uchta 8px oraliq =
+ * 72px, ustiga 24px padding — roppa-rosa 6rem.
+ */
 .lineTitle {
-  height: $font-body;
-  width: 40%;
+  height: 0.75rem;
+  width: 45%;
 }
 
 .lineSubtitle {
-  height: $font-caption;
-  width: 60%;
+  height: 0.6875rem;
+  width: 65%;
 }
 
+.lineSalary {
+  height: 0.875rem;
+  width: 35%;
+}
+
+.lineStats {
+  height: 0.6875rem;
+  width: 55%;
+}
+
+/* O'ngdagi vaqt: "2 soat" */
 .meta {
-  height: $font-caption;
+  align-self: flex-start;
+  height: 0.6875rem;
   width: 2rem;
+}
+
+/* O'ngdagi o'qilmagan soni — yumaloq */
+.badge {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+}
+
+/* ——————————————————————————————————————————————
+   Ariza kartochkasi — sarlavha ustida, ostida to'rt qadamli zanjir
+   —————————————————————————————————————————————— */
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.card {
+  background: var(--surface-raised);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem $side-padding 0.5rem;
+}
+
+.cardChain {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 $side-padding 0.875rem;
+}
+
+.chainStep {
+  flex: 1;
+  height: 0.6875rem;
+}
+
+/* ——————————————————————————————————————————————
+   Matn bloki — sheet va batafsil ekranlar uchun, qator foni yo'q
+   —————————————————————————————————————————————— */
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: $side-padding;
+}
+
+.textLineWide {
+  height: 0.875rem;
+  width: 100%;
+}
+
+.textLine {
+  height: 0.875rem;
+  width: 90%;
+}
+
+.textLineShort {
+  height: 0.875rem;
+  width: 60%;
 }

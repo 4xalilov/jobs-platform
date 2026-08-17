@@ -7,7 +7,7 @@ import { Screen } from "@/components/app/screen";
 import { Avatar } from "@/components/ui/avatar";
 import { Tag } from "@/components/ui/badge";
 import { Button, Fab } from "@/components/ui/button";
-import { EmptyState } from "@/components/ui/empty-state";
+import { EmptyState } from "@/components/ui/state";
 import {
   IconBolt,
   IconBriefcase,

@@ -6,7 +6,8 @@ import { useI18n } from "@/components/providers/i18n-provider";
 import { Screen } from "@/components/app/screen";
 import { Avatar } from "@/components/ui/avatar";
 import { CountBadge } from "@/components/ui/badge";
-import { EmptyState } from "@/components/ui/empty-state";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/state";
 import { IconMessage } from "@/components/ui/icon";
 import { ListGroup, ListItem } from "@/components/ui/list";
 import { apiGet } from "@/lib/api";
@@ -49,6 +50,12 @@ export function ChatList({ chats: initial }: { chats: ChatListItemDTO[] }) {
           icon={<IconMessage size={44} />}
           title={t.screens.messages.empty}
           hint={t.screens.messages.emptyHint}
+          action={
+            /* Suhbat arizadan boshlanadi — demak yo'l ishlar ro'yxatiga */
+            <Button variant="secondary" onClick={() => router.push("/jobs")}>
+              {t.tabs.jobs}
+            </Button>
+          }
         />
       ) : (
         <ListGroup>

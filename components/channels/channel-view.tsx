@@ -6,14 +6,16 @@ import { useI18n } from "@/components/providers/i18n-provider";
 import { Screen } from "@/components/app/screen";
 import { VacancyRow } from "@/components/jobs/vacancy-row";
 
-import { EmptyState } from "@/components/ui/empty-state";
+import { Button } from "@/components/ui/button";
 import { IconBriefcase } from "@/components/ui/icon";
-import { ListSkeleton } from "@/components/ui/skeleton";
+import { EmptyState, ErrorState, LoadingState } from "@/components/ui/state";
+import { haptic } from "@/lib/haptics";
 import { apiGet, apiPost } from "@/lib/api";
 import { EMPLOYMENT_TYPES } from "@/lib/db/types";
 import type { ChannelDTO, EmploymentType, Page, VacancyDTO } from "@/lib/db/types";
 import { cx } from "@/lib/utils";
 import { useSheet } from "@/lib/use-sheet";
+import { useRouter } from "next/navigation";
 import styles from "./channel-view.module.scss";
 
 /** Tanlangan chip saqlanadi — foydalanuvchi qaytganda o'sha filtr turadi */
@@ -49,6 +51,7 @@ export function ChannelView({
   initial: Page<VacancyDTO>;
 }) {
   const { t, locale } = useI18n();
+  const router = useRouter();
 
   const [items, setItems] = useState(initial.items);
   const [cursor, setCursor] = useState(initial.cursor);
@@ -56,6 +59,7 @@ export function ChannelView({
   const [subscribed, setSubscribed] = useState(channel.subscribed);
   const [subscribers, setSubscribers] = useState(channel.subscriberCount);
   const [loading, setLoading] = useState(false);
+  const [failed, setFailed] = useState<string | null>(null);
   const sentinel = useRef<HTMLDivElement>(null);
 
   const vacancySheet = useSheet<VacancyDTO>();
@@ -84,9 +88,20 @@ export function ChannelView({
     setFilter(next);
     localStorage.setItem(FILTER_KEY, next);
     setLoading(true);
-    const page = await load(next, null);
-    setItems(page.items);
-    setCursor(page.cursor);
+    setFailed(null);
+    try {
+      const page = await load(next, null);
+      setItems(page.items);
+      setCursor(page.cursor);
+    } catch (error) {
+      /*
+       * Filtr almashganda ro'yxat serverdan qayta olinadi va tarmoq
+       * uzilsa ekran bo'sh qolardi — endi sababi va qayta urinish bor.
+       */
+      setFailed(error instanceof Error ? error.message : "");
+      setItems([]);
+      setCursor(null);
+    }
     setLoading(false);
   }
 
@@ -99,9 +114,17 @@ export function ChannelView({
       async (entries) => {
         if (!entries[0].isIntersecting) return;
         setLoading(true);
-        const page = await load(filter, cursor);
-        setItems((prev) => [...prev, ...page.items]);
-        setCursor(page.cursor);
+        try {
+          const page = await load(filter, cursor);
+          setItems((prev) => [...prev, ...page.items]);
+          setCursor(page.cursor);
+        } catch {
+          /*
+           * Keyingi sahifa kelmasa allaqachon ko'rsatilgan ro'yxat
+           * o'chirilmaydi: kursorni saqlab qo'yamiz, foydalanuvchi
+           * yana pastga tortsa qayta uriniladi.
+           */
+        }
         setLoading(false);
       },
       { rootMargin: "400px" },
@@ -111,6 +134,7 @@ export function ChannelView({
   }, [cursor, filter, load, loading]);
 
   const toggleSubscribe = () => {
+    haptic("select");
     const next = !subscribed;
     setSubscribed(next);
     setSubscribers((n) => n + (next ? 1 : -1));
@@ -181,9 +205,27 @@ export function ChannelView({
       </div>
 
       {loading && items.length === 0 ? (
-        <ListSkeleton rows={6} />
+        <LoadingState shape="vacancy" rows={6} />
+      ) : failed !== null ? (
+        <ErrorState reason={failed || undefined} onRetry={() => void applyFilter(filter)} />
       ) : items.length === 0 ? (
-        <EmptyState icon={<IconBriefcase size={44} />} title={t.channels.emptyChannel} />
+        <EmptyState
+          icon={<IconBriefcase size={44} />}
+          title={t.channels.emptyChannel}
+          hint={filter === "all" ? t.channels.emptyChannelHint : t.channels.emptyFilterHint}
+          action={
+            /* Filtr sababchi bo'lsa uni olib tashlash, aks holda boshqa kanalga o'tish */
+            filter === "all" ? (
+              <Button variant="secondary" onClick={() => router.push("/jobs/katalog")}>
+                {t.channels.browse}
+              </Button>
+            ) : (
+              <Button variant="secondary" onClick={() => void applyFilter("all")}>
+                {t.common.all}
+              </Button>
+            )
+          }
+        />
       ) : (
         <div className={styles.list} key={filter}>
           {sections.map((section) => (

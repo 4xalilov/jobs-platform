@@ -1,0 +1,77 @@
+@use "../../styles/variables" as *;
+
+/* ——————————————————————————————————————————————
+   Bo'sh va xato holati — bitta geometriya
+   —————————————————————————————————————————————— */
+
+/*
+ * Yuqoridan 4rem: holat ekran markazida emas, yuqori uchdan birida
+ * turadi. Sabab — telefonda ko'z avval yuqoriga tushadi va matn
+ * klaviatura chiqqanda ham ko'rinib qoladi.
+ */
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $space-12 $space-6 0;
+  text-align: center;
+}
+
+.icon {
+  color: var(--text-tertiary);
+}
+
+/* Xatoda ikonka rangi ogohlantiradi, matn esa oddiy qoladi */
+.iconError {
+  color: var(--error-text);
+}
+
+.title {
+  margin: $space-3 0 0;
+  font-size: $font-nav;
+  line-height: $font-nav-line;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Nima bo'ldi — odam tilida, stack trace emas */
+.reason {
+  margin: $space-2 0 0;
+  max-width: 20rem;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--text-primary);
+}
+
+/* Nima qilish kerak */
+.hint {
+  margin: $space-2 0 0;
+  max-width: 20rem;
+  font-size: $font-body;
+  line-height: $font-body-line;
+  color: var(--text-secondary);
+}
+
+.action {
+  margin-top: $space-6;
+}
+
+/* ——————————————————————————————————————————————
+   Yuklanish
+   —————————————————————————————————————————————— */
+
+/*
+ * Skeletning o'zi `aria-hidden`, shuning uchun ekran o'quvchi uchun
+ * bitta matnli xabar qoldiriladi — u ko'rinmaydi, lekin o'qiladi.
+ */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip-path: inset(50%);
+}

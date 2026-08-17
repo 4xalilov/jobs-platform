@@ -1,0 +1,9 @@
+@use "../../styles/variables" as *;
+
+/* Sarlavha ma'lum bo'lmaganda (kanal ichi) uning o'rnida chiziq turadi */
+.titleSkeleton {
+  display: inline-block;
+  width: 7.5rem;
+  height: 0.9375rem;
+  vertical-align: middle;
+}

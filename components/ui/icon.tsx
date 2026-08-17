@@ -322,6 +322,25 @@ export const IconDocument = (p: IconProps) => (
   </Icon>
 );
 
+/** Xato holati — undov belgisi uchburchak ichida */
+export const IconWarning = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M10.3 3.6 2.4 17.4A2 2 0 0 0 4.1 20.4h15.8a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0Z" />
+    <path d="M12 9v4" />
+    <path d="M12 16.6h.01" />
+  </Icon>
+);
+
+/** Qayta urinish — halqa uchlarida strelka */
+export const IconRefresh = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M20.5 11.5A8.5 8.5 0 0 0 6.1 6.1L2.5 9.5" />
+    <path d="M2.5 4.5v5h5" />
+    <path d="M3.5 12.5a8.5 8.5 0 0 0 14.4 5.4l3.6-3.4" />
+    <path d="M21.5 19.5v-5h-5" />
+  </Icon>
+);
+
 /* ——— Faol tab uchun to'ldirilgan variantlar ——— */
 
 export const IconBriefcaseSolid = (p: IconProps) => (

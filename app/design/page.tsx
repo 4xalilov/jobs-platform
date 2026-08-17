@@ -45,7 +45,6 @@ import { NavBar } from "@/components/ui/nav-bar";
 import { SearchField } from "@/components/ui/search-field";
 import { Segmented } from "@/components/ui/segmented";
 import { Sheet } from "@/components/ui/sheet";
-import { ListSkeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { SwipeListItem } from "@/components/ui/swipe-list-item";
 import { TabBar, type TabKey } from "@/components/ui/tab-bar";
@@ -58,6 +57,7 @@ import {
 } from "@/lib/design-samples";
 import { cx, formatAgo, formatSalary } from "@/lib/utils";
 import { ScaleLab } from "@/components/design/scale-lab";
+import { StateLab } from "@/components/design/state-lab";
 import { TokenLab } from "@/components/design/token-lab";
 import shared from "@/styles/shared.module.scss";
 import styles from "./design.module.scss";
@@ -332,9 +332,7 @@ export default function DesignSystemPage() {
         {t.design.sections.skeleton}
       </SectionHeader>
       {showSkeleton ? (
-        <ListGroup>
-          <ListSkeleton rows={3} />
-        </ListGroup>
+        <StateLab />
       ) : (
         <ListGroup>
           {sampleVacancies.slice(0, 3).map((vacancy, i) => (

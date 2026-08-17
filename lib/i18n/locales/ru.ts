@@ -20,6 +20,8 @@ export const ru: Dictionary = {
     retry: "Повторить",
     loading: "Загрузка",
     example: "Пример",
+    errorTitle: "Не удалось загрузить",
+    errorHint: "Проверьте интернет и попробуйте снова.",
   },
 
   tabs: {
@@ -188,6 +190,10 @@ export const ru: Dictionary = {
       note: "При загрузке — не спиннер, а скелетон.",
       toggle: "Показать скелетон",
     },
+    states: {
+      shape: "Форма скелетона",
+      sampleReason: "Сервер не ответил (503)",
+    },
     forms: {
       inputLabel: "Имя",
       inputPlaceholder: "Введите имя",
@@ -282,6 +288,8 @@ export const ru: Dictionary = {
     empty: "Вы не подписаны ни на один канал",
     emptyHint: "Выберите подходящий канал в каталоге",
     emptyChannel: "В этом канале пока нет вакансий",
+    emptyChannelHint: "Новые вакансии появятся здесь",
+    emptyFilterHint: "По выбранному типу занятости ничего не найдено",
     newCount: "{count} новых",
     urgent: "Срочно",
     isNew: "Новое",
